@@ -310,10 +310,21 @@ export default {
           }
           
           const authStore = useAuthStore();
+          const token = authStore.token; // O de donde guardes el token
+
+          // Agrega este log para ver el valor del token
+          console.log('Token que se enviará:', token);
+
           try {
-              const response = await axios.post('/api/auth/verify-password', {
-                  currentPassword: this.currentPassword
-              });
+              const response = await axios.post(
+                  '/api/auth/verify-password',
+                  { currentPassword: this.currentPassword },
+                  {
+                      headers: {
+                          Authorization: `Bearer ${token}`
+                      }
+                  }
+              );
               
               if (response.data.success) {
                   this.passwordError = '';
