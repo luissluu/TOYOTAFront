@@ -10,11 +10,12 @@
         <div class="md:flex">
           <div class="md:w-1/2 hidden md:block relative">
             <div 
-              class="absolute inset-0 bg-cover bg-center" 
-              style="background-image: url('/public/Images/Logo.png');"
+              class="absolute inset-0 bg-cover bg-center"
+              style="background-image: url('/Images/toyota-fondo.webp'); background-blend-mode: overlay; opacity: 0.15;"
             ></div>
+            <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/Images/Logo.png');"></div>
             <div class="absolute inset-0 bg-gradient-to-tr from-[#EB0A1E]/80 to-black/70"></div>
-            <div class="absolute bottom-0 left-0 p-8 text-white">
+            <div class="absolute bottom-0 left-0 p-8 text-white z-10">
               <h2 class="text-2xl font-bold">Restablece tu contraseña</h2>
               <p class="mt-2 text-sm opacity-80">Crea una nueva contraseña segura para tu cuenta.</p>
             </div>
