@@ -141,7 +141,7 @@ const routes = [
   {
     path: '/admin',
     component: AdminLayout,
-    beforeEnter: requireAuth,
+    beforeEnter: requireAdmin,
     children: [
       {
         path: '',

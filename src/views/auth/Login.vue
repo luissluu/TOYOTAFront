@@ -210,17 +210,23 @@ const handleLogin = async () => {
   try {
     cargando.value = true;
     errorGlobal.value = '';
-    const datosLogin = {
-      correoElectronico: formulario.email,
-      contraseña: formulario.password
-    };
-    const res = await loginUsuario(datosLogin);
-    console.log('Respuesta del backend:', res);
-    localStorage.setItem('auth_token', res.token);
-    localStorage.setItem('usuario', JSON.stringify(res.usuario));
-    console.log('Redirigiendo a /Home...');
-    router.push('/Home');
-    console.log('Después de router.push');
+    
+    const resultado = await authStore.login({
+      email: formulario.email,
+      password: formulario.password,
+      remember: true
+    });
+
+    if (resultado) {
+      // Redirigir según el rol del usuario
+      if (authStore.isAdmin) {
+        router.push('/admin');
+      } else {
+        router.push('/Home');
+      }
+    } else {
+      errorGlobal.value = 'Error al iniciar sesión. Verifica tus credenciales.';
+    }
   } catch (error) {
     errorGlobal.value = error.message || 'Error al iniciar sesión. Verifica tus credenciales.';
   } finally {

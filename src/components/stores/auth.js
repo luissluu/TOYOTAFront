@@ -23,12 +23,15 @@ export const useAuthStore = defineStore('auth', {
       this.error = null;
       
       try {
-        // Llamada real al backend
-        const response = await axios.post('/api/auth/login', credentials);
+        // Llamada al backend
+        const response = await axios.post('/api/auth/login', {
+          correoElectronico: credentials.email,
+          contraseña: credentials.password
+        });
 
         const { token, usuario } = response.data;
 
-        // Guarda en storage
+        // Guarda en storage según la preferencia de "recordarme"
         if (credentials.remember) {
           localStorage.setItem('auth_token', token);
           localStorage.setItem('user', JSON.stringify(usuario));
@@ -37,15 +40,12 @@ export const useAuthStore = defineStore('auth', {
           sessionStorage.setItem('user', JSON.stringify(usuario));
         }
 
-        // Refresca el token desde storage
-        this.token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token') || null;
+        // Actualiza el estado
+        this.token = token;
         this.user = usuario;
 
         // Configura el token para futuras peticiones
-        axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
-
-        // Verifica que el token esté guardado
-        console.log('Token guardado después de login:', this.token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
         return usuario;
       } catch (error) {
