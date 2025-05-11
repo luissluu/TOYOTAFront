@@ -308,11 +308,9 @@ export default {
               this.passwordError = 'Por favor ingresa tu contraseña actual';
               return;
           }
-          
-          const authStore = useAuthStore();
-          const token = authStore.token; // O de donde guardes el token
 
-          // Agrega este log para ver el valor del token
+          // Lee el token directamente del storage
+          const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token') || null;
           console.log('Token que se enviará:', token);
 
           try {
