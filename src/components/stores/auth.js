@@ -1,6 +1,6 @@
 // src/components/stores/auth.js (Corregido)
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import axios from '../../axios';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
