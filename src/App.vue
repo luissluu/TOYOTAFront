@@ -336,36 +336,39 @@ export default {
           }
       },
       
-      async changePassword(currentPassword, newPassword) {
-  this.loading = true;
-  this.error = null;
+      async changePassword() {
+        this.loading = true;
+        this.error = null;
 
-  try {
-    // Lee el token directamente del storage
-    const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token') || null;
+        try {
+          // Lee el token directamente del storage
+          const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token') || null;
 
-    const response = await axios.post(
-      '/api/auth/change-password',
-      { currentPassword, newPassword },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
+          const response = await axios.post(
+            '/api/auth/change-password',
+            {
+              currentPassword: this.currentPassword,
+              newPassword: this.newPassword
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            }
+          );
+          if (response.data.success) {
+            this.passwordError = '';
+            this.passwordStep = 3;
+          } else {
+            this.passwordError = response.data.message || 'Error al cambiar la contraseña';
+          }
+        } catch (error) {
+          this.passwordError = error.response?.data?.message || 'Error al cambiar la contraseña. Por favor, intenta nuevamente.';
+          console.error('Error al cambiar contraseña:', error);
+        } finally {
+          this.loading = false;
         }
-      }
-    );
-    if (response.data.success) {
-      return true;
-    } else {
-      throw new Error(response.data.message || 'Error al cambiar la contraseña');
-    }
-  } catch (error) {
-    console.error('Error al cambiar contraseña:', error);
-    this.error = error.response?.data?.message || 'Error al cambiar la contraseña. Por favor, intenta nuevamente.';
-    return false;
-  } finally {
-    this.loading = false;
-  }
-},
+      },
 
       closePasswordModal() {
           // Reiniciar el modal
