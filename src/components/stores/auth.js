@@ -198,6 +198,29 @@ export const useAuthStore = defineStore('auth', {
         this.loading = false;
       }
     },
+
+    async changePassword(currentPassword, newPassword) {
+      this.loading = true;
+      this.error = null;
+      
+      try {
+        const response= await axios.post('/api/auth/change-password', {
+          currentPassword,
+          newPassword
+        });
+        if (response.data.success) {
+          return true;
+        } else {
+          throw new Error(response.data.message || 'Error al cambiar la contraseña');
+        }
+      } catch (error) {
+        console.error('Error al cambiar contraseña:', error);
+        this.error = error.response?.data?.message || 'Error al cambiar la contraseña. Por favor, intenta nuevamente.';
+        return false;
+      } finally {
+        this.loading = false;
+      }
+    },
     
     logout() {
       this.user = null;
