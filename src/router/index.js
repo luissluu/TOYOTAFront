@@ -3,7 +3,7 @@ import Home from '../views/Home.vue'
 import Login from '../views/auth/Login.vue'
 import Registro from '../views/auth/Registro.vue'
 import RecuperacionContrasena from '../views/auth/RecuperacionContrasena.vue'
-import RestablecerContrasena from '../views/auth/RestablecerContrasena.vue'
+import RestablecerContraseña from '../views/auth/RestablecerContraseña.vue'
 import Configuracion from '../views/Configuracion.vue'
 import Perfil from '../views/Perfil.vue'
 import Servicios from '../views/Servicios.vue'
@@ -93,9 +93,9 @@ const routes = [
   },
   
   {
-    path: '/restablecer-contrasena/:token',
-    name: 'RestablecerContrasena',
-    component: RestablecerContrasena,
+    path: '/restablecer-contraseña/:token',
+    name: 'RestablecerContraseña',
+    component: RestablecerContraseña,
     meta: { layout: 'auth' }
   },
   
