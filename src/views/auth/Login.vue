@@ -1,25 +1,22 @@
 <!-- src/views/auth/Login.vue (Corregido) -->
 <template>
   <div class="min-h-screen bg-gray-800 flex flex-col items-center justify-center px-4 py-12">
-    <div 
-      class="absolute inset-0 opacity-10 pointer-events-none bg-cover bg-center" 
-      style="background-image: url('/public/Images/toyota-fondo.webp'); background-blend-mode: overlay;"
-    ></div>
-    <div 
-      class="w-full max-w-4xl bg-white bg-opacity-90 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden relative z-10"
-    >
+    <div class="w-full max-w-4xl bg-white bg-opacity-90 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden relative z-10">
       <div class="md:flex">
+        <!-- MITAD IZQUIERDA CON FONDO Y LOGO -->
         <div class="md:w-1/2 hidden md:block relative">
           <div 
-            class="absolute inset-0 bg-cover bg-center" 
-            style="background-image: url('/public/Images/Logo.png');"
+            class="absolute inset-0 bg-cover bg-center"
+            style="background-image: url('/Images/toyota-fondo.webp'); background-blend-mode: overlay; opacity: 0.15;"
           ></div>
+          <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/Images/Logo.png');"></div>
           <div class="absolute inset-0 bg-gradient-to-tr from-[#EB0A1E]/80 to-black/70"></div>
-          <div class="absolute bottom-0 left-0 p-8 text-white">
-            <h2 class="text-2xl font-bold">Descubre la experiencia Toyota</h2>
-            <p class="mt-2 text-sm opacity-80">Sistema Toyota.</p>
+          <div class="absolute bottom-0 left-0 p-8 text-white z-10">
+            <h2 class="text-2xl font-bold">Bienvenido de nuevo</h2>
+            <p class="mt-2 text-sm opacity-80">Inicia sesión para acceder a tu cuenta Toyota.</p>
           </div>
         </div>
+        <!-- MITAD DERECHA: FORMULARIO -->
         <div class="md:w-1/2 p-6 md:p-8 flex items-center justify-center">
           <div class="w-full max-w-md">
             <!-- Logo y encabezado -->
