@@ -1,17 +1,17 @@
 <!-- src/views/auth/Registro.vue -->
 <template>
-  <div class="min-h-screen bg-gray-800 flex flex-col items-center justify-center px-4 py-12">
+  <div class="relative min-h-screen flex items-center justify-center">
+    <!-- Fondo -->
     <div 
-      class="absolute inset-0 opacity-10 pointer-events-none bg-cover bg-center" 
-      style="background-image: url('/Images/toyota-fondo.webp'); background-blend-mode: overlay;"
+      class="absolute inset-0 bg-cover bg-center"
+      style="background-image: url('/Images/toyota-fondo.webp'); background-blend-mode: overlay; opacity: 0.15; z-index: 0;"
     ></div>
-    <div 
-      class="w-full max-w-4xl bg-white bg-opacity-90 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden relative z-10"
-    >
+    <!-- Contenido principal -->
+    <div class="relative z-10 w-full max-w-4xl bg-white bg-opacity-90 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden">
       <div class="md:flex">
         <div class="md:w-1/2 hidden md:block relative">
           <div 
-            class="absolute inset-0 bg-cover bg-center" 
+            class="absolute inset-0 bg-cover bg-center"
             style="background-image: url('/Images/Logo.png');"
           ></div>
           <div class="absolute inset-0 bg-gradient-to-tr from-[#EB0A1E]/80 to-black/70"></div>
