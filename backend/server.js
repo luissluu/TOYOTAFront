@@ -7,7 +7,10 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['https://toyota-one.vercel.app'],
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
