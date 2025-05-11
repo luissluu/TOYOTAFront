@@ -21,31 +21,34 @@ export const useAuthStore = defineStore('auth', {
     async login(credentials) {
       this.loading = true;
       this.error = null;
-    
+      
       try {
         // Llamada real al backend
         const response = await axios.post('/api/auth/login', credentials);
-    
-        const { token, user } = response.data;
-    
-        this.token = token;
-        this.user = user;
-    
-        // Guarda el token y usuario en localStorage o sessionStorage
+
+        const { token, usuario } = response.data;
+
+        // Guarda en storage
         if (credentials.remember) {
           localStorage.setItem('auth_token', token);
-          localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('user', JSON.stringify(usuario));
         } else {
           sessionStorage.setItem('auth_token', token);
-          sessionStorage.setItem('user', JSON.stringify(user));
+          sessionStorage.setItem('user', JSON.stringify(usuario));
         }
-    
+
+        // Refresca el token desde storage
+        this.token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token') || null;
+        this.user = usuario;
+
         // Configura el token para futuras peticiones
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    
-        return user;
+        axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
+
+        // Verifica que el token esté guardado
+        console.log('Token guardado después de login:', this.token);
+
+        return usuario;
       } catch (error) {
-        console.error('Error en login action:', error);
         this.error = error.response?.data?.message || 'Error al iniciar sesión. Por favor intenta nuevamente.';
         return null;
       } finally {
