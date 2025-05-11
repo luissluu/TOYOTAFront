@@ -21,58 +21,33 @@ export const useAuthStore = defineStore('auth', {
     async login(credentials) {
       this.loading = true;
       this.error = null;
-      
+    
       try {
-        console.log('Iniciando login con credenciales:', credentials);
-        // Para desarrollo/pruebas - simular login exitoso
-        
-        // Verificar si es admin (para pruebas, puede usar un correo específico)
-        const isAdmin = credentials.email.includes('admin@');
-        
-        // Simulación de respuesta exitosa
-        const mockResponse = {
-          data: {
-            token: 'mock-jwt-token-' + Math.random().toString(36).substring(2),
-            user: {
-              id: '1',
-              name: isAdmin ? 'Administrador' : 'Usuario de Prueba',
-              email: credentials.email,
-              role: isAdmin ? 'admin' : 'user'
-            }
-          }
-        };
-        
-        // Simular delay de red
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
-        // Usar esta simulación en lugar de la llamada real a API
-        const response = mockResponse;
-        
+        // Llamada real al backend
+        const response = await axios.post('/api/auth/login', credentials);
+    
         const { token, user } = response.data;
-        
+    
         this.token = token;
         this.user = user;
-        
+    
+        // Guarda el token y usuario en localStorage o sessionStorage
         if (credentials.remember) {
           localStorage.setItem('auth_token', token);
           localStorage.setItem('user', JSON.stringify(user));
-          console.log('Guardando en localStorage:', { token, user });
         } else {
           sessionStorage.setItem('auth_token', token);
           sessionStorage.setItem('user', JSON.stringify(user));
-          console.log('Guardando en sessionStorage:', { token, user });
         }
-        
-        // Configurar el token para futuras peticiones
+    
+        // Configura el token para futuras peticiones
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        
-        console.log('Login exitoso:', user);
+    
         return user;
-        
       } catch (error) {
         console.error('Error en login action:', error);
-        this.error = 'Error al iniciar sesión. Por favor intenta nuevamente.';
-        return null; // Devolvemos null en lugar de lanzar un error
+        this.error = error.response?.data?.message || 'Error al iniciar sesión. Por favor intenta nuevamente.';
+        return null;
       } finally {
         this.loading = false;
       }
