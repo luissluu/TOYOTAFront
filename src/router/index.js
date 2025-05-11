@@ -93,10 +93,9 @@ const routes = [
   },
   
   {
-    path: '/restablecer-contraseña/:token',
-    name: 'RestablecerContraseña',
-    component: RestablecerContraseña,
-    meta: { layout: 'auth' }
+    path: '/reset-password/:token',
+    name: 'ResetPassword',
+    component: RestablecerContraseña
   },
   
 
