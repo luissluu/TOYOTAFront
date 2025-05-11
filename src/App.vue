@@ -336,33 +336,37 @@ export default {
           }
       },
       
-      async changePassword() {
-          // Validación de las contraseñas
-          if (this.newPassword.length < 8) {
-              this.passwordError = 'La contraseña debe tener al menos 8 caracteres';
-              return;
-          }
-          
-          if (this.newPassword !== this.confirmPassword) {
-              this.passwordError = 'Las contraseñas no coinciden';
-              return;
-          }
-          
-          const authStore = useAuthStore();
-          try {
-              const success = await authStore.changePassword(this.currentPassword, this.newPassword);
-              
-              if (success) {
-                  this.passwordError = '';
-                  this.passwordStep = 3;
-              } else {
-                  this.passwordError = authStore.error || 'Error al cambiar la contraseña';
-              }
-          } catch (error) {
-              this.passwordError = error.response?.data?.message || 'Error al cambiar la contraseña';
-              console.error('Error:', error);
-          }
-      },
+      async changePassword(currentPassword, newPassword) {
+  this.loading = true;
+  this.error = null;
+
+  try {
+    // Lee el token directamente del storage
+    const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token') || null;
+
+    const response = await axios.post(
+      '/api/auth/change-password',
+      { currentPassword, newPassword },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+    if (response.data.success) {
+      return true;
+    } else {
+      throw new Error(response.data.message || 'Error al cambiar la contraseña');
+    }
+  } catch (error) {
+    console.error('Error al cambiar contraseña:', error);
+    this.error = error.response?.data?.message || 'Error al cambiar la contraseña. Por favor, intenta nuevamente.';
+    return false;
+  } finally {
+    this.loading = false;
+  }
+},
+
       closePasswordModal() {
           // Reiniciar el modal
           this.showPasswordModal = false;
