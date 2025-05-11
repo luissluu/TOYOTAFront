@@ -131,6 +131,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'RecuperacionContrasenaView',
   data() {
@@ -142,7 +144,7 @@ export default {
     }
   },
   methods: {
-    handleRecovery() {
+    async handleRecovery() {
       if (!this.email) {
         this.error = 'Por favor, introduce tu correo electrónico';
         return;
@@ -151,14 +153,19 @@ export default {
       this.loading = true;
       this.error = '';
       
-      // Simulamos un proceso de recuperación
-      setTimeout(() => {
-        // Aquí iría la llamada real a la API para solicitar la recuperación de contraseña
+      try {
+        const response = await axios.post('http://localhost:3000/api/auth/forgot-password', {
+          correoElectronico: this.email
+        });
         
-        // Simulamos una solicitud exitosa
         this.enviado = true;
+        this.error = '';
+      } catch (error) {
+        this.error = error.response?.data?.message || 'Error al procesar la solicitud';
+        this.enviado = false;
+      } finally {
         this.loading = false;
-      }, 1500);
+      }
     }
   }
 }

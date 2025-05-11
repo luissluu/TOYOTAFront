@@ -3,10 +3,13 @@ import Home from '../views/Home.vue'
 import Login from '../views/auth/Login.vue'
 import Registro from '../views/auth/Registro.vue'
 import RecuperacionContrasena from '../views/auth/RecuperacionContrasena.vue'
+import RestablecerContrasena from '../views/auth/RestablecerContrasena.vue'
 import Configuracion from '../views/Configuracion.vue'
 import Perfil from '../views/Perfil.vue'
 import Servicios from '../views/Servicios.vue'
 import Historial from '../views/Historial.vue'
+
+
 
 // Layouts
 import AdminLayout from '../Layouts/AdminLayout.vue'
@@ -89,6 +92,14 @@ const routes = [
     meta: { layout: 'auth' }
   },
   
+  {
+    path: '/restablecer-contrasena/:token',
+    name: 'RestablecerContrasena',
+    component: RestablecerContrasena,
+    meta: { layout: 'auth' }
+  },
+  
+
   // Rutas principales para usuarios normales (protegidas)
   {
     path: '/Home',
