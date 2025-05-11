@@ -295,7 +295,6 @@ export default {
             this.cerrandoSesion = true;
             const authStore = useAuthStore();
             authStore.logout();
-            this.$router.push('/login');
 
             setTimeout(() => {
                 this.cerrandoSesion = false;
