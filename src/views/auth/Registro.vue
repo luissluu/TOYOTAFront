@@ -1,25 +1,22 @@
 <!-- src/views/auth/Registro.vue -->
 <template>
-  <div class="relative min-h-screen flex items-center justify-center">
-    <!-- Fondo -->
-    <div 
-      class="absolute inset-0 bg-cover bg-center"
-      style="background-image: url('/Images/toyota-fondo.webp'); background-blend-mode: overlay; opacity: 0.15; z-index: 0;"
-    ></div>
-    <!-- Contenido principal -->
-    <div class="relative z-10 w-full max-w-4xl bg-white bg-opacity-90 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden">
+  <div class="min-h-screen bg-gray-800 flex flex-col items-center justify-center px-4 py-12">
+    <div class="w-full max-w-4xl bg-white bg-opacity-90 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden relative z-10">
       <div class="md:flex">
+        <!-- MITAD IZQUIERDA CON FONDO -->
         <div class="md:w-1/2 hidden md:block relative">
           <div 
             class="absolute inset-0 bg-cover bg-center"
-            style="background-image: url('/Images/Logo.png');"
+            style="background-image: url('/Images/toyota-fondo.webp'); background-blend-mode: overlay; opacity: 0.15;"
           ></div>
+          <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/Images/Logo.png');"></div>
           <div class="absolute inset-0 bg-gradient-to-tr from-[#EB0A1E]/80 to-black/70"></div>
-          <div class="absolute bottom-0 left-0 p-8 text-white">
+          <div class="absolute bottom-0 left-0 p-8 text-white z-10">
             <h2 class="text-2xl font-bold">Únete a la comunidad Toyota</h2>
             <p class="mt-2 text-sm opacity-80">Regístrate para acceder a todos nuestros servicios.</p>
           </div>
         </div>
+        <!-- MITAD DERECHA: FORMULARIO -->
         <div class="md:w-1/2 p-6 md:p-8 flex items-center justify-center">
           <div class="w-full max-w-md">
             <!-- Logo y encabezado -->
