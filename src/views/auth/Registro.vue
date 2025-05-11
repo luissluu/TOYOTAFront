@@ -4,17 +4,27 @@
     <div class="w-full max-w-4xl bg-white bg-opacity-90 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden relative z-10">
       <div class="md:flex">
         <!-- MITAD IZQUIERDA CON FONDO -->
-        <div class="md:w-1/2 hidden md:block relative">
+        <div class="md:w-1/2 hidden md:block relative overflow-hidden">
+          <!-- Fondo de Toyota -->
           <div 
             class="absolute inset-0 bg-cover bg-center"
-            style="background-image: url('/Images/toyota-fondo.webp'); background-blend-mode: overlay; opacity: 0.15;"
+            style="background-image: url('/Images/toyota-fondo.webp'); background-blend-mode: overlay; opacity: 0.18;"
           ></div>
-          <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/Images/Logo.png');"></div>
+          <!-- Logo Toyota con fondo blanco semitransparente -->
+          <div class="absolute inset-0 flex items-center justify-center z-10">
+            <div class="bg-white bg-opacity-70 rounded-full p-6 shadow-lg">
+              <img src="/Images/Logo.png" alt="Logo Toyota" class="w-32 h-32 object-contain" />
+            </div>
+          </div>
+          <!-- Gradiente para oscurecer el fondo y mejorar legibilidad -->
           <div class="absolute inset-0 bg-gradient-to-tr from-[#EB0A1E]/80 to-black/70"></div>
-          <div class="absolute bottom-0 left-0 p-8 text-white z-10">
+          <!-- Texto -->
+          <div class="absolute bottom-0 left-0 p-8 text-white z-20 drop-shadow-lg">
             <h2 class="text-2xl font-bold">Únete a la comunidad Toyota</h2>
             <p class="mt-2 text-sm opacity-80">Regístrate para acceder a todos nuestros servicios.</p>
           </div>
+          <!-- Borde derecho sutil -->
+          <div class="absolute top-0 right-0 h-full w-1 bg-gray-200 opacity-30"></div>
         </div>
         <!-- MITAD DERECHA: FORMULARIO -->
         <div class="md:w-1/2 p-6 md:p-8 flex items-center justify-center">
