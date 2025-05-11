@@ -295,9 +295,10 @@ export default {
           this.cerrandoSesion = true;
           const authStore = useAuthStore();
           authStore.logout();
+          console.log('Sesión cerrada, token y usuario eliminados');
           setTimeout(() => {
               this.cerrandoSesion = false;
-              this.$router.push('/login');
+              this.$router.replace('/login');
           }, 1200);
       },
 
