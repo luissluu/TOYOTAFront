@@ -154,7 +154,7 @@ export default {
       this.error = '';
       
       try {
-        const response = await axios.post('http://localhost:3000/api/auth/forgot-password', {
+        const response = await axios.post('https://toyotaback.onrender.com/api/auth/forgot-password', {
           correoElectronico: this.email
         });
         
