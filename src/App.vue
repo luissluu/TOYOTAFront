@@ -249,6 +249,7 @@
 </template>
 
 <script>
+import { useAuthStore } from './components/stores/auth';
 export default {
     data() {
         return {
@@ -278,13 +279,8 @@ export default {
     methods: {
         // Método para cerrar sesión y redirigir a login
         cerrarSesion() {
-            // 1. Limpiar datos de autenticación
-            localStorage.removeItem('auth_token');
-            localStorage.removeItem('user');
-            sessionStorage.removeItem('auth_token');
-            sessionStorage.removeItem('user');
-            
-            // 2. Redirigir al login
+            const authStore = useAuthStore();
+            authStore.logout();
             this.$router.push('/login');
         },
 
