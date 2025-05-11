@@ -95,7 +95,8 @@ const routes = [
   {
     path: '/reset-password/:token',
     name: 'ResetPassword',
-    component: RestablecerContraseña
+    component: RestablecerContraseña,
+    meta: { layout: 'auth' }
   },
   
 
