@@ -1,4 +1,4 @@
-const API_URL = '/api/vehiculos'; // Usando proxy de Vite
+const API_URL = import.meta.env.VITE_API_URL + '/api/vehiculos';
 
 // Obtener todos los vehículos
 export async function getVehiculos(token) {
