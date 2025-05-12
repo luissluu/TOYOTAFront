@@ -218,12 +218,7 @@ const handleLogin = async () => {
     });
 
     if (resultado) {
-      // Redirigir según el rol del usuario
-      if (authStore.isAdmin) {
-        router.push('/admin');
-      } else {
-        router.push('/Home');
-      }
+      router.push('/Home');
     } else {
       errorGlobal.value = 'Error al iniciar sesión. Verifica tus credenciales.';
     }
