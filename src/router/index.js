@@ -46,11 +46,11 @@ const requireAdmin = (to, from, next) => {
       const userData = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
       
       // Comprobar el rol
-      if (userData && userData.role === 'administrador') {
+      if (userData && userData.role === 'admin') {
         authStore.user = userData;
         next();
       } else {
-        // Si no es administrador, redirigir a la página principal
+        // Si no es admin, redirigir a la página principal
         next('/Home');
       }
     } catch (error) {
@@ -58,10 +58,10 @@ const requireAdmin = (to, from, next) => {
       next('/login');
     }
   } else if (authStore.isAdmin) {
-    // Si ya tenemos la info del usuario y es administrador, permitir acceso
+    // Si ya tenemos la info del usuario y es admin, permitir acceso
     next();
   } else {
-    // Si no es administrador, redirigir a la página principal
+    // Si no es admin, redirigir a la página principal
     next('/Home');
   }
 };
