@@ -9,8 +9,6 @@ import Perfil from '../views/Perfil.vue'
 import Servicios from '../views/Servicios.vue'
 import Historial from '../views/Historial.vue'
 
-
-
 // Layouts
 import AdminLayout from '../Layouts/AdminLayout.vue'
 
@@ -18,12 +16,11 @@ import AdminLayout from '../Layouts/AdminLayout.vue'
 import AdminHome from '../views/admin/AdminHome.vue'
 import AdminPerfil from '../views/admin/AdminPerfil.vue'
 import AdminCambiarContrasena from '../views/admin/AdminCambiarContrasena.vue'
-// Importa aquí las demás vistas de administrador a medida que las crees
 
 // Importamos la tienda de autenticación
 import { useAuthStore } from '../components/stores/auth'
 
-// Ruta protegida que verifica el rol de usuario
+// Ruta protegida que verifica la autenticación
 const requireAuth = (to, from, next) => {
   const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
   if (!token) {
@@ -32,44 +29,10 @@ const requireAuth = (to, from, next) => {
   next();
 };
 
-// Ruta protegida que verifica que el usuario sea administrador
-const requireAdmin = (to, from, next) => {
-  const authStore = useAuthStore();
-  const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
-  
-  if (!token) {
-    return next('/login');
-  }
-  if (!authStore.user) {
-    try {
-      // Cargar los datos del usuario desde localStorage/sessionStorage
-      const userData = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-      
-      // Comprobar el rol
-      if (userData && userData.role === 'admin') {
-        authStore.user = userData;
-        next();
-      } else {
-        // Si no es admin, redirigir a la página principal
-        next('/Home');
-      }
-    } catch (error) {
-      console.error('Error al verificar el rol del usuario:', error);
-      next('/login');
-    }
-  } else if (authStore.isAdmin) {
-    // Si ya tenemos la info del usuario y es admin, permitir acceso
-    next();
-  } else {
-    // Si no es admin, redirigir a la página principal
-    next('/Home');
-  }
-};
-
 const routes = [
   {
     path: '/',
-    redirect: '/login'  // Esto hará que la ruta raíz redirija a login
+    redirect: '/login'
   },
   
   // Rutas de autenticación
@@ -98,7 +61,6 @@ const routes = [
     component: RestablecerContraseña,
     meta: { layout: 'auth' }
   },
-  
 
   // Rutas principales para usuarios normales (protegidas)
   {
@@ -137,11 +99,11 @@ const routes = [
     beforeEnter: requireAuth
   },
 
-  // Rutas de administrador (protegidas por rol)
+  // Rutas de administrador (protegidas)
   {
     path: '/admin',
     component: AdminLayout,
-    beforeEnter: requireAdmin,
+    beforeEnter: requireAuth,
     children: [
       {
         path: '',
@@ -184,10 +146,7 @@ const routes = [
   // Ruta para manejar páginas no encontradas
   {
     path: '/:pathMatch(.*)*',
-    redirect: (to) => {
-      const authStore = useAuthStore();
-      return authStore.isAdmin ? '/admin' : '/Home';
-    }
+    redirect: '/Home'
   }
 ];
 
@@ -198,7 +157,6 @@ const router = createRouter({
 
 // Guardia de navegación global
 router.beforeEach(async (to, from, next) => {
-  const authStore = useAuthStore();
   const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
   
   // Si la ruta requiere autenticación y no hay token, redirige a login
@@ -206,20 +164,9 @@ router.beforeEach(async (to, from, next) => {
     return next('/login');
   }
   
-  // Si intenta acceder a rutas de autenticación y ya está autenticado, redirige según rol
+  // Si intenta acceder a rutas de autenticación y ya está autenticado, redirige a home
   if ((to.path === '/login' || to.path === '/registro' || to.path === '/recuperar-contrasena') && token) {
-    // Intentar obtener la información del usuario si no la tenemos
-    if (!authStore.user) {
-      try {
-        const userData = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-        authStore.user = userData;
-      } catch (error) {
-        console.error('Error al cargar datos del usuario:', error);
-      }
-    }
-    
-    // Redirigir según el rol
-    return next(authStore.isAdmin ? '/admin' : '/Home');
+    return next('/Home');
   }
   
   // En otros casos, permite la navegación
