@@ -218,6 +218,7 @@ const handleLogin = async () => {
     });
 
     if (resultado) {
+      console.log('Datos del usuario:', resultado);
       router.push('/Home');
     } else {
       errorGlobal.value = 'Error al iniciar sesión. Verifica tus credenciales.';
