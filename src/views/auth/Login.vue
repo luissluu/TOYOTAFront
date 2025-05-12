@@ -219,7 +219,11 @@ const handleLogin = async () => {
 
     if (resultado) {
       console.log('Datos del usuario:', resultado);
-      router.push('/Home');
+      if (resultado.rol === 'administrador') {
+        router.push('/admin');
+      } else {
+        router.push('/Home');
+      }
     } else {
       errorGlobal.value = 'Error al iniciar sesión. Verifica tus credenciales.';
     }

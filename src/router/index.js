@@ -29,6 +29,33 @@ const requireAuth = (to, from, next) => {
   next();
 };
 
+// Ruta protegida que verifica que el usuario sea administrador
+const requireAdmin = (to, from, next) => {
+  const authStore = useAuthStore();
+  const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
+  if (!token) {
+    return next('/login');
+  }
+  // Cargar usuario si no está en memoria
+  if (!authStore.user) {
+    try {
+      const userData = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+      if (userData && userData.rol === 'administrador') {
+        authStore.user = userData;
+        next();
+      } else {
+        next('/Home');
+      }
+    } catch (error) {
+      next('/login');
+    }
+  } else if (authStore.user.rol === 'administrador') {
+    next();
+  } else {
+    next('/Home');
+  }
+};
+
 const routes = [
   {
     path: '/',
@@ -103,7 +130,7 @@ const routes = [
   {
     path: '/admin',
     component: AdminLayout,
-    beforeEnter: requireAuth,
+    beforeEnter: requireAdmin,
     children: [
       {
         path: '',
