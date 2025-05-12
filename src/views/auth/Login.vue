@@ -218,6 +218,9 @@ const handleLogin = async () => {
     });
 
     if (resultado) {
+      // Guardar el usuario bajo la clave 'user' para el guard de admin
+      localStorage.setItem('user', JSON.stringify(resultado));
+      sessionStorage.setItem('user', JSON.stringify(resultado));
       console.log('Datos del usuario:', resultado);
       if (resultado.rol === 'administrador') {
         router.push('/admin');
