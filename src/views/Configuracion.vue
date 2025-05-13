@@ -225,7 +225,19 @@ export default {
     FormularioMetodoPago,
     FormularioPerfil
   },
+  
   setup() {
+    const cargarDatosUsuario = async () => {
+  try {
+    cargando.value = true;
+    error.value = null;
+    usuario.value = await authStore.fetchUser();
+  } catch (err) {
+    error.value = err.message || 'Error al cargar los datos del usuario';
+  } finally {
+    cargando.value = false;
+  }
+}
     const authStore = useAuthStore();
     const usuarioPerfil = ref(authStore.user);
     onMounted(async () => {
