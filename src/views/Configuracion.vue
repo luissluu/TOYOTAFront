@@ -229,12 +229,10 @@ export default {
     const authStore = useAuthStore();
     const usuarioPerfil = ref(authStore.user);
     onMounted(async () => {
-      if (authStore.fetchUser) {
-        usuarioPerfil.value = await authStore.fetchUser();
-      } else {
-        usuarioPerfil.value = authStore.user;
-      }
-    });
+  console.log('Montando componente Perfil...');
+  await cargarDatosUsuario();
+  console.log('Usuario recibido:', usuario.value);
+});
     
     // Estado de vehículos
     const vehiculos = ref([
