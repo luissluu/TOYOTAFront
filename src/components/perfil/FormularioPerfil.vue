@@ -5,15 +5,19 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-400 mb-1">Nombre</label>
-            <p class="bg-gray-600 px-3 py-2 rounded-md text-white">{{ usuario.nombre }}</p>
+            <p class="bg-gray-600 px-3 py-2 rounded-md text-white">{{  }}</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-400 mb-1">Apellido</label>
-            <p class="bg-gray-600 px-3 py-2 rounded-md text-white">{{ usuario.apellido }}</p>
+            <label class="block text-sm font-medium text-gray-400 mb-1">Apellido Paterno</label>
+            <p class="bg-gray-600 px-3 py-2 rounded-md text-white">{{ usuario.apellidoPaterno }}</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-1">Apellido Materno</label>
+            <p class="bg-gray-600 px-3 py-2 rounded-md text-white">{{ usuario.apellidoMaterno }}</p>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-400 mb-1">Email</label>
-            <p class="bg-gray-600 px-3 py-2 rounded-md text-white">{{ usuario.email }}</p>
+            <p class="bg-gray-600 px-3 py-2 rounded-md text-white">{{ usuario.correoElectronico }}</p>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-400 mb-1">Teléfono</label>
