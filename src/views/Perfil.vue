@@ -117,6 +117,7 @@ const cargarDatosUsuario = async () => {
 };
 
 onMounted(async () => {
+  console.log('Montando componente Perfil...');
   await cargarDatosUsuario();
   console.log('Usuario recibido:', usuario.value);
 });
