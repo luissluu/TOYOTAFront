@@ -64,6 +64,24 @@ export const useAuthStore = defineStore('auth', {
       sessionStorage.removeItem('user');
       
       delete axios.defaults.headers.common['Authorization'];
+    },
+    
+    async fetchUser() {
+      if (!this.token) return null;
+      this.loading = true;
+      try {
+        const response = await axios.get('/api/auth/me');
+        this.user = response.data.user || response.data;
+        // Actualiza el storage también
+        localStorage.setItem('user', JSON.stringify(this.user));
+        sessionStorage.setItem('user', JSON.stringify(this.user));
+        return this.user;
+      } catch (error) {
+        this.logout();
+        throw new Error('Sesión expirada. Por favor inicia sesión nuevamente.');
+      } finally {
+        this.loading = false;
+      }
     }
   }
 });
