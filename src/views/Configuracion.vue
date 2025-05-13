@@ -16,9 +16,7 @@
                   <div class="flex flex-col md:flex-row md:items-start">
                     <div class="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
                       <div class="w-24 h-24 bg-gray-500 rounded-full overflow-hidden">
-                        <img :src="usuarioPerfil.foto" alt="Foto de perfil" class="w-full h-full object-cover">
                       </div>
-                      <button class="mt-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 w-full">Cambiar foto</button>
                     </div>
                     <div class="flex-grow">
                       <FormularioPerfil 
