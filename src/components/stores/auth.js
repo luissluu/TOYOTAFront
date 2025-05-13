@@ -70,6 +70,8 @@ export const useAuthStore = defineStore('auth', {
       if (!this.token) return null;
       this.loading = true;
       try {
+        // Asegura que el token esté en el header antes de la petición
+        axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
         const response = await axios.get('/api/auth/me');
         this.user = response.data.user || response.data;
         // Actualiza el storage también
