@@ -93,8 +93,8 @@
                           <span class="sr-only">User Menu</span>
                           <div class="flex items-center md:-mx-2 ">
                               <div class="hidden md:mx-2 md:flex md:flex-col md:items-end md:leading-tight">
-                                  <span class="font-semibold text-sm text-gray-800">Luis</span>
-                                  <span class="text-sm text-gray-600">Lua</span>
+                                  <span class="font-semibold text-sm text-gray-800">{{ authStore.user?.nombre }}</span>
+                                  <span class="text-sm text-gray-600">{{ authStore.user?.apellidoPaterno }}</span>
                               </div>
 
                               <img class="flex-shrink-0 w-10 h-10 overflow-hidden bg-gray-100 rounded-full md:mx-2" src="https://randomuser.me/api/portraits/men/68.jpg" alt="user profile photo" >
@@ -380,7 +380,13 @@ export default {
           this.confirmPassword = '';
           this.passwordError = '';
       }
-  }
+  },
+  setup() {
+    const authStore = useAuthStore();
+    return {
+      authStore,
+    };
+  },
 }
 </script>
 
