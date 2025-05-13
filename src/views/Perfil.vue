@@ -16,13 +16,6 @@
               <div class="mb-8">
                 <div class="bg-gray-700 rounded-lg p-6">
                   <div class="flex flex-col md:flex-row md:items-center">
-                    <!-- Foto de perfil -->
-                    <div class="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
-                      <div class="w-24 h-24 bg-gray-500 rounded-full overflow-hidden">
-                        <img :src="usuario.foto" alt="Foto de perfil" class="w-full h-full object-cover">
-                      </div>
-                    </div>
-                    
                     <!-- Datos del perfil (solo visualización) -->
                     <div class="flex-grow">
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -32,7 +25,7 @@
                         </div>
                         <div>
                           <h3 class="text-sm font-medium text-gray-400">Correo Electrónico</h3>
-                          <p class="text-white">{{ usuario.email }}</p>
+                          <p class="text-white">{{ usuario.correoElectronico }}</p>
                         </div>
                         <div>
                           <h3 class="text-sm font-medium text-gray-400">Teléfono</h3>
