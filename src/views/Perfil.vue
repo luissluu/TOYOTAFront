@@ -21,7 +21,7 @@
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <h3 class="text-sm font-medium text-gray-400">Nombre</h3>
-                          <p class="text-white">{{ usuario.nombre }} {{ usuario.apellido }}</p>
+                          <p class="text-white">{{ usuario.nombre }} {{ usuario.apellidoPaterno }} {{ usuario.apellidoMaterno }}</p>
                         </div>
                         <div>
                           <h3 class="text-sm font-medium text-gray-400">Correo Electrónico</h3>
@@ -116,7 +116,10 @@ const cargarDatosUsuario = async () => {
   }
 };
 
-onMounted(cargarDatosUsuario);
+onMounted(async () => {
+  await cargarDatosUsuario();
+  console.log('Usuario recibido:', usuario.value);
+});
 
 const formatearFecha = (fecha) => {
   if (!fecha) return '';
