@@ -214,7 +214,8 @@
 </template>
 
 <script>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
+import { useAuthStore } from '../components/stores/auth';
 import FormularioVehiculo from '../components/configuracion/FormularioVehiculo.vue';
 import FormularioMetodoPago from '../components/configuracion/FormularioMetodoPago.vue';
 import FormularioPerfil from '../components/perfil/FormularioPerfil.vue';
@@ -227,6 +228,16 @@ export default {
     FormularioPerfil
   },
   setup() {
+    const authStore = useAuthStore();
+    const usuarioPerfil = ref(authStore.user);
+    onMounted(async () => {
+      if (authStore.fetchUser) {
+        usuarioPerfil.value = await authStore.fetchUser();
+      } else {
+        usuarioPerfil.value = authStore.user;
+      }
+    });
+    
     // Estado de vehículos
     const vehiculos = ref([
       {
@@ -286,17 +297,6 @@ export default {
     const mostrarFormularioPago = ref(false);
     const modoFormularioPago = ref('agregar');
     const metodoPagoEditando = ref(null);
-    
-    // Estado para el perfil de usuario
-    const usuarioPerfil = ref({
-      id: '1',
-      nombre: 'Luis',
-      apellido: 'González',
-      email: 'luis.gonzalez@ejemplo.com',
-      telefono: '5512345678',
-      fechaNacimiento: '1985-06-15',
-      foto: 'https://randomuser.me/api/portraits/men/68.jpg'
-    });
     
     // Métodos para el formulario de vehículos
     const editarVehiculo = (vehiculo) => {
