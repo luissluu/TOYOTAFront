@@ -5,7 +5,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-400 mb-1">Nombre</label>
-            <p class="bg-gray-600 px-3 py-2 rounded-md text-white">{{  }}</p>
+            <p class="bg-gray-600 px-3 py-2 rounded-md text-white">{{ usuario.nombre }}</p>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-400 mb-1">Apellido Paterno</label>
