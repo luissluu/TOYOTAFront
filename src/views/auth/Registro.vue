@@ -367,6 +367,22 @@ import { registerUsuario } from '../../services/usuarioService';
 
 const router = useRouter();
 
+// Coloca la función de validación ANTES del esquema de validación
+const validarFechaNacimiento = (valor) => {
+  if (!valor) return false;
+  const fecha = new Date(valor);
+  const hoy = new Date();
+  const edadMinima = 18;
+  const edadMaxima = 100;
+  if (isNaN(fecha.getTime())) return false;
+  let edad = hoy.getFullYear() - fecha.getFullYear();
+  const m = hoy.getMonth() - fecha.getMonth();
+  if (m < 0 || (m === 0 && hoy.getDate() < fecha.getDate())) {
+    edad--;
+  }
+  return edad >= edadMinima && edad <= edadMaxima;
+};
+
 // Esquema de validación del formulario
 const esquemaValidacion = {
   nombre: {
@@ -524,21 +540,6 @@ const validarNombre = (valor) => {
 
 const validarConfirmacionPassword = (confirmacion, original) => {
   return validarPasswordsCoinciden(confirmacion, original);
-};
-
-const validarFechaNacimiento = (valor) => {
-  if (!valor) return false;
-  const fecha = new Date(valor);
-  const hoy = new Date();
-  const edadMinima = 18;
-  const edadMaxima = 100;
-  if (isNaN(fecha.getTime())) return false;
-  let edad = hoy.getFullYear() - fecha.getFullYear();
-  const m = hoy.getMonth() - fecha.getMonth();
-  if (m < 0 || (m === 0 && hoy.getDate() < fecha.getDate())) {
-    edad--;
-  }
-  return edad >= edadMinima && edad <= edadMaxima;
 };
 
 // Función para manejar la validación de un campo
