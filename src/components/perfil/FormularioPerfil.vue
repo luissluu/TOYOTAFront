@@ -63,20 +63,42 @@
             </template>
           </CampoValidado>
     
-          <!-- Apellido -->
+          <!-- Apellido Paterno -->
           <CampoValidado
-            id="apellido"
-            v-model="formulario.apellido"
-            :error="errores.apellido"
-            @update:error="errores.apellido = $event"
-            @validacion="validacionCampo('apellido', $event)"
-            @blur="alPerderFoco('apellido')"
-            label="Apellido"
-            placeholder="Tu apellido"
+            id="apellidoPaterno"
+            v-model="formulario.apellidoPaterno"
+            :error="errores.apellidoPaterno"
+            @update:error="errores.apellidoPaterno = $event"
+            @validacion="validacionCampo('apellidoPaterno', $event)"
+            @blur="alPerderFoco('apellidoPaterno')"
+            label="Apellido Paterno"
+            placeholder="Tu apellido paterno"
             required
             soloLetras
             :validator="validarSoloLetras"
-            errorMessage="Por favor ingresa un apellido válido (solo letras)"
+            errorMessage="Por favor ingresa un apellido paterno válido (solo letras)"
+          >
+            <template #icono>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+              </svg>
+            </template>
+          </CampoValidado>
+    
+          <!-- Apellido Materno -->
+          <CampoValidado
+            id="apellidoMaterno"
+            v-model="formulario.apellidoMaterno"
+            :error="errores.apellidoMaterno"
+            @update:error="errores.apellidoMaterno = $event"
+            @validacion="validacionCampo('apellidoMaterno', $event)"
+            @blur="alPerderFoco('apellidoMaterno')"
+            label="Apellido Materno"
+            placeholder="Tu apellido materno"
+            required
+            soloLetras
+            :validator="validarSoloLetras"
+            errorMessage="Por favor ingresa un apellido materno válido (solo letras)"
           >
             <template #icono>
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -150,6 +172,115 @@
             </template>
           </CampoValidado>
     
+          <!-- Contraseña -->
+          <CampoValidado
+            id="contraseña"
+            v-model="formulario.contraseña"
+            :error="errores.contraseña"
+            @update:error="errores.contraseña = $event"
+            @validacion="validacionCampo('contraseña', $event)"
+            @blur="alPerderFoco('contraseña')"
+            label="Contraseña"
+            type="password"
+            placeholder="Tu contraseña"
+            required
+            :validator="validarContraseña"
+            errorMessage="La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número"
+          >
+            <template #icono>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+              </svg>
+            </template>
+          </CampoValidado>
+    
+          <!-- Dirección -->
+          <CampoValidado
+            id="direccion"
+            v-model="formulario.direccion"
+            :error="errores.direccion"
+            @update:error="errores.direccion = $event"
+            @validacion="validacionCampo('direccion', $event)"
+            @blur="alPerderFoco('direccion')"
+            label="Dirección"
+            placeholder="Tu dirección"
+            required
+            :validator="validarDireccion"
+            errorMessage="Por favor ingresa una dirección válida"
+          >
+            <template #icono>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+              </svg>
+            </template>
+          </CampoValidado>
+    
+          <!-- Ciudad -->
+          <CampoValidado
+            id="ciudad"
+            v-model="formulario.ciudad"
+            :error="errores.ciudad"
+            @update:error="errores.ciudad = $event"
+            @validacion="validacionCampo('ciudad', $event)"
+            @blur="alPerderFoco('ciudad')"
+            label="Ciudad"
+            placeholder="Tu ciudad"
+            required
+            soloLetras
+            :validator="validarSoloLetras"
+            errorMessage="Por favor ingresa una ciudad válida"
+          >
+            <template #icono>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+              </svg>
+            </template>
+          </CampoValidado>
+    
+          <!-- Estado/Provincia -->
+          <CampoValidado
+            id="estado_provincia"
+            v-model="formulario.estado_provincia"
+            :error="errores.estado_provincia"
+            @update:error="errores.estado_provincia = $event"
+            @validacion="validacionCampo('estado_provincia', $event)"
+            @blur="alPerderFoco('estado_provincia')"
+            label="Estado/Provincia"
+            placeholder="Tu estado o provincia"
+            required
+            soloLetras
+            :validator="validarSoloLetras"
+            errorMessage="Por favor ingresa un estado o provincia válido"
+          >
+            <template #icono>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+              </svg>
+            </template>
+          </CampoValidado>
+    
+          <!-- Código Postal -->
+          <CampoValidado
+            id="codigo_postal"
+            v-model="formulario.codigo_postal"
+            :error="errores.codigo_postal"
+            @update:error="errores.codigo_postal = $event"
+            @validacion="validacionCampo('codigo_postal', $event)"
+            @blur="alPerderFoco('codigo_postal')"
+            label="Código Postal"
+            placeholder="Tu código postal"
+            required
+            soloNumeros
+            :validator="validarCodigoPostal"
+            errorMessage="Por favor ingresa un código postal válido"
+          >
+            <template #icono>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+              </svg>
+            </template>
+          </CampoValidado>
+    
           <!-- Botones de acción -->
           <div class="flex justify-end space-x-3 mt-6">
             <button
@@ -208,7 +339,27 @@
            (edad > 18 || (edad === 18 && hoy.getMonth() >= fechaNac.getMonth() && hoy.getDate() >= fechaNac.getDate()));
   };
   
-  // Esquema de validación del formulario
+  // En la sección de script, agregar las nuevas validaciones y esquema
+  const validarContraseña = (valor) => {
+    if (!valor) return false;
+    // Mínimo 8 caracteres, al menos una letra mayúscula, una minúscula y un número
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+    return regex.test(valor);
+  };
+  
+  const validarDireccion = (valor) => {
+    if (!valor) return false;
+    return valor.length >= 5 && valor.length <= 255;
+  };
+  
+  const validarCodigoPostal = (valor) => {
+    if (!valor) return false;
+    // Acepta códigos postales de 5 dígitos
+    const regex = /^\d{5}$/;
+    return regex.test(valor);
+  };
+  
+  // Actualizar el esquema de validación
   const esquemaValidacion = {
     nombre: {
       requerido: true,
@@ -218,12 +369,20 @@
         validador: 'Por favor ingresa un nombre válido (solo letras)'
       }
     },
-    apellido: {
+    apellidoPaterno: {
       requerido: true,
       validador: validarSoloLetras,
       mensajes: {
-        requerido: 'El apellido es obligatorio',
-        validador: 'Por favor ingresa un apellido válido (solo letras)'
+        requerido: 'El apellido paterno es obligatorio',
+        validador: 'Por favor ingresa un apellido paterno válido (solo letras)'
+      }
+    },
+    apellidoMaterno: {
+      requerido: true,
+      validador: validarSoloLetras,
+      mensajes: {
+        requerido: 'El apellido materno es obligatorio',
+        validador: 'Por favor ingresa un apellido materno válido (solo letras)'
       }
     },
     email: {
@@ -234,27 +393,66 @@
         validador: 'Por favor ingresa un correo electrónico válido'
       }
     },
+    contraseña: {
+      requerido: true,
+      validador: validarContraseña,
+      mensajes: {
+        requerido: 'La contraseña es obligatoria',
+        validador: 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número'
+      }
+    },
     telefono: {
       validador: validarTelefono,
       mensajes: {
         validador: 'Por favor ingresa un número telefónico válido'
       }
     },
-    fechaNacimiento: {
-      validador: validarFechaNacimiento,
+    direccion: {
+      requerido: true,
+      validador: validarDireccion,
       mensajes: {
-        validador: 'Por favor ingresa una fecha de nacimiento válida'
+        requerido: 'La dirección es obligatoria',
+        validador: 'Por favor ingresa una dirección válida'
+      }
+    },
+    ciudad: {
+      requerido: true,
+      validador: validarSoloLetras,
+      mensajes: {
+        requerido: 'La ciudad es obligatoria',
+        validador: 'Por favor ingresa una ciudad válida'
+      }
+    },
+    estado_provincia: {
+      requerido: true,
+      validador: validarSoloLetras,
+      mensajes: {
+        requerido: 'El estado/provincia es obligatorio',
+        validador: 'Por favor ingresa un estado/provincia válido'
+      }
+    },
+    codigo_postal: {
+      requerido: true,
+      validador: validarCodigoPostal,
+      mensajes: {
+        requerido: 'El código postal es obligatorio',
+        validador: 'Por favor ingresa un código postal válido'
       }
     }
   };
   
-  // Valores iniciales del formulario
+  // Actualizar los valores iniciales
   const valoresIniciales = {
     nombre: '',
-    apellido: '',
+    apellidoPaterno: '',
+    apellidoMaterno: '',
     email: '',
+    contraseña: '',
     telefono: '',
-    fechaNacimiento: ''
+    direccion: '',
+    ciudad: '',
+    estado_provincia: '',
+    codigo_postal: ''
   };
   
   // Usar el hook de formulario
@@ -317,8 +515,13 @@
       esValido = false;
     }
     
-    if (!formulario.apellido) {
-      errores.apellido = 'El apellido es obligatorio';
+    if (!formulario.apellidoPaterno) {
+      errores.apellidoPaterno = 'El apellido paterno es obligatorio';
+      esValido = false;
+    }
+    
+    if (!formulario.apellidoMaterno) {
+      errores.apellidoMaterno = 'El apellido materno es obligatorio';
       esValido = false;
     }
     
@@ -339,6 +542,51 @@
     // Si hay fecha de nacimiento, validarla
     if (formulario.fechaNacimiento && !validarFechaNacimiento(formulario.fechaNacimiento)) {
       errores.fechaNacimiento = 'Por favor ingresa una fecha de nacimiento válida';
+      esValido = false;
+    }
+    
+    // Si hay contraseña, validarla
+    if (!formulario.contraseña) {
+      errores.contraseña = 'La contraseña es obligatoria';
+      esValido = false;
+    } else if (!validarContraseña(formulario.contraseña)) {
+      errores.contraseña = 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número';
+      esValido = false;
+    }
+    
+    // Si hay dirección, validarla
+    if (!formulario.direccion) {
+      errores.direccion = 'La dirección es obligatoria';
+      esValido = false;
+    } else if (!validarDireccion(formulario.direccion)) {
+      errores.direccion = 'Por favor ingresa una dirección válida';
+      esValido = false;
+    }
+    
+    // Si hay ciudad, validarla
+    if (!formulario.ciudad) {
+      errores.ciudad = 'La ciudad es obligatoria';
+      esValido = false;
+    } else if (!validarSoloLetras(formulario.ciudad)) {
+      errores.ciudad = 'Por favor ingresa una ciudad válida';
+      esValido = false;
+    }
+    
+    // Si hay estado/provincia, validarla
+    if (!formulario.estado_provincia) {
+      errores.estado_provincia = 'El estado/provincia es obligatorio';
+      esValido = false;
+    } else if (!validarSoloLetras(formulario.estado_provincia)) {
+      errores.estado_provincia = 'Por favor ingresa un estado/provincia válido';
+      esValido = false;
+    }
+    
+    // Si hay código postal, validarlo
+    if (!formulario.codigo_postal) {
+      errores.codigo_postal = 'El código postal es obligatorio';
+      esValido = false;
+    } else if (!validarCodigoPostal(formulario.codigo_postal)) {
+      errores.codigo_postal = 'Por favor ingresa un código postal válido';
       esValido = false;
     }
     
