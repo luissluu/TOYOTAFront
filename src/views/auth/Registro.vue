@@ -476,14 +476,6 @@ const esquemaValidacion = {
       validador: 'Las contraseñas no coinciden'
     }
   },
-  fecha_nacimiento: {
-    requerido: true,
-    validador: validarFechaNacimiento,
-    mensajes: {
-      requerido: 'La fecha de nacimiento es obligatoria',
-      validador: 'Debes tener entre 18 y 100 años'
-    }
-  }
 };
 
 // Valores iniciales del formulario
@@ -493,7 +485,6 @@ const valoresIniciales = {
   apellidoMaterno: '',
   email: '',
   telefono: '',
-  fecha_nacimiento: '',
   calle: '',
   numero: '',
   colonia: '',
@@ -524,25 +515,6 @@ const validarNombre = (valor) => {
   return validarSoloLetras(valor);
 };
 
-// Comentar función y validación de fecha de nacimiento
-// const validarFechaNacimiento = (valor) => {
-//   if (!valor) return false;
-//   const fecha = new Date(valor);
-//   const hoy = new Date();
-//   const edadMinima = 18;
-//   const edadMaxima = 100;
-//   if (isNaN(fecha.getTime())) return false;
-//   const edad = hoy.getFullYear() - fecha.getFullYear();
-//   const mesActual = hoy.getMonth();
-//   const mesNacimiento = fecha.getMonth();
-//   const diaActual = hoy.getDate();
-//   const diaNacimiento = fecha.getDate();
-//   const edadAjustada = (mesActual < mesNacimiento || (mesActual === mesNacimiento && diaActual < diaNacimiento)) 
-//     ? edad - 1 
-//     : edad;
-//   return edadAjustada >= edadMinima && edadAjustada <= edadMaxima;
-// };
-
 const validarConfirmacionPassword = (confirmacion, original) => {
   return validarPasswordsCoinciden(confirmacion, original);
 };
@@ -563,7 +535,6 @@ const handleRegister = async () => {
       apellidoMaterno: formulario.apellidoMaterno,
       correoElectronico: formulario.email,
       telefono: formulario.telefono,
-      fechaNacimiento: formulario.fecha_nacimiento,
       calle: formulario.calle,
       numero: formulario.numero,
       colonia: formulario.colonia,
