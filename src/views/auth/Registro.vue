@@ -133,6 +133,116 @@
                   </template>
                 </CampoValidado>
 
+                <!-- Teléfono -->
+                <CampoValidado
+                  id="telefono"
+                  v-model="formulario.telefono"
+                  :error="errores.telefono"
+                  @update:error="errores.telefono = $event"
+                  @validacion="validacionCampo('telefono', $event)"
+                  @blur="alPerderFoco('telefono')"
+                  label="Teléfono"
+                  placeholder="Tu teléfono"
+                  required
+                  :validator="(valor) => /^\d{10,15}$/.test(valor)"
+                  errorMessage="Por favor ingresa un teléfono válido (10 a 15 dígitos)"
+                >
+                  <template #icono>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                    </svg>
+                  </template>
+                </CampoValidado>
+
+                <!-- Dirección -->
+                <div class="space-y-2">
+                  <div class="font-semibold text-gray-700 mt-2 mb-1">Dirección</div>
+                  <!-- Calle -->
+                  <CampoValidado
+                    id="calle"
+                    v-model="formulario.calle"
+                    :error="errores.calle"
+                    @update:error="errores.calle = $event"
+                    @validacion="validacionCampo('calle', $event)"
+                    @blur="alPerderFoco('calle')"
+                    label="Calle"
+                    placeholder="Nombre de la calle"
+                    required
+                    :validator="(valor) => valor && valor.length > 2"
+                    errorMessage="Por favor ingresa la calle"
+                  />
+                  <!-- Número -->
+                  <CampoValidado
+                    id="numero"
+                    v-model="formulario.numero"
+                    :error="errores.numero"
+                    @update:error="errores.numero = $event"
+                    @validacion="validacionCampo('numero', $event)"
+                    @blur="alPerderFoco('numero')"
+                    label="Número"
+                    placeholder="Número exterior"
+                    required
+                    :validator="(valor) => /^\d+$/.test(valor)"
+                    errorMessage="Por favor ingresa el número"
+                  />
+                  <!-- Colonia -->
+                  <CampoValidado
+                    id="colonia"
+                    v-model="formulario.colonia"
+                    :error="errores.colonia"
+                    @update:error="errores.colonia = $event"
+                    @validacion="validacionCampo('colonia', $event)"
+                    @blur="alPerderFoco('colonia')"
+                    label="Colonia"
+                    placeholder="Colonia"
+                    required
+                    :validator="(valor) => valor && valor.length > 2"
+                    errorMessage="Por favor ingresa la colonia"
+                  />
+                  <!-- Ciudad -->
+                  <CampoValidado
+                    id="ciudad"
+                    v-model="formulario.ciudad"
+                    :error="errores.ciudad"
+                    @update:error="errores.ciudad = $event"
+                    @validacion="validacionCampo('ciudad', $event)"
+                    @blur="alPerderFoco('ciudad')"
+                    label="Ciudad"
+                    placeholder="Ciudad"
+                    required
+                    :validator="(valor) => valor && valor.length > 2"
+                    errorMessage="Por favor ingresa la ciudad"
+                  />
+                  <!-- Estado/Provincia -->
+                  <CampoValidado
+                    id="estado_provincia"
+                    v-model="formulario.estado_provincia"
+                    :error="errores.estado_provincia"
+                    @update:error="errores.estado_provincia = $event"
+                    @validacion="validacionCampo('estado_provincia', $event)"
+                    @blur="alPerderFoco('estado_provincia')"
+                    label="Estado/Provincia"
+                    placeholder="Estado o provincia"
+                    required
+                    :validator="(valor) => valor && valor.length > 2"
+                    errorMessage="Por favor ingresa el estado o provincia"
+                  />
+                  <!-- Código Postal -->
+                  <CampoValidado
+                    id="codigo_postal"
+                    v-model="formulario.codigo_postal"
+                    :error="errores.codigo_postal"
+                    @update:error="errores.codigo_postal = $event"
+                    @validacion="validacionCampo('codigo_postal', $event)"
+                    @blur="alPerderFoco('codigo_postal')"
+                    label="Código Postal"
+                    placeholder="Código postal"
+                    required
+                    :validator="(valor) => /^\d{4,10}$/.test(valor)"
+                    errorMessage="Por favor ingresa un código postal válido"
+                  />
+                </div>
+
                 <!-- Contraseña -->
                 <CampoValidado
                   id="password"
@@ -271,6 +381,62 @@ const esquemaValidacion = {
       validador: 'Por favor ingresa un correo electrónico válido'
     }
   },
+  telefono: {
+    requerido: true,
+    validador: valor => /^\d{10,15}$/.test(valor),
+    mensajes: {
+      requerido: 'El teléfono es obligatorio',
+      validador: 'Por favor ingresa un teléfono válido (10 a 15 dígitos)'
+    }
+  },
+  calle: {
+    requerido: true,
+    validador: valor => valor && valor.length > 2,
+    mensajes: {
+      requerido: 'La calle es obligatoria',
+      validador: 'Por favor ingresa la calle'
+    }
+  },
+  numero: {
+    requerido: true,
+    validador: valor => /^\d+$/.test(valor),
+    mensajes: {
+      requerido: 'El número es obligatorio',
+      validador: 'Por favor ingresa el número'
+    }
+  },
+  colonia: {
+    requerido: true,
+    validador: valor => valor && valor.length > 2,
+    mensajes: {
+      requerido: 'La colonia es obligatoria',
+      validador: 'Por favor ingresa la colonia'
+    }
+  },
+  ciudad: {
+    requerido: true,
+    validador: valor => valor && valor.length > 2,
+    mensajes: {
+      requerido: 'La ciudad es obligatoria',
+      validador: 'Por favor ingresa la ciudad'
+    }
+  },
+  estado_provincia: {
+    requerido: true,
+    validador: valor => valor && valor.length > 2,
+    mensajes: {
+      requerido: 'El estado/provincia es obligatorio',
+      validador: 'Por favor ingresa el estado o provincia'
+    }
+  },
+  codigo_postal: {
+    requerido: true,
+    validador: valor => /^\d{4,10}$/.test(valor),
+    mensajes: {
+      requerido: 'El código postal es obligatorio',
+      validador: 'Por favor ingresa un código postal válido'
+    }
+  },
   password: {
     requerido: true,
     validador: validarPassword,
@@ -295,6 +461,13 @@ const valoresIniciales = {
   apellidoPaterno: '',
   apellidoMaterno: '',
   email: '',
+  telefono: '',
+  calle: '',
+  numero: '',
+  colonia: '',
+  ciudad: '',
+  estado_provincia: '',
+  codigo_postal: '',
   password: '',
   passwordConfirm: ''
 };
@@ -338,6 +511,13 @@ const handleRegister = async () => {
       apellidoPaterno: formulario.apellidoPaterno,
       apellidoMaterno: formulario.apellidoMaterno,
       correoElectronico: formulario.email,
+      telefono: formulario.telefono,
+      calle: formulario.calle,
+      numero: formulario.numero,
+      colonia: formulario.colonia,
+      ciudad: formulario.ciudad,
+      estado_provincia: formulario.estado_provincia,
+      codigo_postal: formulario.codigo_postal,
       contraseña: formulario.password,
       rol_id: 3 // Cliente por defecto
     };
