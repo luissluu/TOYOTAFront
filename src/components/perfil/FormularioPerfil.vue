@@ -109,12 +109,12 @@
     
           <!-- Email -->
           <CampoValidado
-            id="email"
-            v-model="formulario.email"
-            :error="errores.email"
-            @update:error="errores.email = $event"
-            @validacion="validacionCampo('email', $event)"
-            @blur="alPerderFoco('email')"
+            id="correoElectronico"
+            v-model="formulario.correoElectronico"
+            :error="errores.correoElectronico"
+            @update:error="errores.correoElectronico = $event"
+            @validacion="validacionCampo('correoElectronico', $event)"
+            @blur="alPerderFoco('correoElectronico')"
             label="Correo Electrónico"
             placeholder="correo@ejemplo.com"
             required
@@ -195,25 +195,73 @@
           </CampoValidado>
     
           <!-- Dirección -->
-          <CampoValidado
-            id="direccion"
-            v-model="formulario.direccion"
-            :error="errores.direccion"
-            @update:error="errores.direccion = $event"
-            @validacion="validacionCampo('direccion', $event)"
-            @blur="alPerderFoco('direccion')"
-            label="Dirección"
-            placeholder="Tu dirección"
-            required
-            :validator="validarDireccion"
-            errorMessage="Por favor ingresa una dirección válida"
-          >
-            <template #icono>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
-              </svg>
-            </template>
-          </CampoValidado>
+          <div class="space-y-4">
+            <h3 class="text-lg font-medium text-gray-300">Dirección</h3>
+            
+            <!-- Calle -->
+            <CampoValidado
+              id="calle"
+              v-model="formulario.calle"
+              :error="errores.calle"
+              @update:error="errores.calle = $event"
+              @validacion="validacionCampo('calle', $event)"
+              @blur="alPerderFoco('calle')"
+              label="Calle"
+              placeholder="Nombre de la calle"
+              required
+              :validator="validarSoloLetras"
+              errorMessage="Por favor ingresa el nombre de la calle"
+            >
+              <template #icono>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                </svg>
+              </template>
+            </CampoValidado>
+
+            <!-- Número -->
+            <CampoValidado
+              id="numero"
+              v-model="formulario.numero"
+              :error="errores.numero"
+              @update:error="errores.numero = $event"
+              @validacion="validacionCampo('numero', $event)"
+              @blur="alPerderFoco('numero')"
+              label="Número"
+              placeholder="Número exterior"
+              required
+              soloNumeros
+              :validator="validarNumero"
+              errorMessage="Por favor ingresa el número de la dirección"
+            >
+              <template #icono>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                </svg>
+              </template>
+            </CampoValidado>
+
+            <!-- Colonia -->
+            <CampoValidado
+              id="colonia"
+              v-model="formulario.colonia"
+              :error="errores.colonia"
+              @update:error="errores.colonia = $event"
+              @validacion="validacionCampo('colonia', $event)"
+              @blur="alPerderFoco('colonia')"
+              label="Colonia"
+              placeholder="Nombre de la colonia"
+              required
+              :validator="validarSoloLetras"
+              errorMessage="Por favor ingresa el nombre de la colonia"
+            >
+              <template #icono>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                </svg>
+              </template>
+            </CampoValidado>
+          </div>
     
           <!-- Ciudad -->
           <CampoValidado
@@ -349,7 +397,10 @@
   
   const validarDireccion = (valor) => {
     if (!valor) return false;
-    return valor.length >= 5 && valor.length <= 255;
+    // La dirección debe tener al menos 5 caracteres y no más de 255
+    // Debe contener al menos un número y letras
+    const regex = /^(?=.*[0-9])(?=.*[a-zA-Z]).{5,255}$/;
+    return regex.test(valor);
   };
   
   const validarCodigoPostal = (valor) => {
@@ -357,6 +408,12 @@
     // Acepta códigos postales de 5 dígitos
     const regex = /^\d{5}$/;
     return regex.test(valor);
+  };
+  
+  // Agregar las nuevas validaciones
+  const validarNumero = (valor) => {
+    if (!valor) return false;
+    return /^\d+$/.test(valor);
   };
   
   // Actualizar el esquema de validación
@@ -385,7 +442,7 @@
         validador: 'Por favor ingresa un apellido materno válido (solo letras)'
       }
     },
-    email: {
+    correoElectronico: {
       requerido: true,
       validador: validarEmail,
       mensajes: {
@@ -407,12 +464,28 @@
         validador: 'Por favor ingresa un número telefónico válido'
       }
     },
-    direccion: {
+    calle: {
       requerido: true,
-      validador: validarDireccion,
+      validador: validarSoloLetras,
       mensajes: {
-        requerido: 'La dirección es obligatoria',
-        validador: 'Por favor ingresa una dirección válida'
+        requerido: 'La calle es obligatoria',
+        validador: 'Por favor ingresa un nombre de calle válido'
+      }
+    },
+    numero: {
+      requerido: true,
+      validador: validarNumero,
+      mensajes: {
+        requerido: 'El número es obligatorio',
+        validador: 'Por favor ingresa un número válido'
+      }
+    },
+    colonia: {
+      requerido: true,
+      validador: validarSoloLetras,
+      mensajes: {
+        requerido: 'La colonia es obligatoria',
+        validador: 'Por favor ingresa un nombre de colonia válido'
       }
     },
     ciudad: {
@@ -446,10 +519,12 @@
     nombre: '',
     apellidoPaterno: '',
     apellidoMaterno: '',
-    email: '',
+    correoElectronico: '',
     contraseña: '',
     telefono: '',
-    direccion: '',
+    calle: '',
+    numero: '',
+    colonia: '',
     ciudad: '',
     estado_provincia: '',
     codigo_postal: ''
@@ -525,11 +600,11 @@
       esValido = false;
     }
     
-    if (!formulario.email) {
-      errores.email = 'El correo electrónico es obligatorio';
+    if (!formulario.correoElectronico) {
+      errores.correoElectronico = 'El correo electrónico es obligatorio';
       esValido = false;
-    } else if (!validarEmail(formulario.email)) {
-      errores.email = 'Por favor ingresa un correo electrónico válido';
+    } else if (!validarEmail(formulario.correoElectronico)) {
+      errores.correoElectronico = 'Por favor ingresa un correo electrónico válido';
       esValido = false;
     }
     
@@ -554,12 +629,19 @@
       esValido = false;
     }
     
-    // Si hay dirección, validarla
-    if (!formulario.direccion) {
-      errores.direccion = 'La dirección es obligatoria';
+    // Validar campos de dirección
+    if (!formulario.calle) {
+      errores.calle = 'La calle es obligatoria';
       esValido = false;
-    } else if (!validarDireccion(formulario.direccion)) {
-      errores.direccion = 'Por favor ingresa una dirección válida';
+    }
+
+    if (!formulario.numero) {
+      errores.numero = 'El número es obligatorio';
+      esValido = false;
+    }
+
+    if (!formulario.colonia) {
+      errores.colonia = 'La colonia es obligatoria';
       esValido = false;
     }
     
@@ -595,6 +677,9 @@
       return;
     }
     
+    // Construir la dirección completa
+    const direccionCompleta = `${formulario.calle} ${formulario.numero}, ${formulario.colonia}`;
+
     console.log("Formulario válido, emitiendo evento guardar con datos:", formulario);
     
     // Iniciar carga
@@ -605,6 +690,7 @@
       // Emitir evento con los datos
       emit('guardar', {
         ...formulario,
+        direccion: direccionCompleta,
         id: props.usuario.id || Date.now().toString(),
       });
       
