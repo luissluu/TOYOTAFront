@@ -154,6 +154,27 @@
                   </template>
                 </CampoValidado>
 
+                <!-- Fecha de Nacimiento -->
+                <CampoValidado
+                  id="fecha_nacimiento"
+                  type="date"
+                  v-model="formulario.fecha_nacimiento"
+                  :error="errores.fecha_nacimiento"
+                  @update:error="errores.fecha_nacimiento = $event"
+                  @validacion="validacionCampo('fecha_nacimiento', $event)"
+                  @blur="alPerderFoco('fecha_nacimiento')"
+                  label="Fecha de Nacimiento"
+                  required
+                  :validator="validarFechaNacimiento"
+                  errorMessage="Por favor ingresa una fecha de nacimiento válida"
+                >
+                  <template #icono>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                    </svg>
+                  </template>
+                </CampoValidado>
+
                 <!-- Dirección -->
                 <div class="space-y-2">
                   <div class="font-semibold text-gray-700 mt-2 mb-1">Dirección</div>
@@ -452,6 +473,14 @@ const esquemaValidacion = {
       requerido: 'Por favor, confirma tu contraseña',
       validador: 'Las contraseñas no coinciden'
     }
+  },
+  fecha_nacimiento: {
+    requerido: true,
+    validador: validarFechaNacimiento,
+    mensajes: {
+      requerido: 'La fecha de nacimiento es obligatoria',
+      validador: 'Debes tener entre 18 y 100 años'
+    }
   }
 };
 
@@ -462,6 +491,7 @@ const valoresIniciales = {
   apellidoMaterno: '',
   email: '',
   telefono: '',
+  fecha_nacimiento: '',
   calle: '',
   numero: '',
   colonia: '',
@@ -492,6 +522,31 @@ const validarNombre = (valor) => {
   return validarSoloLetras(valor);
 };
 
+const validarFechaNacimiento = (valor) => {
+  if (!valor) return false;
+  const fecha = new Date(valor);
+  const hoy = new Date();
+  const edadMinima = 18;
+  const edadMaxima = 100;
+  
+  // Verificar que la fecha sea válida
+  if (isNaN(fecha.getTime())) return false;
+  
+  // Calcular la edad
+  const edad = hoy.getFullYear() - fecha.getFullYear();
+  const mesActual = hoy.getMonth();
+  const mesNacimiento = fecha.getMonth();
+  const diaActual = hoy.getDate();
+  const diaNacimiento = fecha.getDate();
+  
+  // Ajustar la edad si aún no ha cumplido años
+  const edadAjustada = (mesActual < mesNacimiento || (mesActual === mesNacimiento && diaActual < diaNacimiento)) 
+    ? edad - 1 
+    : edad;
+  
+  return edadAjustada >= edadMinima && edadAjustada <= edadMaxima;
+};
+
 const validarConfirmacionPassword = (confirmacion, original) => {
   return validarPasswordsCoinciden(confirmacion, original);
 };
@@ -512,6 +567,7 @@ const handleRegister = async () => {
       apellidoMaterno: formulario.apellidoMaterno,
       correoElectronico: formulario.email,
       telefono: formulario.telefono,
+      fechaNacimiento: formulario.fecha_nacimiento,
       calle: formulario.calle,
       numero: formulario.numero,
       colonia: formulario.colonia,
