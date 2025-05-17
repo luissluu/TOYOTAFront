@@ -550,7 +550,6 @@ const validacionCampo = (campo, esValido) => {
 
 // Función para manejar el registro
 const handleRegister = async () => {
-  console.log('Intentando registrar...');
   try {
     const datosRegistro = {
       nombre: formulario.nombre,
@@ -558,6 +557,7 @@ const handleRegister = async () => {
       apellidoMaterno: formulario.apellidoMaterno,
       correoElectronico: formulario.email,
       telefono: formulario.telefono,
+      fecha_nacimiento: formulario.fecha_nacimiento,
       calle: formulario.calle,
       numero: formulario.numero,
       colonia: formulario.colonia,
@@ -565,7 +565,6 @@ const handleRegister = async () => {
       estado_provincia: formulario.estado_provincia,
       codigo_postal: formulario.codigo_postal,
       contraseña: formulario.password,
-      fechaNacimiento: formulario.fecha_nacimiento,
       rol_id: 3 // Cliente por defecto
     };
     const res = await registerUsuario(datosRegistro);
@@ -573,8 +572,15 @@ const handleRegister = async () => {
     router.push('/login');
     return true;
   } catch (error) {
-    errorGlobal.value = error.message;
-    throw new Error('Ha ocurrido un error al registrarse. Por favor, intenta más tarde.');
+    // Mostrar mensaje del backend si existe
+    if (error.response && error.response.data && error.response.data.message) {
+      errorGlobal.value = error.response.data.message;
+    } else if (error.message) {
+      errorGlobal.value = error.message;
+    } else {
+      errorGlobal.value = 'Ha ocurrido un error al registrarse. Por favor, intenta más tarde.';
+    }
+    throw new Error(errorGlobal.value);
   }
 };
 
