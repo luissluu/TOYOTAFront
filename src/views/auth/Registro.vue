@@ -155,7 +155,6 @@
                 </CampoValidado>
 
                 <!-- Fecha de Nacimiento -->
-                <!--
                 <CampoValidado
                   id="fecha_nacimiento"
                   type="date"
@@ -175,7 +174,6 @@
                     </svg>
                   </template>
                 </CampoValidado>
-                -->
 
                 <!-- Dirección -->
                 <div class="space-y-2">
@@ -476,6 +474,14 @@ const esquemaValidacion = {
       validador: 'Las contraseñas no coinciden'
     }
   },
+  fecha_nacimiento: {
+    requerido: true,
+    validador: validarFechaNacimiento,
+    mensajes: {
+      requerido: 'La fecha de nacimiento es obligatoria',
+      validador: 'Debes tener entre 18 y 100 años'
+    }
+  },
 };
 
 // Valores iniciales del formulario
@@ -492,7 +498,8 @@ const valoresIniciales = {
   estado_provincia: '',
   codigo_postal: '',
   password: '',
-  passwordConfirm: ''
+  passwordConfirm: '',
+  fecha_nacimiento: '',
 };
 
 // Usar el hook de formulario
@@ -519,6 +526,21 @@ const validarConfirmacionPassword = (confirmacion, original) => {
   return validarPasswordsCoinciden(confirmacion, original);
 };
 
+const validarFechaNacimiento = (valor) => {
+  if (!valor) return false;
+  const fecha = new Date(valor);
+  const hoy = new Date();
+  const edadMinima = 18;
+  const edadMaxima = 100;
+  if (isNaN(fecha.getTime())) return false;
+  let edad = hoy.getFullYear() - fecha.getFullYear();
+  const m = hoy.getMonth() - fecha.getMonth();
+  if (m < 0 || (m === 0 && hoy.getDate() < fecha.getDate())) {
+    edad--;
+  }
+  return edad >= edadMinima && edad <= edadMaxima;
+};
+
 // Función para manejar la validación de un campo
 const validacionCampo = (campo, esValido) => {
   // Puedes hacer algo adicional aquí si es necesario
@@ -542,6 +564,7 @@ const handleRegister = async () => {
       estado_provincia: formulario.estado_provincia,
       codigo_postal: formulario.codigo_postal,
       contraseña: formulario.password,
+      fechaNacimiento: formulario.fecha_nacimiento,
       rol_id: 3 // Cliente por defecto
     };
     const res = await registerUsuario(datosRegistro);
