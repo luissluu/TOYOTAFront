@@ -155,6 +155,7 @@
                 </CampoValidado>
 
                 <!-- Fecha de Nacimiento -->
+                <!--
                 <CampoValidado
                   id="fecha_nacimiento"
                   type="date"
@@ -174,6 +175,7 @@
                     </svg>
                   </template>
                 </CampoValidado>
+                -->
 
                 <!-- Dirección -->
                 <div class="space-y-2">
@@ -522,30 +524,24 @@ const validarNombre = (valor) => {
   return validarSoloLetras(valor);
 };
 
-const validarFechaNacimiento = (valor) => {
-  if (!valor) return false;
-  const fecha = new Date(valor);
-  const hoy = new Date();
-  const edadMinima = 18;
-  const edadMaxima = 100;
-  
-  // Verificar que la fecha sea válida
-  if (isNaN(fecha.getTime())) return false;
-  
-  // Calcular la edad
-  const edad = hoy.getFullYear() - fecha.getFullYear();
-  const mesActual = hoy.getMonth();
-  const mesNacimiento = fecha.getMonth();
-  const diaActual = hoy.getDate();
-  const diaNacimiento = fecha.getDate();
-  
-  // Ajustar la edad si aún no ha cumplido años
-  const edadAjustada = (mesActual < mesNacimiento || (mesActual === mesNacimiento && diaActual < diaNacimiento)) 
-    ? edad - 1 
-    : edad;
-  
-  return edadAjustada >= edadMinima && edadAjustada <= edadMaxima;
-};
+// Comentar función y validación de fecha de nacimiento
+// const validarFechaNacimiento = (valor) => {
+//   if (!valor) return false;
+//   const fecha = new Date(valor);
+//   const hoy = new Date();
+//   const edadMinima = 18;
+//   const edadMaxima = 100;
+//   if (isNaN(fecha.getTime())) return false;
+//   const edad = hoy.getFullYear() - fecha.getFullYear();
+//   const mesActual = hoy.getMonth();
+//   const mesNacimiento = fecha.getMonth();
+//   const diaActual = hoy.getDate();
+//   const diaNacimiento = fecha.getDate();
+//   const edadAjustada = (mesActual < mesNacimiento || (mesActual === mesNacimiento && diaActual < diaNacimiento)) 
+//     ? edad - 1 
+//     : edad;
+//   return edadAjustada >= edadMinima && edadAjustada <= edadMaxima;
+// };
 
 const validarConfirmacionPassword = (confirmacion, original) => {
   return validarPasswordsCoinciden(confirmacion, original);
