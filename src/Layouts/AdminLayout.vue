@@ -67,10 +67,8 @@
 
           <!-- Enlace a Órdenes de Servicio -->
           <router-link to="/admin/ordenes" class="p-2 transition-colors duration-300 rounded-lg group" :class="{ 'bg-white': $route.path.startsWith('/admin/ordenes'), 'hover:bg-white': !$route.path.startsWith('/admin/ordenes') }">
-            <svg class="w-5 h-5 transition-colors duration-300" :class="{ 'text-blue-500': $route.path.startsWith('/admin/ordenes'), 'text-gray-400 group-hover:text-blue-500': !$route.path.startsWith('/admin/ordenes') }" viewBox="0 0 1024 1024" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M300 462.4h424.8v48H300v-48zM300 673.6H560v48H300v-48z" />
-              <path d="M818.4 981.6H205.6c-12.8 0-24.8-2.4-36.8-7.2-11.2-4.8-21.6-11.2-29.6-20-8.8-8.8-15.2-20-29.6-4.8-12-7.2-24-7.2-36.8V250.4c0-12.8 2.4-24.8 7.2-36.8 4.8-11.2 11.2-21.6 20-29.6 8.8-8.8 18.4-15.2 20-29.6 4.8-12 7.2-24 7.2-36.8V250.4c0-12.8 2.4-24.8 7.2-36.8 4.8-11.2 11.2-21.6 20-29.6 8.8-8.8 18.4-15.2 20-29.6 4.8-12 7.2-24 7.2-36.8v637.6c0 12.8-2.4 24.8-7.2 36.8-4.8 11.2-11.2 21.6-20 29.6-8.8 8.8-18.4 15.2-29.6 20-12 5.6-24 8-36.8 8z" />
-              <path d="M747.2 297.6H276.8V144c0-32.8 26.4-59.2 59.2-59.2h60.8c21.6-43.2 66.4-71.2 116-71.2 49.6 0 94.4 28 116 71.2h60.8c32.8 0 59.2 26.4 59.2 59.2l-1.6 153.6z m-423.2-47.2h376.8V144c0-6.4-5.6-12-12-12H595.2l-5.6-16c-11.2-32.8-42.4-55.2-77.6-55.2-35.2 0-66.4 22.4-77.6 55.2l-5.6 16H335.2c-6.4 0-12 5.6-12 12v106.4z" />
+            <svg class="w-5 h-5" :class="{ 'stroke-blue-700': $route.path.startsWith('/admin/ordenes'), 'stroke-gray-100 group-hover:stroke-blue-700': !$route.path.startsWith('/admin/ordenes') }" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0a2 2 0 002 2h2a2 2 0 002-2m-6 0V7a2 2 0 012-2h2a2 2 0 012 2v10" />
             </svg>
           </router-link>
         </nav>
@@ -116,8 +114,8 @@
               leave-to-class="transform scale-95 opacity-0"
             >
               <div class="absolute right-0 z-50 w-56 p-2 bg-white border rounded-lg top-16 lg:top-20" v-show="dropdownOpen">
-                <router-link to="/admin/perfil" class="block px-4 py-2 text-gray-800 transition-colors duration-300 rounded-lg cursor-pointer hover:bg-gray-100">Perfil de Administrador</router-link>
-                <router-link to="/admin/cambiar-contrasena" class="block px-4 py-2 text-gray-800 transition-colors duration-300 rounded-lg cursor-pointer hover:bg-gray-100">Restablecer Contraseña</router-link>
+                <router-link to="/admin/perfil" class="block px-4 py-2 text-gray-800 transition-colors duration-300 rounded-lg cursor-pointer hover:bg-gray-100" @click="dropdownOpen = false">Perfil de Administrador</router-link>
+                <router-link to="/admin/cambiar-contrasena" class="block px-4 py-2 text-gray-800 transition-colors duration-300 rounded-lg cursor-pointer hover:bg-gray-100" @click="dropdownOpen = false">Restablecer Contraseña</router-link>
               </div>
             </transition>
           </div>
