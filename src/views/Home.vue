@@ -339,17 +339,23 @@
 <script>
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
+import { useAuthStore } from '@/components/stores/auth'
 
 export default {
   name: 'HomePage',
   setup() {
-    // Reemplaza esto por la forma en que obtienes el usuarioId en tu app
-    const usuarioId = localStorage.getItem('usuario_id') || 1
+    const authStore = useAuthStore()
     const ordenes = ref([])
 
     const cargarOrdenes = async () => {
       try {
+        // Esperar a que el usuario esté disponible
+        await authStore.restoreSession?.()
+        const usuarioId = authStore.user?.id
+        console.log('usuarioId usado para cargar órdenes:', usuarioId)
+        if (!usuarioId) return
         const { data } = await axios.get(`/api/ordenes-servicio/usuario/${usuarioId}`)
+        console.log('Órdenes del usuario:', data)
         ordenes.value = data
       } catch (error) {
         console.error('Error al cargar órdenes del usuario:', error)
