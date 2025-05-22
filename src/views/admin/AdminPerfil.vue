@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useAuthStore } from '../../components/stores/auth';
 
 export default {
@@ -64,6 +64,17 @@ export default {
       apellidoMaterno: user?.apellidoMaterno || '',
       correoElectronico: user?.correoElectronico || '',
       telefono: user?.telefono || ''
+    });
+
+    onMounted(async () => {
+      const updatedUser = await authStore.fetchUser();
+      perfil.value = {
+        nombre: updatedUser?.nombre || '',
+        apellidoPaterno: updatedUser?.apellidoPaterno || '',
+        apellidoMaterno: updatedUser?.apellidoMaterno || '',
+        correoElectronico: updatedUser?.correoElectronico || '',
+        telefono: updatedUser?.telefono || ''
+      };
     });
 
     const cambiarFoto = () => {
