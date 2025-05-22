@@ -25,23 +25,23 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-1">Nombre</label>
-            <input v-model="perfil.nombre" type="text" readonly class="w-full bg-gray-700 border-gray-600 text-white rounded-md px-4 py-2 focus:outline-none cursor-default" >
+            <div class="w-full bg-gray-700 border border-gray-600 text-white rounded-md px-4 py-2">{{ perfil.nombre }}</div>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-1">Apellido Paterno</label>
-            <input v-model="perfil.apellidoPaterno" type="text" readonly class="w-full bg-gray-700 border-gray-600 text-white rounded-md px-4 py-2 focus:outline-none cursor-default" >
+            <div class="w-full bg-gray-700 border border-gray-600 text-white rounded-md px-4 py-2">{{ perfil.apellidoPaterno }}</div>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-1">Apellido Materno</label>
-            <input v-model="perfil.apellidoMaterno" type="text" readonly class="w-full bg-gray-700 border-gray-600 text-white rounded-md px-4 py-2 focus:outline-none cursor-default" >
+            <div class="w-full bg-gray-700 border border-gray-600 text-white rounded-md px-4 py-2">{{ perfil.apellidoMaterno }}</div>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-1">Correo electrónico</label>
-            <input v-model="perfil.correoElectronico" type="email" readonly class="w-full bg-gray-700 border-gray-600 text-white rounded-md px-4 py-2 focus:outline-none cursor-default" >
+            <div class="w-full bg-gray-700 border border-gray-600 text-white rounded-md px-4 py-2">{{ perfil.correoElectronico }}</div>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-1">Teléfono</label>
-            <input v-model="perfil.telefono" type="tel" readonly class="w-full bg-gray-700 border-gray-600 text-white rounded-md px-4 py-2 focus:outline-none cursor-default" >
+            <div class="w-full bg-gray-700 border border-gray-600 text-white rounded-md px-4 py-2">{{ perfil.telefono }}</div>
           </div>
         </div>
       </form>

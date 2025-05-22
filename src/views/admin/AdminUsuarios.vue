@@ -380,6 +380,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { usuarioService } from '../../services/usuarioService';
 import { notificacionStore } from '../../components/stores/notificacion';
+import { useAuthStore } from '../../components/stores/auth';
 
 export default {
   name: 'AdminUsuarios',
@@ -426,6 +427,8 @@ export default {
       hasta: 10,
       total: 0
     });
+
+    const authStore = useAuthStore();
 
     // Cargar usuarios
     const cargarUsuarios = async () => {
@@ -504,6 +507,10 @@ export default {
         if (usuarioSeleccionado.value) {
           await usuarioService.actualizarUsuario(usuarioSeleccionado.value.id, formulario.value);
           notificacionStore.mostrar('Usuario actualizado correctamente', 'success');
+          // Si el usuario editado es el mismo que el autenticado, refrescar datos
+          if (authStore.user && usuarioSeleccionado.value.id === authStore.user.id) {
+            await authStore.fetchUser();
+          }
         } else {
           await usuarioService.crearUsuario(formulario.value);
           notificacionStore.mostrar('Usuario creado correctamente', 'success');
