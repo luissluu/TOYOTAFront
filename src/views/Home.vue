@@ -6,24 +6,21 @@
         <div v-for="orden in ordenes" :key="orden.orden_id" class="mb-8">
             <script>console.log('Orden:', orden)</script>
             <h3 class="text-base font-semibold text-blue-300 mb-4">Orden #{{ orden.orden_id }}</h3>
-            <div v-if="orden.detalles && orden.detalles.length">
-                <div v-for="servicio in orden.detalles" :key="servicio.detalle_id" class="mb-6">
-                    <div class="text-white font-medium mb-2">{{ servicio.nombre_servicio }}</div>
-                    <div class="flex items-center justify-start gap-4">
-                        <div v-for="(step, idx) in steps" :key="step.key" class="flex items-center">
-                            <div :class="[
-                                'w-10 h-10 flex items-center justify-center rounded-full border-2 font-bold',
-                                getStepClass(servicio.estado, step.key)
-                            ]">
-                                <span v-html="step.icon"></span>
-                            </div>
-                            <span class="ml-2 text-sm font-semibold" :class="getStepTextClass(servicio.estado, step.key)">{{ step.label }}</span>
-                            <span v-if="idx < steps.length - 1" class="w-8 h-1 bg-gray-600 mx-2 rounded"></span>
+            <div v-for="servicio in orden.detalles" :key="servicio.detalle_id" class="mb-6">
+                <div class="text-white font-medium mb-2">{{ servicio.nombre_servicio }}</div>
+                <div class="flex items-center justify-start gap-4">
+                    <div v-for="(step, idx) in steps" :key="step.key" class="flex items-center">
+                        <div :class="[
+                            'w-10 h-10 flex items-center justify-center rounded-full border-2 font-bold',
+                            getStepClass(servicio.estado, step.key)
+                        ]">
+                            <span>{{ step.icon }}</span>
                         </div>
+                        <span class="ml-2 text-sm font-semibold" :class="getStepTextClass(servicio.estado, step.key)">{{ step.label }}</span>
+                        <span v-if="idx < steps.length - 1" class="w-8 h-1 bg-gray-600 mx-2 rounded"></span>
                     </div>
                 </div>
             </div>
-            <div v-else class="text-gray-400 italic">Esta orden no tiene servicios registrados.</div>
         </div>
     </div>
 
@@ -348,23 +345,25 @@ import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/components/stores/auth'
 
 const steps = [
-  { key: 'recibido', label: 'Recibido', icon: '✔️' },
-  { key: 'mantenimiento', label: 'Mantenimiento', icon: '🛠️' },
-  { key: 'calidad', label: 'Control de Calidad', icon: '🔍' },
-  { key: 'entrega', label: 'Entrega', icon: '🚗' }
+  { key: 'abierta', label: 'Abierta', icon: '🟡' },
+  { key: 'en progreso', label: 'En progreso', icon: '🔵' },
+  { key: 'finalizada', label: 'Finalizada', icon: '🟢' }
 ]
 
 function getStepClass(estado, stepKey) {
-  // Puedes personalizar la lógica según tus estados reales
-  if (estado === 'completado' && stepKey === 'entrega') return 'bg-green-500 border-green-500 text-white';
-  if (estado === 'en progreso' && stepKey === 'mantenimiento') return 'bg-yellow-400 border-yellow-400 text-white';
-  if (estado === 'pendiente' && stepKey === 'recibido') return 'bg-gray-400 border-gray-400 text-white';
+  if (estado === stepKey) {
+    if (stepKey === 'abierta') return 'bg-yellow-400 border-yellow-400 text-white';
+    if (stepKey === 'en progreso') return 'bg-blue-500 border-blue-500 text-white';
+    if (stepKey === 'finalizada') return 'bg-green-500 border-green-500 text-white';
+  }
   return 'bg-gray-800 border-gray-600 text-gray-400';
 }
 function getStepTextClass(estado, stepKey) {
-  if (estado === 'completado' && stepKey === 'entrega') return 'text-green-400';
-  if (estado === 'en progreso' && stepKey === 'mantenimiento') return 'text-yellow-400';
-  if (estado === 'pendiente' && stepKey === 'recibido') return 'text-gray-400';
+  if (estado === stepKey) {
+    if (stepKey === 'abierta') return 'text-yellow-400';
+    if (stepKey === 'en progreso') return 'text-blue-400';
+    if (stepKey === 'finalizada') return 'text-green-400';
+  }
   return 'text-gray-300';
 }
 
@@ -376,13 +375,10 @@ export default {
 
     const cargarOrdenes = async () => {
       try {
-        // Esperar a que el usuario esté disponible
         await authStore.restoreSession?.()
         const usuarioId = authStore.user?.id
-        console.log('usuarioId usado para cargar órdenes:', usuarioId)
         if (!usuarioId) return
         const { data } = await axios.get(`/api/ordenes-servicio/usuario/${usuarioId}`)
-        console.log('Órdenes del usuario:', data)
         ordenes.value = data
       } catch (error) {
         console.error('Error al cargar órdenes del usuario:', error)
