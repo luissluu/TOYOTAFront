@@ -206,6 +206,7 @@
         </form>
       </div>
     </div>
+    <ToastNotificacion v-if="notificacion.visible" :mensaje="notificacion.mensaje" :tipo="notificacion.tipo" />
   </div>
 </template>
 
@@ -214,9 +215,14 @@ import { ref, onMounted, computed, watch } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '../../components/stores/auth'
 import { useRouter } from 'vue-router'
+import { notificacionStore } from '../../components/stores/notificacion'
+import ToastNotificacion from '../../components/ui/ToastNotificacion.vue'
 
 export default {
   name: 'AdminCrearOrden',
+  components: {
+    ToastNotificacion
+  },
   setup() {
     const authStore = useAuthStore()
     const router = useRouter()
@@ -322,7 +328,7 @@ export default {
       try {
         const creadoPorId = authStore.user?.id;
         if (!creadoPorId) {
-          alert('No se pudo obtener el ID del administrador. Vuelve a iniciar sesión.');
+          notificacionStore.mostrar('No se pudo obtener el ID del administrador. Vuelve a iniciar sesión.', 'error');
           return;
         }
         const fechaInicio = form.value.fecha_inicio ? new Date(form.value.fecha_inicio).toISOString() : null;
@@ -339,11 +345,11 @@ export default {
           creado_por: creadoPorId
         };
         await axios.post('/api/ordenes-servicio', ordenData);
-        alert('Orden creada exitosamente');
+        notificacionStore.mostrar('Orden creada exitosamente', 'success');
         router.push('/admin');
       } catch (error) {
         console.error('Error al crear orden:', error);
-        alert(error.response?.data?.error || 'Error al crear la orden');
+        notificacionStore.mostrar(error.response?.data?.error || 'Error al crear la orden', 'error');
       }
     }
 
@@ -369,7 +375,8 @@ export default {
       formatearFecha,
       crearOrden,
       vehiculosFiltrados,
-      citasFiltradas
+      citasFiltradas,
+      notificacion: notificacionStore.state
     }
   }
 }
