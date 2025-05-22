@@ -356,19 +356,38 @@ const steps = [
   { key: 'finalizada', label: 'Finalizada', icon: '🟢' }
 ]
 
+const stepOrder = ['abierta', 'en progreso', 'finalizada']
+
 function getStepClass(estado, stepKey) {
-  if (estado === stepKey) {
+  const currentIdx = stepOrder.indexOf(estado)
+  const stepIdx = stepOrder.indexOf(stepKey)
+  if (stepIdx < currentIdx) {
+    // Pasos completados
     if (stepKey === 'abierta') return 'bg-yellow-400 border-yellow-400 text-white';
     if (stepKey === 'en progreso') return 'bg-blue-500 border-blue-500 text-white';
     if (stepKey === 'finalizada') return 'bg-green-500 border-green-500 text-white';
   }
+  if (stepIdx === currentIdx) {
+    // Paso actual
+    if (stepKey === 'abierta') return 'bg-yellow-400 border-yellow-400 text-white animate-pulse';
+    if (stepKey === 'en progreso') return 'bg-blue-500 border-blue-500 text-white animate-pulse';
+    if (stepKey === 'finalizada') return 'bg-green-500 border-green-500 text-white animate-pulse';
+  }
+  // Pasos futuros
   return 'bg-gray-800 border-gray-600 text-gray-400';
 }
 function getStepTextClass(estado, stepKey) {
-  if (estado === stepKey) {
+  const currentIdx = stepOrder.indexOf(estado)
+  const stepIdx = stepOrder.indexOf(stepKey)
+  if (stepIdx < currentIdx) {
     if (stepKey === 'abierta') return 'text-yellow-400';
     if (stepKey === 'en progreso') return 'text-blue-400';
     if (stepKey === 'finalizada') return 'text-green-400';
+  }
+  if (stepIdx === currentIdx) {
+    if (stepKey === 'abierta') return 'text-yellow-400 font-bold';
+    if (stepKey === 'en progreso') return 'text-blue-400 font-bold';
+    if (stepKey === 'finalizada') return 'text-green-400 font-bold';
   }
   return 'text-gray-300';
 }

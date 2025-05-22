@@ -144,6 +144,13 @@ const routes = [
     meta: { requiresAuth: true },
     beforeEnter: requireAuth
   },
+  {
+    path: '/ordenes',
+    name: 'OrdenesUsuario',
+    component: () => import('../views/OrdenesUsuario.vue'),
+    meta: { requiresAuth: true },
+    beforeEnter: requireAuth
+  },
 
   // Rutas de administrador (protegidas)
   {
