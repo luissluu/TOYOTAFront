@@ -5,7 +5,13 @@
         <h2 class="text-xl font-bold text-white mb-4">Tus servicios en curso</h2>
         <div v-for="orden in ordenes.slice(0, 4)" :key="orden.orden_id" class="mb-8">
             <script>console.log('Orden:', orden)</script>
-            <h3 class="text-base font-semibold text-blue-300 mb-4">Orden #{{ orden.orden_id }}</h3>
+            <h3 class="text-base font-semibold text-blue-300 mb-4 flex items-center">
+                Orden #{{ orden.orden_id }}
+                <span v-if="(orden.estado || '').toLowerCase().trim() === 'finalizada'" class="ml-3 px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs font-bold flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    Finalizada
+                </span>
+            </h3>
             <div v-for="servicio in orden.detalles" :key="servicio.detalle_id" class="mb-6">
                 <script>console.log('Estado servicio:', servicio.estado)</script>
                 <div class="text-white font-medium mb-2">{{ servicio.nombre_servicio }}</div>
