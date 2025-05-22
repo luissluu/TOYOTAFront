@@ -13,11 +13,11 @@
                     <div v-for="(step, idx) in steps" :key="step.key" class="flex items-center">
                         <div :class="[
                             'w-10 h-10 flex items-center justify-center rounded-full border-2 font-bold',
-                            getStepClass(servicio.estado, step.key)
+                            getStepClass(mapEstadoStepper(servicio.estado), step.key)
                         ]">
                             <span>{{ step.icon }}</span>
                         </div>
-                        <span class="ml-2 text-sm font-semibold" :class="getStepTextClass(servicio.estado, step.key)">{{ step.label }}</span>
+                        <span class="ml-2 text-sm font-semibold" :class="getStepTextClass(mapEstadoStepper(servicio.estado), step.key)">{{ step.label }}</span>
                         <span v-if="idx < steps.length - 1" class="w-8 h-1 bg-gray-600 mx-2 rounded"></span>
                     </div>
                 </div>
@@ -393,6 +393,13 @@ function getStepTextClass(estado, stepKey) {
   return 'text-gray-300';
 }
 
+function mapEstadoStepper(estado) {
+  const norm = (estado || '').toLowerCase().trim()
+  if (norm === 'pendiente') return 'en progreso'
+  if (norm === 'completado') return 'finalizada'
+  return 'abierta'
+}
+
 export default {
   name: 'HomePage',
   setup() {
@@ -415,7 +422,7 @@ export default {
       cargarOrdenes()
     })
 
-    return { ordenes, steps, getStepClass, getStepTextClass }
+    return { ordenes, steps, getStepClass, getStepTextClass, mapEstadoStepper }
   }
 }
 </script>
