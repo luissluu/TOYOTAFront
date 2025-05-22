@@ -112,7 +112,6 @@
                       </div>
                       <router-link to="/perfil" class="block px-4 py-2 text-gray-800 transition-colors duration-300 rounded-lg cursor-pointer hover:bg-gray-100" @click="dropdownOpen = false">Perfil</router-link>
                       <div @click="showPasswordModal = true; dropdownOpen = false" class="px-4 py-2 text-gray-800 transition-colors duration-300 rounded-lg cursor-pointer hover:bg-gray-100">Cambiar contraseña</div>
-                      <div @click="añadirVehiculo" class="px-4 py-2 text-gray-800 transition-colors duration-300 rounded-lg cursor-pointer hover:bg-gray-100">Añadir vehículo</div>
                     </div>
                   </transition>
                 </div>
@@ -381,6 +380,7 @@ export default {
       },
 
       añadirVehiculo() {
+        this.dropdownOpen = false;
         this.$router.push('/configuracion');
         localStorage.setItem('abrirModalVehiculo', '1');
       },
