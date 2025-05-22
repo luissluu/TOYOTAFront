@@ -220,6 +220,7 @@ export default {
       try {
         await axios.put(`/api/detalles-orden/${detalleId}/estado`, { estado: 'completado' })
         await cargarDetalles()
+        await cargarOrden()
         notificacionStore.mostrar('Servicio marcado como completado', 'success')
       } catch (error) {
         notificacionStore.mostrar('Error al marcar como completado', 'error')
