@@ -7,13 +7,13 @@
             <script>console.log('Orden:', orden)</script>
             <h3 class="text-base font-semibold text-blue-300 mb-4">Orden #{{ orden.orden_id }}</h3>
             <div v-for="servicio in orden.detalles" :key="servicio.detalle_id" class="mb-6">
+                <script>console.log('Estado servicio:', servicio.estado)</script>
                 <div class="text-white font-medium mb-2">{{ servicio.nombre_servicio }}</div>
                 <div class="flex items-center justify-start gap-4">
                     <div v-for="(step, idx) in steps" :key="step.key" class="flex items-center">
                         <div :class="[
                             'w-10 h-10 flex items-center justify-center rounded-full border-2 font-bold',
-                            getStepClass(servicio.estado, step.key),
-                            servicio.estado === step.key ? 'animate-pulse' : ''
+                            getStepClass(servicio.estado, step.key)
                         ]">
                             <span>{{ step.icon }}</span>
                         </div>
@@ -359,35 +359,36 @@ const steps = [
 const stepOrder = ['abierta', 'en progreso', 'finalizada']
 
 function getStepClass(estado, stepKey) {
-  const currentIdx = stepOrder.indexOf(estado)
-  const stepIdx = stepOrder.indexOf(stepKey)
+  const normEstado = (estado || '').toLowerCase().trim()
+  const normStepKey = (stepKey || '').toLowerCase().trim()
+  const currentIdx = stepOrder.indexOf(normEstado)
+  const stepIdx = stepOrder.indexOf(normStepKey)
   if (stepIdx < currentIdx) {
-    // Pasos completados
-    if (stepKey === 'abierta') return 'bg-yellow-400 border-yellow-400 text-white';
-    if (stepKey === 'en progreso') return 'bg-blue-500 border-blue-500 text-white';
-    if (stepKey === 'finalizada') return 'bg-green-500 border-green-500 text-white';
+    if (normStepKey === 'abierta') return 'bg-yellow-400 border-yellow-400 text-white';
+    if (normStepKey === 'en progreso') return 'bg-blue-500 border-blue-500 text-white';
+    if (normStepKey === 'finalizada') return 'bg-green-500 border-green-500 text-white';
   }
   if (stepIdx === currentIdx) {
-    // Paso actual
-    if (stepKey === 'abierta') return 'bg-yellow-400 border-yellow-400 text-white animate-pulse';
-    if (stepKey === 'en progreso') return 'bg-blue-500 border-blue-500 text-white animate-pulse';
-    if (stepKey === 'finalizada') return 'bg-green-500 border-green-500 text-white animate-pulse';
+    if (normStepKey === 'abierta') return 'bg-yellow-400 border-yellow-400 text-white animate-pulse';
+    if (normStepKey === 'en progreso') return 'bg-blue-500 border-blue-500 text-white animate-pulse';
+    if (normStepKey === 'finalizada') return 'bg-green-500 border-green-500 text-white animate-pulse';
   }
-  // Pasos futuros
   return 'bg-gray-800 border-gray-600 text-gray-400';
 }
 function getStepTextClass(estado, stepKey) {
-  const currentIdx = stepOrder.indexOf(estado)
-  const stepIdx = stepOrder.indexOf(stepKey)
+  const normEstado = (estado || '').toLowerCase().trim()
+  const normStepKey = (stepKey || '').toLowerCase().trim()
+  const currentIdx = stepOrder.indexOf(normEstado)
+  const stepIdx = stepOrder.indexOf(normStepKey)
   if (stepIdx < currentIdx) {
-    if (stepKey === 'abierta') return 'text-yellow-400';
-    if (stepKey === 'en progreso') return 'text-blue-400';
-    if (stepKey === 'finalizada') return 'text-green-400';
+    if (normStepKey === 'abierta') return 'text-yellow-400';
+    if (normStepKey === 'en progreso') return 'text-blue-400';
+    if (normStepKey === 'finalizada') return 'text-green-400';
   }
   if (stepIdx === currentIdx) {
-    if (stepKey === 'abierta') return 'text-yellow-400 font-bold';
-    if (stepKey === 'en progreso') return 'text-blue-400 font-bold';
-    if (stepKey === 'finalizada') return 'text-green-400 font-bold';
+    if (normStepKey === 'abierta') return 'text-yellow-400 font-bold';
+    if (normStepKey === 'en progreso') return 'text-blue-400 font-bold';
+    if (normStepKey === 'finalizada') return 'text-green-400 font-bold';
   }
   return 'text-gray-300';
 }
