@@ -10,7 +10,8 @@
       <div class="max-w-4xl mx-auto">
         <form @submit.prevent="crearOrden" class="space-y-8">
           <!-- Sección de Información Principal -->
-          <div class="bg-gray-800 rounded-xl p-6 shadow-xl border border-gray-700">
+          <div class="bg-gray-800 rounded-xl p-6 shadow-xl border border-gray-700 transform transition-all duration-500"
+               :class="{'scale-100 opacity-100': true, 'scale-95 opacity-50': !form.usuario_id || !form.vehiculo_id}">
             <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -46,123 +47,162 @@
           </div>
 
           <!-- Sección de Detalles de la Orden -->
-          <div class="bg-gray-800 rounded-xl p-6 shadow-xl border border-gray-700">
-            <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-              Detalles de la Orden
-            </h3>
+          <transition
+            enter-active-class="transition duration-500 ease-out"
+            enter-from-class="transform -translate-y-4 opacity-0"
+            enter-to-class="transform translate-y-0 opacity-100"
+            leave-active-class="transition duration-300 ease-in"
+            leave-from-class="transform translate-y-0 opacity-100"
+            leave-to-class="transform -translate-y-4 opacity-0"
+          >
+            <div v-if="form.usuario_id && form.vehiculo_id"
+                 class="bg-gray-800 rounded-xl p-6 shadow-xl border border-gray-700">
+              <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                Detalles de la Orden
+              </h3>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <!-- Cita -->
-              <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-300">Cita (opcional)</label>
-                <select v-model="form.cita_id" :disabled="!form.usuario_id"
-                  class="w-full rounded-lg bg-gray-700 text-white border-gray-600 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 transition duration-200">
-                  <option value="">Sin cita</option>
-                  <option v-for="cita in citasFiltradas" :key="cita.cita_id" :value="cita.cita_id">
-                    {{ cita.tipo_servicio }} - {{ formatearFecha(cita.fecha) }}
-                  </option>
-                </select>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Cita -->
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-gray-300">Cita (opcional)</label>
+                  <select v-model="form.cita_id" :disabled="!form.usuario_id"
+                    class="w-full rounded-lg bg-gray-700 text-white border-gray-600 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 transition duration-200">
+                    <option value="">Sin cita</option>
+                    <option v-for="cita in citasFiltradas" :key="cita.cita_id" :value="cita.cita_id">
+                      {{ cita.tipo_servicio }} - {{ formatearFecha(cita.fecha) }}
+                    </option>
+                  </select>
+                </div>
+
+                <!-- Fecha de Inicio -->
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-gray-300">Fecha de Inicio</label>
+                  <input type="datetime-local" v-model="form.fecha_inicio" required
+                    class="w-full rounded-lg bg-gray-700 text-white border-gray-600 focus:border-blue-500 focus:ring-blue-500 transition duration-200">
+                </div>
               </div>
 
-              <!-- Fecha de Inicio -->
-              <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-300">Fecha de Inicio</label>
-                <input type="datetime-local" v-model="form.fecha_inicio" required
-                  class="w-full rounded-lg bg-gray-700 text-white border-gray-600 focus:border-blue-500 focus:ring-blue-500 transition duration-200">
+              <!-- Diagnóstico -->
+              <div class="mt-6 space-y-2">
+                <label class="block text-sm font-medium text-gray-300">Diagnóstico</label>
+                <textarea v-model="form.diagnostico" rows="3" required
+                  class="w-full rounded-lg bg-gray-700 text-white border-gray-600 focus:border-blue-500 focus:ring-blue-500 transition duration-200"
+                  placeholder="Describe el diagnóstico inicial..."></textarea>
+              </div>
+
+              <!-- Notas -->
+              <div class="mt-6 space-y-2">
+                <label class="block text-sm font-medium text-gray-300">Notas Adicionales</label>
+                <textarea v-model="form.notas" rows="3"
+                  class="w-full rounded-lg bg-gray-700 text-white border-gray-600 focus:border-blue-500 focus:ring-blue-500 transition duration-200"
+                  placeholder="Agrega notas adicionales..."></textarea>
               </div>
             </div>
-
-            <!-- Diagnóstico -->
-            <div class="mt-6 space-y-2">
-              <label class="block text-sm font-medium text-gray-300">Diagnóstico</label>
-              <textarea v-model="form.diagnostico" rows="3" required
-                class="w-full rounded-lg bg-gray-700 text-white border-gray-600 focus:border-blue-500 focus:ring-blue-500 transition duration-200"
-                placeholder="Describe el diagnóstico inicial..."></textarea>
-            </div>
-
-            <!-- Notas -->
-            <div class="mt-6 space-y-2">
-              <label class="block text-sm font-medium text-gray-300">Notas Adicionales</label>
-              <textarea v-model="form.notas" rows="3"
-                class="w-full rounded-lg bg-gray-700 text-white border-gray-600 focus:border-blue-500 focus:ring-blue-500 transition duration-200"
-                placeholder="Agrega notas adicionales..."></textarea>
-            </div>
-          </div>
+          </transition>
 
           <!-- Sección de Servicios -->
-          <div class="bg-gray-800 rounded-xl p-6 shadow-xl border border-gray-700">
-            <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-              </svg>
-              Servicios
-            </h3>
+          <transition
+            enter-active-class="transition duration-500 ease-out"
+            enter-from-class="transform -translate-y-4 opacity-0"
+            enter-to-class="transform translate-y-0 opacity-100"
+            leave-active-class="transition duration-300 ease-in"
+            leave-from-class="transform translate-y-0 opacity-100"
+            leave-to-class="transform -translate-y-4 opacity-0"
+          >
+            <div v-if="form.diagnostico"
+                 class="bg-gray-800 rounded-xl p-6 shadow-xl border border-gray-700">
+              <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+                Servicios
+              </h3>
 
-            <div class="space-y-4">
-              <div v-for="(servicio, index) in serviciosSeleccionados" :key="index" 
-                class="bg-gray-700 rounded-lg p-4 flex flex-col md:flex-row gap-4 items-start">
-                <div class="flex-1 space-y-4">
-                  <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-300">Servicio</label>
-                    <select v-model="servicio.id" required
-                      class="w-full rounded-lg bg-gray-600 text-white border-gray-500 focus:border-blue-500 focus:ring-blue-500 transition duration-200">
-                      <option value="">Seleccionar servicio</option>
-                      <option v-for="s in servicios" :key="s.servicio_id" :value="s.servicio_id">
-                        {{ s.nombre }} - ${{ s.precio_estimado }}
-                      </option>
-                    </select>
+              <div class="space-y-4">
+                <transition-group
+                  enter-active-class="transition duration-300 ease-out"
+                  enter-from-class="transform translate-x-4 opacity-0"
+                  enter-to-class="transform translate-x-0 opacity-100"
+                  leave-active-class="transition duration-200 ease-in"
+                  leave-from-class="transform translate-x-0 opacity-100"
+                  leave-to-class="transform -translate-x-4 opacity-0"
+                >
+                  <div v-for="(servicio, index) in serviciosSeleccionados" :key="index" 
+                    class="bg-gray-700 rounded-lg p-4 flex flex-col md:flex-row gap-4 items-start">
+                    <div class="flex-1 space-y-4">
+                      <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-300">Servicio</label>
+                        <select v-model="servicio.id" required
+                          class="w-full rounded-lg bg-gray-600 text-white border-gray-500 focus:border-blue-500 focus:ring-blue-500 transition duration-200">
+                          <option value="">Seleccionar servicio</option>
+                          <option v-for="s in servicios" :key="s.servicio_id" :value="s.servicio_id">
+                            {{ s.nombre }} - ${{ s.precio_estimado }}
+                          </option>
+                        </select>
+                      </div>
+                      <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-300">Mecánico Asignado</label>
+                        <select v-model="servicio.mecanico_id" required
+                          class="w-full rounded-lg bg-gray-600 text-white border-gray-500 focus:border-blue-500 focus:ring-blue-500 transition duration-200">
+                          <option value="">Seleccionar mecánico</option>
+                          <option v-for="m in mecanicos" :key="m.usuario_id" :value="m.usuario_id">
+                            {{ m.nombre }} {{ m.apellidoPaterno }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <button type="button" @click="eliminarServicio(index)"
+                      class="p-2 text-red-500 hover:text-red-600 transition duration-200">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
                   </div>
-                  <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-300">Mecánico Asignado</label>
-                    <select v-model="servicio.mecanico_id" required
-                      class="w-full rounded-lg bg-gray-600 text-white border-gray-500 focus:border-blue-500 focus:ring-blue-500 transition duration-200">
-                      <option value="">Seleccionar mecánico</option>
-                      <option v-for="m in mecanicos" :key="m.usuario_id" :value="m.usuario_id">
-                        {{ m.nombre }} {{ m.apellidoPaterno }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
-                <button type="button" @click="eliminarServicio(index)"
-                  class="p-2 text-red-500 hover:text-red-600 transition duration-200">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </transition-group>
+
+                <button type="button" @click="agregarServicio"
+                  class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-200 flex items-center justify-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                   </svg>
+                  Agregar Servicio
                 </button>
               </div>
-
-              <button type="button" @click="agregarServicio"
-                class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-200 flex items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-                Agregar Servicio
-              </button>
             </div>
-          </div>
+          </transition>
 
           <!-- Resumen y Botones -->
-          <div class="bg-gray-800 rounded-xl p-6 shadow-xl border border-gray-700">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-              <div class="text-right">
-                <p class="text-gray-400">Total Estimado</p>
-                <p class="text-3xl font-bold text-white">${{ calcularTotal() }}</p>
-              </div>
-              <div class="flex gap-4">
-                <button type="button" @click="$router.push('/admin')"
-                  class="px-6 py-3 text-sm font-medium text-gray-300 hover:text-white transition duration-200">
-                  Cancelar
-                </button>
-                <button type="submit"
-                  class="px-6 py-3 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition duration-200">
-                  Crear Orden
-                </button>
+          <transition
+            enter-active-class="transition duration-500 ease-out"
+            enter-from-class="transform -translate-y-4 opacity-0"
+            enter-to-class="transform translate-y-0 opacity-100"
+            leave-active-class="transition duration-300 ease-in"
+            leave-from-class="transform translate-y-0 opacity-100"
+            leave-to-class="transform -translate-y-4 opacity-0"
+          >
+            <div v-if="serviciosSeleccionados.some(s => s.id && s.mecanico_id)"
+                 class="bg-gray-800 rounded-xl p-6 shadow-xl border border-gray-700">
+              <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-right">
+                  <p class="text-gray-400">Total Estimado</p>
+                  <p class="text-3xl font-bold text-white">${{ calcularTotal() }}</p>
+                </div>
+                <div class="flex gap-4">
+                  <button type="button" @click="$router.push('/admin')"
+                    class="px-6 py-3 text-sm font-medium text-gray-300 hover:text-white transition duration-200">
+                    Cancelar
+                  </button>
+                  <button type="submit"
+                    class="px-6 py-3 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition duration-200">
+                    Crear Orden
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          </transition>
         </form>
       </div>
     </div>
