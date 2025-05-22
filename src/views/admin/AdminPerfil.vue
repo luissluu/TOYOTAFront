@@ -1,96 +1,51 @@
 <!-- src/views/admin/AdminPerfil.vue -->
 <template>
-  <div class="flex flex-col w-full px-6">
-    <section class="grid grid-cols-1 gap-8 px-8 md:grid-cols-1">
-      <div class="bg-gray-800 md:col-span-1">
-        <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <!-- Encabezado -->
-          <div class="mb-6">
-            <h2 class="text-2xl font-bold tracking-tight text-white">Perfil de Administrador</h2>
-            <p class="text-gray-400 mt-2">Gestiona tu información personal y preferencias</p>
-          </div>
-          
-          <div class="bg-gray-700 rounded-lg p-6">
-            <div class="flex flex-col md:flex-row md:items-start">
-              <!-- Foto de perfil -->
-              <div class="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
-                <div class="w-32 h-32 bg-gray-600 rounded-full overflow-hidden">
-                  <img :src="perfil.foto" alt="Foto de perfil" class="w-full h-full object-cover">
-                </div>
-                <button 
-                  @click="cambiarFoto" 
-                  class="mt-4 w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center justify-center"
-                >
-                  <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  Cambiar Foto
-                </button>
-              </div>
-              
-              <!-- Información del perfil -->
-              <div class="flex-grow">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Nombre</label>
-                    <input 
-                      v-model="perfil.nombre"
-                      type="text" 
-                      class="w-full bg-gray-600 border-gray-500 text-white rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                  </div>
-                  
-                  <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Apellido</label>
-                    <input 
-                      v-model="perfil.apellido"
-                      type="text" 
-                      class="w-full bg-gray-600 border-gray-500 text-white rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                  </div>
-                  
-                  <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Email</label>
-                    <input 
-                      v-model="perfil.email"
-                      type="email" 
-                      class="w-full bg-gray-600 border-gray-500 text-white rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                  </div>
-                  
-                  <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Teléfono</label>
-                    <input 
-                      v-model="perfil.telefono"
-                      type="tel" 
-                      class="w-full bg-gray-600 border-gray-500 text-white rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                  </div>
-                </div>
-                
-                <div class="mt-6 flex justify-end space-x-4">
-                  <button 
-                    @click="restaurarPerfil"
-                    class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition"
-                  >
-                    Restaurar
-                  </button>
-                  <button 
-                    @click="guardarPerfil"
-                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center"
-                  >
-                    <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    Guardar Cambios
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+  <div class="flex flex-col items-center justify-center min-h-screen bg-gray-900 py-8 px-4">
+    <div class="bg-gray-800 rounded-2xl shadow-xl p-8 w-full max-w-2xl flex flex-col items-center">
+      <!-- Avatar y nombre -->
+      <div class="flex flex-col items-center mb-6">
+        <div class="relative">
+          <img :src="getAvatarUrl(user)" alt="Avatar" class="w-32 h-32 rounded-full border-4 border-blue-700 bg-gray-700 object-cover shadow-lg">
+          <button @click="cambiarFoto" class="absolute bottom-2 right-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 shadow transition" title="Cambiar foto">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13h3l8-8a2.828 2.828 0 10-4-4l-8 8v3zm-2 6h12a2 2 0 002-2v-7a2 2 0 00-2-2h-2.586a1 1 0 01-.707-.293l-2.414-2.414a1 1 0 00-1.414 0l-7.293 7.293a1 1 0 000 1.414l2.414 2.414a1 1 0 01.293.707V17a2 2 0 002 2z" />
+            </svg>
+          </button>
+        </div>
+        <div class="mt-4 text-center">
+          <h2 class="text-2xl font-bold text-white flex items-center justify-center gap-2">
+            {{ user?.nombre }} {{ user?.apellidoPaterno }}
+            <span class="ml-2 px-2 py-0.5 text-xs font-semibold rounded bg-blue-700 text-white">Administrador</span>
+          </h2>
+          <p class="text-gray-400 text-sm mt-1">{{ user?.correoElectronico }}</p>
         </div>
       </div>
-    </section>
+      <!-- Datos del perfil -->
+      <form class="w-full mt-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Nombre</label>
+            <input v-model="perfil.nombre" type="text" readonly class="w-full bg-gray-700 border-gray-600 text-white rounded-md px-4 py-2 focus:outline-none cursor-default" >
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Apellido Paterno</label>
+            <input v-model="perfil.apellidoPaterno" type="text" readonly class="w-full bg-gray-700 border-gray-600 text-white rounded-md px-4 py-2 focus:outline-none cursor-default" >
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Apellido Materno</label>
+            <input v-model="perfil.apellidoMaterno" type="text" readonly class="w-full bg-gray-700 border-gray-600 text-white rounded-md px-4 py-2 focus:outline-none cursor-default" >
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Correo electrónico</label>
+            <input v-model="perfil.correoElectronico" type="email" readonly class="w-full bg-gray-700 border-gray-600 text-white rounded-md px-4 py-2 focus:outline-none cursor-default" >
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Teléfono</label>
+            <input v-model="perfil.telefono" type="tel" readonly class="w-full bg-gray-700 border-gray-600 text-white rounded-md px-4 py-2 focus:outline-none cursor-default" >
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -104,36 +59,53 @@ export default {
     const authStore = useAuthStore();
     const user = authStore.user;
     const perfil = ref({
-      foto: user?.foto || 'https://randomuser.me/api/portraits/men/1.jpg',
       nombre: user?.nombre || '',
-      apellido: user?.apellidoPaterno || '',
-      email: user?.correoElectronico || '',
-      telefono: user?.telefono || '',
-      cargo: user?.rol || 'Administrador',
-      departamento: user?.departamento || '',
-      biografia: user?.biografia || ''
+      apellidoPaterno: user?.apellidoPaterno || '',
+      apellidoMaterno: user?.apellidoMaterno || '',
+      correoElectronico: user?.correoElectronico || '',
+      telefono: user?.telefono || ''
     });
 
     const cambiarFoto = () => {
       // Implementar lógica para cambiar foto
-      console.log('Cambiando foto de perfil');
+      alert('Funcionalidad para cambiar foto próximamente.');
     };
 
     const guardarPerfil = () => {
       // Implementar guardado de perfil
-      console.log('Guardando perfil:', perfil.value);
+      alert('Perfil guardado (simulado): ' + JSON.stringify(perfil.value));
     };
 
     const restaurarPerfil = () => {
-      // Implementar restauración de perfil
-      console.log('Restaurando perfil');
+      // Restaurar datos originales del usuario autenticado
+      perfil.value = {
+        nombre: user?.nombre || '',
+        apellidoPaterno: user?.apellidoPaterno || '',
+        apellidoMaterno: user?.apellidoMaterno || '',
+        correoElectronico: user?.correoElectronico || '',
+        telefono: user?.telefono || ''
+      };
+    };
+
+    // Función para obtener el avatar igual que en el layout
+    const getAvatarUrl = (usuario) => {
+      if (usuario?.foto) {
+        return usuario.foto;
+      }
+      const nombre = usuario?.nombre || '';
+      const apellido = usuario?.apellidoPaterno || '';
+      const apellidos = apellido + ' ' + (usuario?.apellidoMaterno || '');
+      const fullName = encodeURIComponent((nombre + ' ' + apellidos).trim());
+      return `https://ui-avatars.com/api/?name=${fullName}&background=random&color=fff&size=128`;
     };
 
     return {
+      user,
       perfil,
       cambiarFoto,
       guardarPerfil,
-      restaurarPerfil
+      restaurarPerfil,
+      getAvatarUrl
     };
   }
 };
