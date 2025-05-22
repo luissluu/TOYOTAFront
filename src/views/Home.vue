@@ -3,7 +3,7 @@
     <!-- Tus servicios en curso (Stepper dinámico) -->
     <div v-if="ordenes.length" class="mb-8">
         <h2 class="text-xl font-bold text-white mb-4">Tus servicios en curso</h2>
-        <div v-for="orden in ordenes" :key="orden.orden_id" class="mb-8">
+        <div v-for="orden in ordenes.slice(0, 4)" :key="orden.orden_id" class="mb-8">
             <script>console.log('Orden:', orden)</script>
             <h3 class="text-base font-semibold text-blue-300 mb-4">Orden #{{ orden.orden_id }}</h3>
             <div v-for="servicio in orden.detalles" :key="servicio.detalle_id" class="mb-6">
@@ -12,7 +12,8 @@
                     <div v-for="(step, idx) in steps" :key="step.key" class="flex items-center">
                         <div :class="[
                             'w-10 h-10 flex items-center justify-center rounded-full border-2 font-bold',
-                            getStepClass(servicio.estado, step.key)
+                            getStepClass(servicio.estado, step.key),
+                            servicio.estado === step.key ? 'animate-pulse' : ''
                         ]">
                             <span>{{ step.icon }}</span>
                         </div>
@@ -21,6 +22,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div v-if="ordenes.length > 4" class="flex justify-center mt-4">
+            <router-link to="/ordenes" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow transition">
+                Ver todas
+            </router-link>
         </div>
     </div>
 
