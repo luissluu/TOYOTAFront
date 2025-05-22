@@ -104,6 +104,26 @@
         <div class="mx-auto max-w-2xl px-4 py-1 sm:px-6 sm:py-1 lg:max-w-7xl lg:px-8">
             <h2 class="text-2xl font-bold tracking-tight text-white">Servicios recomendados</h2>
 
+            <div v-if="ordenes.length" class="mb-8">
+                <h2 class="text-xl font-bold text-white mb-4">Tus servicios en curso</h2>
+                <div v-for="orden in ordenes" :key="orden.orden_id" class="mb-4">
+                    <h3 class="text-base font-semibold text-blue-300 mb-2">Orden #{{ orden.orden_id }}</h3>
+                    <div v-for="servicio in orden.detalles" :key="servicio.detalle_id" class="flex items-center gap-3 mb-1">
+                        <span class="text-white">{{ servicio.nombre_servicio }}:</span>
+                        <span
+                            :class="{
+                                'text-green-400': servicio.estado === 'completado',
+                                'text-yellow-400': servicio.estado === 'en progreso' || servicio.estado === 'en proceso',
+                                'text-gray-400': servicio.estado === 'pendiente'
+                            }"
+                            class="capitalize"
+                        >
+                            {{ servicio.estado }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
             <!-- Tarjeta 1: Cambio de aceite y filtro -->
             <div class="w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col">
@@ -317,7 +337,30 @@
 </template>
 
 <script>
+import axios from 'axios'
+import { ref, onMounted } from 'vue'
+
 export default {
-  name: 'HomePage'
+  name: 'HomePage',
+  setup() {
+    // Reemplaza esto por la forma en que obtienes el usuarioId en tu app
+    const usuarioId = localStorage.getItem('usuario_id') || 1
+    const ordenes = ref([])
+
+    const cargarOrdenes = async () => {
+      try {
+        const { data } = await axios.get(`/api/ordenes-servicio/usuario/${usuarioId}`)
+        ordenes.value = data
+      } catch (error) {
+        console.error('Error al cargar órdenes del usuario:', error)
+      }
+    }
+
+    onMounted(() => {
+      cargarOrdenes()
+    })
+
+    return { ordenes }
+  }
 }
 </script>
