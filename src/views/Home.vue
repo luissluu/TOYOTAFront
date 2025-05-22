@@ -106,20 +106,22 @@
 
             <div v-if="ordenes.length" class="mb-8">
                 <h2 class="text-xl font-bold text-white mb-4">Tus servicios en curso</h2>
-                <div v-for="orden in ordenes" :key="orden.orden_id" class="mb-4">
-                    <h3 class="text-base font-semibold text-blue-300 mb-2">Orden #{{ orden.orden_id }}</h3>
-                    <div v-for="servicio in orden.detalles" :key="servicio.detalle_id" class="flex items-center gap-3 mb-1">
-                        <span class="text-white">{{ servicio.nombre_servicio }}:</span>
-                        <span
-                            :class="{
-                                'text-green-400': servicio.estado === 'completado',
-                                'text-yellow-400': servicio.estado === 'en progreso' || servicio.estado === 'en proceso',
-                                'text-gray-400': servicio.estado === 'pendiente'
-                            }"
-                            class="capitalize"
-                        >
-                            {{ servicio.estado }}
-                        </span>
+                <div v-for="orden in ordenes" :key="orden.orden_id" class="mb-8">
+                    <h3 class="text-base font-semibold text-blue-300 mb-4">Orden #{{ orden.orden_id }}</h3>
+                    <div v-for="servicio in orden.detalles" :key="servicio.detalle_id" class="mb-6">
+                        <div class="text-white font-medium mb-2">{{ servicio.nombre_servicio }}</div>
+                        <div class="flex items-center justify-start gap-4">
+                            <div v-for="(step, idx) in steps" :key="step.key" class="flex items-center">
+                                <div :class="[
+                                    'w-10 h-10 flex items-center justify-center rounded-full border-2 font-bold',
+                                    getStepClass(servicio.estado, step.key)
+                                ]">
+                                    <span v-html="step.icon"></span>
+                                </div>
+                                <span class="ml-2 text-sm font-semibold" :class="getStepTextClass(servicio.estado, step.key)">{{ step.label }}</span>
+                                <span v-if="idx < steps.length - 1" class="w-8 h-1 bg-gray-600 mx-2 rounded"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -341,6 +343,27 @@ import axios from 'axios'
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/components/stores/auth'
 
+const steps = [
+  { key: 'recibido', label: 'Recibido', icon: '✔️' },
+  { key: 'mantenimiento', label: 'Mantenimiento', icon: '🛠️' },
+  { key: 'calidad', label: 'Control de Calidad', icon: '🔍' },
+  { key: 'entrega', label: 'Entrega', icon: '🚗' }
+]
+
+function getStepClass(estado, stepKey) {
+  // Puedes personalizar la lógica según tus estados reales
+  if (estado === 'completado' && stepKey === 'entrega') return 'bg-green-500 border-green-500 text-white';
+  if (estado === 'en progreso' && stepKey === 'mantenimiento') return 'bg-yellow-400 border-yellow-400 text-white';
+  if (estado === 'pendiente' && stepKey === 'recibido') return 'bg-gray-400 border-gray-400 text-white';
+  return 'bg-gray-800 border-gray-600 text-gray-400';
+}
+function getStepTextClass(estado, stepKey) {
+  if (estado === 'completado' && stepKey === 'entrega') return 'text-green-400';
+  if (estado === 'en progreso' && stepKey === 'mantenimiento') return 'text-yellow-400';
+  if (estado === 'pendiente' && stepKey === 'recibido') return 'text-gray-400';
+  return 'text-gray-300';
+}
+
 export default {
   name: 'HomePage',
   setup() {
@@ -366,7 +389,7 @@ export default {
       cargarOrdenes()
     })
 
-    return { ordenes }
+    return { ordenes, steps, getStepClass, getStepTextClass }
   }
 }
 </script>
