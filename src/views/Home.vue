@@ -1,5 +1,27 @@
 <template>
 
+    <!-- Tus servicios en curso (Stepper dinámico) -->
+    <div v-if="ordenes.length" class="mb-8">
+        <h2 class="text-xl font-bold text-white mb-4">Tus servicios en curso</h2>
+        <div v-for="orden in ordenes" :key="orden.orden_id" class="mb-8">
+            <h3 class="text-base font-semibold text-blue-300 mb-4">Orden #{{ orden.orden_id }}</h3>
+            <div v-for="servicio in orden.detalles" :key="servicio.detalle_id" class="mb-6">
+                <div class="text-white font-medium mb-2">{{ servicio.nombre_servicio }}</div>
+                <div class="flex items-center justify-start gap-4">
+                    <div v-for="(step, idx) in steps" :key="step.key" class="flex items-center">
+                        <div :class="[
+                            'w-10 h-10 flex items-center justify-center rounded-full border-2 font-bold',
+                            getStepClass(servicio.estado, step.key)
+                        ]">
+                            <span v-html="step.icon"></span>
+                        </div>
+                        <span class="ml-2 text-sm font-semibold" :class="getStepTextClass(servicio.estado, step.key)">{{ step.label }}</span>
+                        <span v-if="idx < steps.length - 1" class="w-8 h-1 bg-gray-600 mx-2 rounded"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <section class="flex flex-col w-full px-6  md:justify-between md:items-center md:flex-row rounded-lg">
     <div class="max-w-5xl mx-auto w-full">
@@ -103,29 +125,6 @@
     <div class="bg-gray-800 md:col-span-2">
         <div class="mx-auto max-w-2xl px-4 py-1 sm:px-6 sm:py-1 lg:max-w-7xl lg:px-8">
             <h2 class="text-2xl font-bold tracking-tight text-white">Servicios recomendados</h2>
-
-            <!-- Tus servicios en curso (Stepper) -->
-            <div v-if="ordenes.length" class="mb-8">
-                <h2 class="text-xl font-bold text-white mb-4">Tus servicios en curso</h2>
-                <div v-for="orden in ordenes" :key="orden.orden_id" class="mb-8">
-                    <h3 class="text-base font-semibold text-blue-300 mb-4">Orden #{{ orden.orden_id }}</h3>
-                    <div v-for="servicio in orden.detalles" :key="servicio.detalle_id" class="mb-6">
-                        <div class="text-white font-medium mb-2">{{ servicio.nombre_servicio }}</div>
-                        <div class="flex items-center justify-start gap-4">
-                            <div v-for="(step, idx) in steps" :key="step.key" class="flex items-center">
-                                <div :class="[
-                                    'w-10 h-10 flex items-center justify-center rounded-full border-2 font-bold',
-                                    getStepClass(servicio.estado, step.key)
-                                ]">
-                                    <span v-html="step.icon"></span>
-                                </div>
-                                <span class="ml-2 text-sm font-semibold" :class="getStepTextClass(servicio.estado, step.key)">{{ step.label }}</span>
-                                <span v-if="idx < steps.length - 1" class="w-8 h-1 bg-gray-600 mx-2 rounded"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
             <!-- Tarjeta 1: Cambio de aceite y filtro -->
