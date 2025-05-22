@@ -39,7 +39,7 @@
           <select
             v-model="formData.servicio_id"
             required
-            :disabled="noTieneVehiculos"
+            :disabled="camposDeshabilitados"
             class="mt-1 block w-full rounded-lg border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-700 text-white"
           >
             <option value="">Seleccione un servicio</option>
@@ -57,7 +57,7 @@
             v-model="formData.fecha"
             required
             :min="minDate"
-            :disabled="noTieneVehiculos"
+            :disabled="camposDeshabilitados"
             class="mt-1 block w-full rounded-lg border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-700 text-white"
           />
         </div>
@@ -71,7 +71,7 @@
             required
             min="08:00"
             max="17:00"
-            :disabled="noTieneVehiculos"
+            :disabled="camposDeshabilitados"
             class="mt-1 block w-full rounded-lg border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-700 text-white"
           />
         </div>
@@ -82,18 +82,18 @@
           <textarea
             v-model="formData.descripcion"
             rows="3"
-            :disabled="noTieneVehiculos"
+            :disabled="camposDeshabilitados"
             class="mt-1 block w-full rounded-lg border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-700 text-white"
             placeholder="Describa el problema o necesidad específica"
           />
         </div>
-        <div v-if="noTieneVehiculos" class="text-red-400 mt-2 text-center">
+        <div v-if="vehiculosCargados && noTieneVehiculos" class="text-red-400 mt-2 text-center">
           Debes registrar un vehículo antes de agendar una cita.
         </div>
         <div class="pt-2">
           <button
             type="submit"
-            :disabled="noTieneVehiculos"
+            :disabled="camposDeshabilitados"
             class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-lg font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition"
           >
             <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -127,12 +127,16 @@ export default {
       },
       error: '',
       success: '',
-      minDate: new Date().toISOString().split('T')[0]
+      minDate: new Date().toISOString().split('T')[0],
+      vehiculosCargados: false
     }
   },
   computed: {
     noTieneVehiculos() {
       return this.vehiculos.length === 0;
+    },
+    camposDeshabilitados() {
+      return this.noTieneVehiculos || !this.formData.vehiculo_id;
     }
   },
   async created() {
@@ -145,12 +149,15 @@ export default {
         const token = localStorage.getItem('auth_token')
         if (!token) {
           this.error = 'No hay sesión activa'
+          this.vehiculosCargados = true
           return
         }
         this.vehiculos = await getVehiculos(token)
       } catch (error) {
         console.error('Error al cargar vehículos:', error)
         this.error = 'Error al cargar los vehículos'
+      } finally {
+        this.vehiculosCargados = true
       }
     },
     async cargarServicios() {
