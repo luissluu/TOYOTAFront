@@ -40,7 +40,7 @@
             v-model="formData.servicio_id"
             required
             :disabled="camposDeshabilitados"
-            class="mt-1 block w-full rounded-lg border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-700 text-white"
+            :class="['mt-1 block w-full rounded-lg border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-700 text-white', camposDeshabilitados ? 'opacity-60 bg-gray-800 cursor-not-allowed' : '']"
           >
             <option value="">Seleccione un servicio</option>
             <option v-for="servicio in servicios" :key="servicio.servicio_id" :value="servicio.servicio_id">
@@ -58,7 +58,7 @@
             required
             :min="minDate"
             :disabled="camposDeshabilitados"
-            class="mt-1 block w-full rounded-lg border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-700 text-white"
+            :class="['mt-1 block w-full rounded-lg border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-700 text-white', camposDeshabilitados ? 'opacity-60 bg-gray-800 cursor-not-allowed' : '']"
           />
         </div>
         <div>
@@ -72,7 +72,7 @@
             min="08:00"
             max="17:00"
             :disabled="camposDeshabilitados"
-            class="mt-1 block w-full rounded-lg border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-700 text-white"
+            :class="['mt-1 block w-full rounded-lg border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-700 text-white', camposDeshabilitados ? 'opacity-60 bg-gray-800 cursor-not-allowed' : '']"
           />
         </div>
         <div>
@@ -83,7 +83,7 @@
             v-model="formData.descripcion"
             rows="3"
             :disabled="camposDeshabilitados"
-            class="mt-1 block w-full rounded-lg border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-700 text-white"
+            :class="['mt-1 block w-full rounded-lg border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-700 text-white', camposDeshabilitados ? 'opacity-60 bg-gray-800 cursor-not-allowed' : '']"
             placeholder="Describa el problema o necesidad específica"
           />
         </div>
