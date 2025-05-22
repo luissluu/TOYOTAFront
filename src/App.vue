@@ -51,17 +51,20 @@
                       </svg>
                   </router-link>
 
-                  <!-- Enlace a Servicios -->
+                  <!-- Enlace a Servicios Automotrices -->
                   <router-link to="/Servicios" class="p-3 transition-all duration-300 rounded-lg group hover:bg-white/10" :class="{ 'bg-white/10': $route.path === '/Servicios' }">
                       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 transition-colors duration-300" :class="{ 'text-blue-500': $route.path === '/Servicios', 'text-gray-400 group-hover:text-blue-500': $route.path !== '/Servicios' }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L7.5 21H3v-4.5L16.732 3.732z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16v-1a4 4 0 014-4h10a4 4 0 014 4v1M5 16v2a2 2 0 002 2h10a2 2 0 002-2v-2M6.5 12l1-2m9 2l-1-2M7 16h10" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" />
                       </svg>
                   </router-link>
 
-                  <!-- Enlace a Documentos -->
+                  <!-- Enlace a Historial de Servicio -->
                   <router-link to="/Historial" class="p-3 transition-all duration-300 rounded-lg group hover:bg-white/10" :class="{ 'bg-white/10': $route.path === '/Historial' }">
                       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 transition-colors duration-300" :class="{ 'text-blue-500': $route.path === '/Historial', 'text-gray-400 group-hover:text-blue-500': $route.path !== '/Historial' }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8H6a2 2 0 01-2-2V6a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5h6a2 2 0 012 2v12a2 2 0 01-2 2H9a2 2 0 01-2-2V7a2 2 0 012-2z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10h6M9 14h6" />
                       </svg>
                   </router-link>
 
@@ -78,8 +81,7 @@
               <!-- Enlace a Configuración -->
               <router-link to="/configuracion" class="p-3 transition-all duration-300 rounded-lg group hover:bg-white/10" :class="{ 'bg-white/10': $route.path === '/configuracion' }">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 transition-colors duration-300" :class="{ 'text-blue-500': $route.path === '/configuracion', 'text-gray-400 group-hover:text-blue-500': $route.path !== '/configuracion' }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0a1.724 1.724 0 002.573.982c.797-.46 1.8.243 1.637 1.118a1.724 1.724 0 001.516 2.36c.94.06 1.324 1.292.588 1.93a1.724 1.724 0 000 2.573c.736.638.352 1.87-.588 1.93a1.724 1.724 0 00-1.516 2.36c.163.875-.84 1.578-1.637 1.118a1.724 1.724 0 00-2.573.982c-.3.921-1.603.921-1.902 0a1.724 1.724 0 00-2.573-.982c-.797.46-1.8-.243-1.637-1.118a1.724 1.724 0 00-1.516-2.36c-.94-.06-1.324-1.292-.588-1.93a1.724 1.724 0 000-2.573c-.736-.638-.352-1.87.588-1.93a1.724 1.724 0 001.516-2.36c-.163-.875.84-1.578 1.637-1.118.873.504 1.973-.379 2.573-.982z" />
-                    <circle cx="12" cy="12" r="3" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.25 2.25a.75.75 0 011.5 0v1.5a.75.75 0 01-1.5 0v-1.5zM4.22 4.22a.75.75 0 011.06 0l1.06 1.06a.75.75 0 11-1.06 1.06L4.22 5.28a.75.75 0 010-1.06zm15.56 0a.75.75 0 010 1.06l-1.06 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zM12 7.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9zm7.5 4.5a.75.75 0 010 1.5h-1.5a.75.75 0 010-1.5h1.5zm-15 0a.75.75 0 010 1.5H3a.75.75 0 010-1.5h1.5zm12.72 6.28a.75.75 0 011.06 0l1.06 1.06a.75.75 0 11-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm-11.44 0a.75.75 0 010 1.06l1.06 1.06a.75.75 0 11-1.06-1.06l-1.06-1.06a.75.75 0 010-1.06zM12 19.5a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 0112 19.5z" />
                   </svg>
               </router-link>
           </div>
