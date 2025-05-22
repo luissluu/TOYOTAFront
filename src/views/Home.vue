@@ -104,6 +104,7 @@
         <div class="mx-auto max-w-2xl px-4 py-1 sm:px-6 sm:py-1 lg:max-w-7xl lg:px-8">
             <h2 class="text-2xl font-bold tracking-tight text-white">Servicios recomendados</h2>
 
+            <!-- Tus servicios en curso (Stepper) -->
             <div v-if="ordenes.length" class="mb-8">
                 <h2 class="text-xl font-bold text-white mb-4">Tus servicios en curso</h2>
                 <div v-for="orden in ordenes" :key="orden.orden_id" class="mb-8">
