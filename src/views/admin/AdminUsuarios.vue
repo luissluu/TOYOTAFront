@@ -462,9 +462,12 @@ export default {
     // Editar usuario
     const editarUsuario = (usuario) => {
       usuarioSeleccionado.value = usuario;
+      // Formatear la fecha de nacimiento para el input type="date"
+      const fechaNacimiento = usuario.fecha_nacimiento ? new Date(usuario.fecha_nacimiento).toISOString().split('T')[0] : '';
       formulario.value = { 
         ...usuario,
-        rol_id: usuario.rol_id.toString() // Convertir a string para el select
+        rol_id: usuario.rol_id.toString(), // Convertir a string para el select
+        fecha_nacimiento: fechaNacimiento
       };
       mostrarFormulario.value = true;
     };

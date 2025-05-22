@@ -46,11 +46,10 @@
             </svg>
           </router-link>
 
-          <!-- Enlace a Registrar Vehículo -->
-          <!-- Enlace a Gestión de Servicios -->
+          <!-- Enlace a Gestión de Servicios (Inventario de piezas y herramientas) -->
           <router-link to="/admin/servicios" class="p-2 transition-colors duration-300 rounded-lg group" :class="{ 'bg-white': $route.path === '/admin/servicios', 'hover:bg-white': $route.path !== '/admin/servicios' }">
-            <svg class="w-5 h-5" :class="{ 'stroke-blue-700': $route.path === '/admin/servicios', 'stroke-gray-100 group-hover:stroke-blue-700': $route.path !== '/admin/servicios' }" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg class="w-5 h-5 transition-colors duration-300" :class="{ 'text-blue-500': $route.path === '/admin/servicios', 'text-gray-400 group-hover:text-blue-500': $route.path !== '/admin/servicios' }" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M0 4.6A2.6 2.6 0 0 1 2.6 2h18.8A2.6 2.6 0 0 1 24 4.6v.8A2.6 2.6 0 0 1 21.4 8H21v10.6c0 1.33-1.07 2.4-2.4 2.4H5.4C4.07 21 3 19.93 3 18.6V8h-.4A2.6 2.6 0 0 1 0 5.4v-.8ZM2.6 4a.6.6 0 0 0-.6.6v.8a.6.6 0 0 0 .6.6h18.8a.6.6 0 0 0 .6-.6v-.8a.6.6 0 0 0-.6-.6H2.6ZM8 10a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="currentColor"></path>
             </svg>
           </router-link>
           <router-link to="/admin/crear-orden" class="p-2 transition-colors duration-300 rounded-lg group" :class="{ 'bg-white': $route.path === '/admin/crear-orden', 'hover:bg-white': $route.path !== '/admin/crear-orden' }">
@@ -68,8 +67,10 @@
 
           <!-- Enlace a Órdenes de Servicio -->
           <router-link to="/admin/ordenes" class="p-2 transition-colors duration-300 rounded-lg group" :class="{ 'bg-white': $route.path.startsWith('/admin/ordenes'), 'hover:bg-white': !$route.path.startsWith('/admin/ordenes') }">
-            <svg class="w-5 h-5" :class="{ 'stroke-blue-700': $route.path.startsWith('/admin/ordenes'), 'stroke-gray-100 group-hover:stroke-blue-700': !$route.path.startsWith('/admin/ordenes') }" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2m-6 4h6a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            <svg class="w-5 h-5 transition-colors duration-300" :class="{ 'text-blue-500': $route.path.startsWith('/admin/ordenes'), 'text-gray-400 group-hover:text-blue-500': !$route.path.startsWith('/admin/ordenes') }" viewBox="0 0 1024 1024" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M300 462.4h424.8v48H300v-48zM300 673.6H560v48H300v-48z" />
+              <path d="M818.4 981.6H205.6c-12.8 0-24.8-2.4-36.8-7.2-11.2-4.8-21.6-11.2-29.6-20-8.8-8.8-15.2-18.4-20-29.6-4.8-12-7.2-24-7.2-36.8V250.4c0-12.8 2.4-24.8 7.2-36.8 4.8-11.2 11.2-21.6 20-29.6 8.8-8.8 18.4-15.2 29.6-20 12-4.8 24-7.2 36.8-7.2h92.8v47.2H205.6c-25.6 0-47.2 20.8-47.2 47.2v637.6c0 25.6 20.8 47.2 47.2 47.2h612c25.6 0 47.2-20.8 47.2-47.2V250.4c0-25.6-20.8-47.2-47.2-47.2H725.6v-47.2h92.8c12.8 0 24.8 2.4 36.8 7.2 11.2 4.8 21.6 11.2 29.6 20 8.8 8.8 15.2 18.4 20 29.6 4.8 12 7.2 24 7.2 36.8v637.6c0 12.8-2.4 24.8-7.2 36.8-4.8 11.2-11.2 21.6-20 29.6-8.8 8.8-18.4 15.2-29.6 20-12 5.6-24 8-36.8 8z" />
+              <path d="M747.2 297.6H276.8V144c0-32.8 26.4-59.2 59.2-59.2h60.8c21.6-43.2 66.4-71.2 116-71.2 49.6 0 94.4 28 116 71.2h60.8c32.8 0 59.2 26.4 59.2 59.2l-1.6 153.6z m-423.2-47.2h376.8V144c0-6.4-5.6-12-12-12H595.2l-5.6-16c-11.2-32.8-42.4-55.2-77.6-55.2-35.2 0-66.4 22.4-77.6 55.2l-5.6 16H335.2c-6.4 0-12 5.6-12 12v106.4z" />
             </svg>
           </router-link>
         </nav>
@@ -88,7 +89,7 @@
 
     <!-- Contenido principal con barra superior -->
     <main id="content" class="flex-1 pb-12 space-y-6 overflow-y-auto bg-gray-800 lg:h-screen md:space-y-8">
-      <header class="flex items-center justify-between h-20 px-6 bg-gray-800 border-b">
+      <header class="flex items-center justify-between h-20 px-6 bg-gray-800">
         <div class="relative flex items-center">
           <span class="absolute inset-y-0 left-0 flex items-center pl-3">
           </span>
