@@ -173,8 +173,8 @@
           <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="bg-gray-700 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-gray-600">
               <div class="flex-shrink-0 bg-blue-500 rounded-lg h-12 w-12 flex items-center justify-center">
-                <svg viewBox="0 0 512 512" class="h-7 w-7 text-white" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path fill="currentColor" d="M219.59,292.5a8,8,0,0,1,0,11.31l-90.05,90.06a8,8,0,1,1-11.31-11.32l90.05-90.05A8,8,0,0,1,219.59,292.5Zm208.74,96A8,8,0,0,1,415,391.78l-27.15-27.15L373.1,379.39l27.16,27.17a8,8,0,0,1-3.32,13.3,51.5,51.5,0,0,1-15.08,2.21c-15.64,0-31.77-6.7-43.91-18.84-11.61-11.61-18.35-26.77-18.82-42.06l-52.38-52.39a8,8,0,0,1-1.77-1.33l-5.57-5.57a43.89,43.89,0,0,1-11.05,18.41l-97.47,97.47a43.34,43.34,0,0,1-29.17,12.84l-1.5,0a38.51,38.51,0,0,1-27.56-11.22c-15.59-15.59-14.85-41.71,1.66-58.22l97.47-97.47a44,44,0,0,1,18.4-11.05l-5.55-5.55a8,8,0,0,1-1.33-1.77l-52.55-52.56c-15.28-.46-30.43-7.2-42-18.81-16.11-16.13-22.64-39.27-16.64-59a8,8,0,0,1,13.31-3.32l27.16,27.15,14.76-14.77L120.15,96.91a8,8,0,0,1,3.32-13.31c19.71-6,42.87.51,59,16.63,11.62,11.61,18.36,26.77,18.83,42.07l70,70L379.11,104.42A7.71,7.71,0,0,1,381,103L418.3,83A8,8,0,0,1,429.13,93.8l-20.08,37.3a8,8,0,0,1-1.39,1.87L299.81,240.82l69.85,69.85c15.28.46,30.42,7.2,42,18.81C427.81,345.61,434.33,368.76,428.33,388.46ZM282.73,278.38l-49-49-11.89,11.88,49,49Zm-16.16-38.8,5.93,5.93,123-123,6.9-12.82-12.83,6.89ZM159.73,179.14l50.79,50.79,17.54-17.54a8,8,0,0,1,11.31,0l15.88,15.88,4.69-4.69-72.31-72.31a8,8,0,0,1-2.34-5.93c.41-12.08-4.74-24.4-14.14-33.79a47.85,47.85,0,0,0-27.61-13.88l20.74,20.75a8,8,0,0,1,0,11.31L138.2,155.81a8,8,0,0,1-11.31,0l-20.73-20.73A48,48,0,0,0,120,162.67c9.4,9.39,21.71,14.54,33.77,14.13h.28A8,8,0,0,1,159.73,179.14Zm85.41,108.47-20.68-20.67A27.17,27.17,0,0,0,203.11,275L105.63,372.5c-10.27,10.27-11,26.24-1.65,35.6a22.78,22.78,0,0,0,17.17,6.51,27.4,27.4,0,0,0,18.42-8.16L237.05,309a27.4,27.4,0,0,0,8.16-18.42A24,24,0,0,0,245.14,287.61Zm169.11,80.77a47.87,47.87,0,0,0-13.87-27.58c-9.4-9.4-21.71-14.54-33.76-14.13a8,8,0,0,1-5.93-2.34L288.5,252.14l-4.69,4.69,15.89,15.9a8,8,0,0,1,0,11.31l-17.53,17.53,50.61,50.63a8,8,0,0,1,2.34,5.92c-.4,12.08,4.75,24.4,14.14,33.8a47.89,47.89,0,0,0,27.61,13.87l-20.74-20.74a8,8,0,0,1,0-11.32l26.08-26.08a8,8,0,0,1,11.31,0Z"/>
+                <svg class="h-7 w-7 text-white" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 2v2m0 16v2m10-10h-2M4 12H2m15.07-7.07l-1.41 1.41M6.34 17.66l-1.41 1.41m12.02 0l-1.41-1.41M6.34 6.34L4.93 4.93"/>
                 </svg>
               </div>
               <div>
@@ -182,9 +182,9 @@
                 <p class="text-xl font-bold text-white">{{ estadisticas.totalGastado }}</p>
               </div>
             </div>
-            <div class="bg-yellow-400 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-yellow-300">
+            <div class="bg-gray-700 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-gray-600">
               <div class="flex-shrink-0 bg-yellow-400 rounded-lg h-12 w-12 flex items-center justify-center">
-                <svg class="h-6 w-6 text-yellow-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
@@ -193,9 +193,9 @@
                 <p class="text-xl font-bold text-white">{{ estadisticas.abiertas }}</p>
               </div>
             </div>
-            <div class="bg-blue-400 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-blue-300">
+            <div class="bg-gray-700 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-gray-600">
               <div class="flex-shrink-0 bg-blue-400 rounded-lg h-12 w-12 flex items-center justify-center">
-                <svg class="h-6 w-6 text-blue-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
@@ -211,30 +211,8 @@
                 </svg>
               </div>
               <div>
-                <p class="text-sm font-medium text-gray-300">Servicios Completados</p>
+                <p class="text-sm font-medium text-white">Servicios Completados</p>
                 <p class="text-xl font-bold text-white">{{ estadisticas.finalizadas }}</p>
-              </div>
-            </div>
-            <div class="bg-gray-700 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-gray-600">
-              <div class="flex-shrink-0 bg-yellow-400 rounded-lg h-12 w-12 flex items-center justify-center">
-                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div>
-                <p class="text-sm font-medium text-gray-300">En Progreso</p>
-                <p class="text-xl font-bold text-white">{{ estadisticas.enProceso }}</p>
-              </div>
-            </div>
-            <div class="bg-gray-700 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-gray-600">
-              <div class="flex-shrink-0 bg-gray-500 rounded-lg h-12 w-12 flex items-center justify-center">
-                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div>
-                <p class="text-sm font-medium text-gray-300">Abiertas</p>
-                <p class="text-xl font-bold text-white">{{ estadisticas.abiertas }}</p>
               </div>
             </div>
           </div>
@@ -270,7 +248,7 @@
                   <span class="text-gray-400">Teléfono:</span> {{ servicioDetalle.cliente?.telefono || 'No disponible' }}
                 </p>
                 <p class="text-gray-300">
-                  <span class="text-gray-400">Email:</span> {{ servicioDetalle.cliente?.correoElectronico || 'No disponible' }}
+                  <span class="text-gray-400">Email:</span> {{ servicioDetalle.cliente?.email || 'No disponible' }}
                 </p>
               </div>
             </div>
@@ -377,9 +355,9 @@ export default {
           estado: normalizarEstado(orden.estado),
           descripcion: orden.notas || '',
           cliente: {
-            nombre: `${orden.nombre_usuario || ''} ${orden.apellido_usuario || ''}`.trim() || 'No disponible',
-            telefono: orden.telefono || 'No disponible',
-            email: orden.email || 'No disponible',
+            nombre: `${orden.nombre_usuario || orden.nombre || ''} ${orden.apellido_usuario || orden.apellidoPaterno || ''}`.trim() || 'No disponible',
+            telefono: orden.telefono || orden.telefono_usuario || 'No disponible',
+            email: orden.email || orden.correoElectronico || 'No disponible',
           },
           vehiculo: {
             modelo: `${orden.marca_vehiculo || ''} ${orden.modelo_vehiculo || ''}`.trim() || 'No disponible',

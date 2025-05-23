@@ -363,10 +363,10 @@ export default {
           id: orden.orden_id,
           tipo: orden.diagnostico || 'Sin diagnóstico',
           cliente: {
-            nombre: `${orden.nombre_usuario} ${orden.apellido_usuario}`,
-            telefono: orden.telefono || 'No disponible',
-            email: orden.email || 'No disponible',
-            avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(orden.nombre_usuario)}+${encodeURIComponent(orden.apellido_usuario)}&background=random`
+            nombre: `${orden.nombre_usuario || orden.nombre || ''} ${orden.apellido_usuario || orden.apellidoPaterno || ''}`.trim() || 'No disponible',
+            telefono: orden.telefono || orden.telefono_usuario || 'No disponible',
+            email: orden.email || orden.correoElectronico || 'No disponible',
+            avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(orden.nombre_usuario || orden.nombre || '')}+${encodeURIComponent(orden.apellido_usuario || orden.apellidoPaterno || '')}&background=random`
           },
           vehiculo: {
             modelo: `${orden.marca_vehiculo} ${orden.modelo_vehiculo}`,
