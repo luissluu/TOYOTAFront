@@ -1,5 +1,6 @@
 <template>
 
+
     <!-- Tus servicios en curso (Stepper dinámico mejorado) -->
     <div v-if="ordenes.length" class="mb-8">
         <h2 class="text-2xl font-bold text-white mb-6">Tus servicios en curso</h2>
