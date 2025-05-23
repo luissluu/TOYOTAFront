@@ -10,11 +10,12 @@
   },
   "dependencies": {
     "axios": "^1.9.0",
-    "chart.js": "^3.9.1",
+    "chart.js": "^4.4.0",
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",
     "pinia": "^3.0.2",
     "vue": "^3.2.37",
+    "vue-chartjs": "^5.3.1",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
