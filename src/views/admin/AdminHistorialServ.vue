@@ -437,9 +437,29 @@ export default {
       });
     });
 
-    const verDetalles = (servicio) => {
-      servicioDetalle.value = servicio;
-      mostrarDetalles.value = true;
+    const verDetalles = async (servicio) => {
+      try {
+        const { data } = await axios.get(`/api/ordenes-servicio/${servicio.id}`);
+        servicioDetalle.value = {
+          ...servicio,
+          ...data,
+          cliente: {
+            nombre: `${data.nombre_usuario || ''} ${data.apellido_usuario || ''}`.trim() || 'No disponible',
+            telefono: data.telefono_usuario || data.telefono || 'No disponible',
+            email: data.email || data.correoElectronico || data.correo || 'No disponible',
+            avatar: servicio.cliente.avatar
+          },
+          vehiculo: {
+            modelo: `${data.marca_vehiculo} ${data.modelo_vehiculo}`,
+            placa: data.placa_vehiculo,
+            anio: data.anio || 'No disponible'
+          },
+          detalles: data.detalles || []
+        };
+        mostrarDetalles.value = true;
+      } catch (err) {
+        error.value = 'No se pudieron cargar los detalles de la orden';
+      }
     };
 
     const generarPDF = (servicio) => {
