@@ -248,7 +248,7 @@
                   <span class="text-gray-400">Teléfono:</span> {{ servicioDetalle.cliente?.telefono || 'No disponible' }}
                 </p>
                 <p class="text-gray-300">
-                  <span class="text-gray-400">Email:</span> {{ servicioDetalle.cliente?.email || 'No disponible' }}
+                  <span class="text-gray-400">Email:</span> {{ servicioDetalle.cliente?.correoElectronico || 'No disponible' }}
                 </p>
               </div>
             </div>

@@ -266,7 +266,7 @@
                   <span class="text-gray-400">Teléfono:</span> {{ servicioDetalle.cliente.telefono }}
                 </p>
                 <p class="text-gray-300">
-                  <span class="text-gray-400">Email:</span> {{ servicioDetalle.cliente.email }}
+                  <span class="text-gray-400">Email:</span> {{ servicioDetalle.cliente.correoElectronico }}
                 </p>
               </div>
             </div>
@@ -364,8 +364,8 @@ export default {
           tipo: orden.diagnostico || 'Sin diagnóstico',
           cliente: {
             nombre: `${orden.nombre_usuario || orden.nombre || ''} ${orden.apellido_usuario || orden.apellidoPaterno || ''}`.trim() || 'No disponible',
-            telefono: orden.telefono || orden.telefono_usuario || 'No disponible',
-            email: orden.email || orden.correoElectronico || 'No disponible',
+            telefono: orden.telefono_usuario || orden.telefono || 'No disponible',
+            email: orden.email || orden.correoElectronico || orden.correo || 'No disponible',
             avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(orden.nombre_usuario || orden.nombre || '')}+${encodeURIComponent(orden.apellido_usuario || orden.apellidoPaterno || '')}&background=random`
           },
           vehiculo: {
