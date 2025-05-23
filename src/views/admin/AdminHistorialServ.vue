@@ -29,13 +29,6 @@
             >
               <option v-for="estado in estadosDisponibles" :key="estado.value" :value="estado.value">{{ estado.label }}</option>
             </select>
-            
-            <select 
-              v-model="filtroPeriodo" 
-              class="rounded-md bg-gray-600 border-gray-500 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option v-for="periodo in periodosDisponibles" :key="periodo.value" :value="periodo.value">{{ periodo.label }}</option>
-            </select>
           </div>
           
           <!-- Estado de carga y error -->
@@ -447,34 +440,11 @@ export default {
     const serviciosFiltrados = computed(() => {
       return servicios.value.filter(servicio => {
         const coincideEstado = !filtroEstado.value || servicio.estado === filtroEstado.value;
-        const coincidePeriodo = !filtroPeriodo.value || filtrarPorPeriodo(servicio.fecha, filtroPeriodo.value);
         const coincideBusqueda = servicio.tipo.toLowerCase().includes(busqueda.value.toLowerCase()) ||
                                 servicio.cliente.nombre.toLowerCase().includes(busqueda.value.toLowerCase());
-        return coincideEstado && coincidePeriodo && coincideBusqueda;
+        return coincideEstado && coincideBusqueda;
       });
     });
-
-    const filtrarPorPeriodo = (fecha, periodo) => {
-      const hoy = new Date();
-      const fechaServicio = new Date(fecha.split('/').reverse().join('-'));
-      switch (periodo) {
-        case 'hoy':
-          return fechaServicio.toDateString() === hoy.toDateString();
-        case 'semana': {
-          const inicioSemana = new Date(hoy);
-          inicioSemana.setDate(hoy.getDate() - hoy.getDay());
-          const finSemana = new Date(inicioSemana);
-          finSemana.setDate(inicioSemana.getDate() + 6);
-          return fechaServicio >= inicioSemana && fechaServicio <= finSemana;
-        }
-        case 'mes':
-          return fechaServicio.getMonth() === hoy.getMonth() && fechaServicio.getFullYear() === hoy.getFullYear();
-        case 'anio':
-          return fechaServicio.getFullYear() === hoy.getFullYear();
-        default:
-          return true;
-      }
-    };
 
     const verDetalles = (servicio) => {
       servicioDetalle.value = servicio;

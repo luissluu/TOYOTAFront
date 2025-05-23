@@ -1,110 +1,90 @@
 <template>
-    <div class="flex flex-col w-full px-6">
-      <section class="grid grid-cols-1 gap-8 px-8 md:grid-cols-2">
-        <div class="bg-gray-800 md:col-span-2">
-          <div class="mx-auto max-w-2xl px-4 py-1 sm:px-6 sm:py-1 lg:max-w-7xl lg:px-8">
+  <div class="flex flex-col w-full px-6">
+    <section class="grid grid-cols-1 gap-8 px-8 md:grid-cols-1">
+      <div class="bg-gray-800 md:col-span-1">
+        <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold tracking-tight text-white">Historial de Servicios</h2>
-            
-            <!-- Filtros y búsqueda -->
-            <div class="mt-6 flex flex-col md:flex-row gap-4">
-              <div class="relative flex-grow">
-                <input type="text" class="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Buscar en historial...">
-                <button class="absolute right-2 top-2">
-                  <svg class="w-6 h-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-              </div>
-              <div class="flex gap-2">
-                <select class="bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                  <option value="">Período</option>
-                  <option value="ultima-semana">Última semana</option>
-                  <option value="ultimo-mes">Último mes</option>
-                  <option value="ultimos-3-meses">Últimos 3 meses</option>
-                  <option value="ultimo-anio">Último año</option>
-                  <option value="todos">Todos</option>
-                </select>
-                <select class="bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                  <option value="">Estado</option>
-                  <option value="completado">Completado</option>
-                  <option value="en-proceso">En proceso</option>
-                  <option value="pendiente">Pendiente</option>
-                  <option value="cancelado">Cancelado</option>
-                </select>
+            <div class="flex items-center space-x-4">
+              <div class="relative">
+                <input 
+                  type="text" 
+                  v-model="busqueda" 
+                  placeholder="Buscar en historial..." 
+                  class="w-64 rounded-md bg-gray-600 border-gray-500 text-white px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                <svg class="absolute left-3 top-3 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
               </div>
             </div>
-            
-            <!-- Tabla de historial -->
-            <div class="mt-8 overflow-x-auto">
-              <table class="min-w-full bg-gray-700 rounded-lg overflow-hidden">
-                <thead class="bg-gray-600">
+          </div>
+
+          <!-- Filtros -->
+          <div class="flex flex-wrap gap-4 mb-6">
+            <select 
+              v-model="filtroEstado" 
+              class="rounded-md bg-gray-600 border-gray-500 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option v-for="estado in estadosDisponibles" :key="estado.value" :value="estado.value">{{ estado.label }}</option>
+            </select>
+          </div>
+          
+          <!-- Estado de carga y error -->
+          <div v-if="cargando" class="flex justify-center items-center py-8">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          </div>
+
+          <div v-else-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong class="font-bold">Error:</strong>
+            <span class="block sm:inline">{{ error }}</span>
+          </div>
+
+          <!-- Tabla de historial de servicios -->
+          <div v-else class="bg-gray-700 rounded-lg overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-600">
+                <thead class="bg-gray-800">
                   <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">ID</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Servicio</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Fecha</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Precio</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Estado</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Acciones</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">ID</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Servicio</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Fecha</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Precio</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Estado</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Acciones</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-500">
-                  <!-- Fila 1 -->
-                  <tr class="hover:bg-gray-600">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">#8742</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">Cambio de aceite y filtro</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">20/04/2025</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">$750</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Completado</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
-                      <button class="text-blue-400 hover:text-blue-300 mr-2">Ver</button>
-                      <button class="text-blue-400 hover:text-blue-300">Factura</button>
+                <tbody class="bg-gray-700 divide-y divide-gray-600">
+                  <tr v-if="serviciosFiltrados.length === 0" class="hover:bg-gray-600 transition-colors duration-200">
+                    <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-400">
+                      No se encontraron servicios
                     </td>
                   </tr>
-                  
-                  <!-- Fila 2 -->
-                  <tr class="hover:bg-gray-600">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">#8723</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">Alineación y balanceo</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">15/04/2025</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">$850</td>
+                  <tr v-for="servicio in serviciosFiltrados" :key="servicio.id" class="hover:bg-gray-600 transition-colors duration-200">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">#{{ servicio.id }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ servicio.tipo }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ servicio.fecha }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">${{ servicio.precio }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Completado</span>
+                      <span :class="badgeEstado(servicio.estado)">{{ servicio.estado }}</span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
-                      <button class="text-blue-400 hover:text-blue-300 mr-2">Ver</button>
-                      <button class="text-blue-400 hover:text-blue-300">Factura</button>
-                    </td>
-                  </tr>
-                  
-                  <!-- Fila 3 -->
-                  <tr class="hover:bg-gray-600">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">#8654</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">Diagnóstico del sistema eléctrico</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">10/04/2025</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">$950</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">En proceso</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
-                      <button class="text-blue-400 hover:text-blue-300 mr-2">Ver</button>
-                      <button class="text-gray-400 cursor-not-allowed">Factura</button>
-                    </td>
-                  </tr>
-                  
-                  <!-- Fila 4 -->
-                  <tr class="hover:bg-gray-600">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">#8597</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">Cambio de bujías</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">05/04/2025</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">$550</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Pendiente</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
-                      <button class="text-blue-400 hover:text-blue-300 mr-2">Ver</button>
-                      <button class="text-gray-400 cursor-not-allowed">Factura</button>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div class="flex space-x-3">
+                        <button 
+                          @click="verDetalles(servicio)" 
+                          class="text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                          title="Ver detalles"
+                        >
+                          Ver
+                        </button>
+                        <button 
+                          @click="generarPDF(servicio)" 
+                          class="text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                          title="Generar PDF"
+                        >
+                          Factura
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -112,85 +92,258 @@
             </div>
             
             <!-- Paginación -->
-            <div class="flex justify-between items-center mt-8">
-              <div class="text-sm text-white">
-                Mostrando 1-4 de 24 resultados
+            <div v-if="serviciosFiltrados.length > 0" class="bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-700 sm:px-6">
+              <div class="flex-1 flex justify-between sm:hidden">
+                <button 
+                  @click="cambiarPagina(paginacion.paginaActual - 1)"
+                  :disabled="paginacion.paginaActual === 1"
+                  class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Anterior
+                </button>
+                <button 
+                  @click="cambiarPagina(paginacion.paginaActual + 1)"
+                  :disabled="paginacion.paginaActual === paginacion.totalPaginas"
+                  class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Siguiente
+                </button>
               </div>
-              <nav class="flex items-center">
-                <button class="px-3 py-1 bg-gray-700 text-white rounded-l-md hover:bg-gray-600">Anterior</button>
-                <button class="px-3 py-1 bg-blue-600 text-white">1</button>
-                <button class="px-3 py-1 bg-gray-700 text-white hover:bg-gray-600">2</button>
-                <button class="px-3 py-1 bg-gray-700 text-white hover:bg-gray-600">3</button>
-                <button class="px-3 py-1 bg-gray-700 text-white rounded-r-md hover:bg-gray-600">Siguiente</button>
-              </nav>
-            </div>
-            
-            <!-- Resumen de estadísticas -->
-            <div class="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              <div class="bg-gray-700 p-5 rounded-lg">
-                <div class="flex items-center">
-                  <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
-                    <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
-                    </svg>
-                  </div>
-                  <div class="ml-5">
-                    <p class="text-sm font-medium text-gray-300">Total Gastado</p>
-                    <p class="text-2xl font-semibold text-white">$3,100</p>
-                  </div>
+              <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                  <p class="text-sm text-gray-400">
+                    Mostrando
+                    <span class="font-medium">{{ paginacion.desde }}</span>
+                    a
+                    <span class="font-medium">{{ paginacion.hasta }}</span>
+                    de
+                    <span class="font-medium">{{ paginacion.total }}</span>
+                    resultados
+                  </p>
                 </div>
-              </div>
-              
-              <div class="bg-gray-700 p-5 rounded-lg">
-                <div class="flex items-center">
-                  <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
-                    <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div class="ml-5">
-                    <p class="text-sm font-medium text-gray-300">Servicios Completados</p>
-                    <p class="text-2xl font-semibold text-white">18</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="bg-gray-700 p-5 rounded-lg">
-                <div class="flex items-center">
-                  <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
-                    <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div class="ml-5">
-                    <p class="text-sm font-medium text-gray-300">En Proceso</p>
-                    <p class="text-2xl font-semibold text-white">2</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="bg-gray-700 p-5 rounded-lg">
-                <div class="flex items-center">
-                  <div class="flex-shrink-0 bg-gray-500 rounded-md p-3">
-                    <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div class="ml-5">
-                    <p class="text-sm font-medium text-gray-300">Pendientes</p>
-                    <p class="text-2xl font-semibold text-white">4</p>
-                  </div>
+                <div>
+                  <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    <button 
+                      @click="cambiarPagina(paginacion.paginaActual - 1)"
+                      :disabled="paginacion.paginaActual === 1"
+                      class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-600 bg-gray-700 text-sm font-medium text-gray-300 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <span class="sr-only">Anterior</span>
+                      <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
+                    <button 
+                      v-for="pagina in paginacion.totalPaginas" 
+                      :key="pagina"
+                      @click="cambiarPagina(pagina)"
+                      :class="[
+                        'relative inline-flex items-center px-4 py-2 border border-gray-600 text-sm font-medium',
+                        pagina === paginacion.paginaActual 
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                      ]"
+                    >
+                      {{ pagina }}
+                    </button>
+                    <button 
+                      @click="cambiarPagina(paginacion.paginaActual + 1)"
+                      :disabled="paginacion.paginaActual === paginacion.totalPaginas"
+                      class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-600 bg-gray-700 text-sm font-medium text-gray-300 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <span class="sr-only">Siguiente</span>
+                      <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
+                  </nav>
                 </div>
               </div>
             </div>
           </div>
+          
+          <!-- Resumen de estadísticas -->
+          <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="bg-gray-700 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-gray-600">
+              <div class="flex-shrink-0 bg-blue-500 rounded-lg h-12 w-12 flex items-center justify-center">
+                <svg viewBox="0 0 512 512" class="h-7 w-7 text-white" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill="currentColor" d="M219.59,292.5a8,8,0,0,1,0,11.31l-90.05,90.06a8,8,0,1,1-11.31-11.32l90.05-90.05A8,8,0,0,1,219.59,292.5Zm208.74,96A8,8,0,0,1,415,391.78l-27.15-27.15L373.1,379.39l27.16,27.17a8,8,0,0,1-3.32,13.3,51.5,51.5,0,0,1-15.08,2.21c-15.64,0-31.77-6.7-43.91-18.84-11.61-11.61-18.35-26.77-18.82-42.06l-52.38-52.39a8,8,0,0,1-1.77-1.33l-5.57-5.57a43.89,43.89,0,0,1-11.05,18.41l-97.47,97.47a43.34,43.34,0,0,1-29.17,12.84l-1.5,0a38.51,38.51,0,0,1-27.56-11.22c-15.59-15.59-14.85-41.71,1.66-58.22l97.47-97.47a44,44,0,0,1,18.4-11.05l-5.55-5.55a8,8,0,0,1-1.33-1.77l-52.55-52.56c-15.28-.46-30.43-7.2-42-18.81-16.11-16.13-22.64-39.27-16.64-59a8,8,0,0,1,13.31-3.32l27.16,27.15,14.76-14.77L120.15,96.91a8,8,0,0,1,3.32-13.31c19.71-6,42.87.51,59,16.63,11.62,11.61,18.36,26.77,18.83,42.07l70,70L379.11,104.42A7.71,7.71,0,0,1,381,103L418.3,83A8,8,0,0,1,429.13,93.8l-20.08,37.3a8,8,0,0,1-1.39,1.87L299.81,240.82l69.85,69.85c15.28.46,30.42,7.2,42,18.81C427.81,345.61,434.33,368.76,428.33,388.46ZM282.73,278.38l-49-49-11.89,11.88,49,49Zm-16.16-38.8,5.93,5.93,123-123,6.9-12.82-12.83,6.89ZM159.73,179.14l50.79,50.79,17.54-17.54a8,8,0,0,1,11.31,0l15.88,15.88,4.69-4.69-72.31-72.31a8,8,0,0,1-2.34-5.93c.41-12.08-4.74-24.4-14.14-33.79a47.85,47.85,0,0,0-27.61-13.88l20.74,20.75a8,8,0,0,1,0,11.31L138.2,155.81a8,8,0,0,1-11.31,0l-20.73-20.73A48,48,0,0,0,120,162.67c9.4,9.39,21.71,14.54,33.77,14.13h.28A8,8,0,0,1,159.73,179.14Zm85.41,108.47-20.68-20.67A27.17,27.17,0,0,0,203.11,275L105.63,372.5c-10.27,10.27-11,26.24-1.65,35.6a22.78,22.78,0,0,0,17.17,6.51,27.4,27.4,0,0,0,18.42-8.16L237.05,309a27.4,27.4,0,0,0,8.16-18.42A24,24,0,0,0,245.14,287.61Zm169.11,80.77a47.87,47.87,0,0,0-13.87-27.58c-9.4-9.4-21.71-14.54-33.76-14.13a8,8,0,0,1-5.93-2.34L288.5,252.14l-4.69,4.69,15.89,15.9a8,8,0,0,1,0,11.31l-17.53,17.53,50.61,50.63a8,8,0,0,1,2.34,5.92c-.4,12.08,4.75,24.4,14.14,33.8a47.89,47.89,0,0,0,27.61,13.87l-20.74-20.74a8,8,0,0,1,0-11.32l26.08-26.08a8,8,0,0,1,11.31,0Z"/>
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-gray-300">Total Gastado</p>
+                <p class="text-xl font-bold text-white">{{ estadisticas.totalGastado }}</p>
+              </div>
+            </div>
+            <div class="bg-gray-700 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-gray-600">
+              <div class="flex-shrink-0 bg-green-500 rounded-lg h-12 w-12 flex items-center justify-center">
+                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-gray-300">Servicios Completados</p>
+                <p class="text-xl font-bold text-white">{{ estadisticas.completados }}</p>
+              </div>
+            </div>
+            <div class="bg-gray-700 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-gray-600">
+              <div class="flex-shrink-0 bg-yellow-400 rounded-lg h-12 w-12 flex items-center justify-center">
+                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-gray-300">En Proceso</p>
+                <p class="text-xl font-bold text-white">{{ estadisticas.enProceso }}</p>
+              </div>
+            </div>
+            <div class="bg-gray-700 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-gray-600">
+              <div class="flex-shrink-0 bg-gray-500 rounded-lg h-12 w-12 flex items-center justify-center">
+                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-gray-300">Pendientes</p>
+                <p class="text-xl font-bold text-white">{{ estadisticas.pendientes }}</p>
+              </div>
+            </div>
+          </div>
         </div>
-      </section>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'HistorialPage'
+      </div>
+    </section>
+  </div>
+</template>
+
+<script>
+import { ref, computed, onMounted } from 'vue';
+import axios from 'axios';
+import { useAuthStore } from '@/components/stores/auth';
+
+export default {
+  name: 'HistorialPage',
+  setup() {
+    const authStore = useAuthStore();
+    const busqueda = ref('');
+    const filtroEstado = ref('');
+    const servicios = ref([]);
+    const cargando = ref(true);
+    const error = ref(null);
+    const paginacion = ref({
+      paginaActual: 1,
+      totalPaginas: 1,
+      desde: 0,
+      hasta: 0,
+      total: 0
+    });
+    const estadisticas = ref({
+      totalGastado: 0,
+      completados: 0,
+      enProceso: 0,
+      pendientes: 0
+    });
+
+    const estadosDisponibles = [
+      { value: '', label: 'Todos los estados' },
+      { value: 'completado', label: 'Completado' },
+      { value: 'en proceso', label: 'En Proceso' },
+      { value: 'pendiente', label: 'Pendiente' }
+    ];
+
+    const cargarServicios = async () => {
+      try {
+        cargando.value = true;
+        await authStore.restoreSession?.();
+        const usuarioId = authStore.user?.id;
+        if (!usuarioId) throw new Error('No se encontró el usuario autenticado');
+        const response = await axios.get(`/api/ordenes-servicio/usuario/${usuarioId}`);
+        servicios.value = response.data.map(orden => ({
+          id: orden.orden_id,
+          tipo: orden.diagnostico || 'Sin diagnóstico',
+          fecha: new Date(orden.fecha_inicio).toLocaleDateString(),
+          precio: orden.total || '0',
+          estado: orden.estado ? orden.estado.toLowerCase() : 'desconocido',
+        }));
+        // Estadísticas
+        estadisticas.value = {
+          totalGastado: servicios.value.reduce((acc, s) => acc + Number(s.precio), 0),
+          completados: servicios.value.filter(s => s.estado === 'completado').length,
+          enProceso: servicios.value.filter(s => s.estado === 'en proceso').length,
+          pendientes: servicios.value.filter(s => s.estado === 'pendiente').length
+        };
+        // Paginación
+        const total = servicios.value.length;
+        paginacion.value = {
+          paginaActual: 1,
+          totalPaginas: Math.ceil(total / 10),
+          desde: 1,
+          hasta: Math.min(10, total),
+          total
+        };
+      } catch (err) {
+        error.value = 'Error al cargar el historial de servicios';
+        console.error('Error:', err);
+      } finally {
+        cargando.value = false;
+      }
+    };
+
+    const serviciosFiltrados = computed(() => {
+      return servicios.value.filter(servicio => {
+        const coincideEstado = !filtroEstado.value || servicio.estado === filtroEstado.value;
+        const coincideBusqueda = servicio.tipo.toLowerCase().includes(busqueda.value.toLowerCase());
+        return coincideEstado && coincideBusqueda;
+      });
+    });
+
+    const cambiarPagina = (pagina) => {
+      paginacion.value.paginaActual = pagina;
+      paginacion.value.desde = (pagina - 1) * 10 + 1;
+      paginacion.value.hasta = Math.min(pagina * 10, paginacion.value.total);
+    };
+
+    const badgeEstado = (estado) => {
+      switch (estado) {
+        case 'completado':
+          return 'px-2 py-1 rounded-full text-xs font-semibold bg-green-200 text-green-800';
+        case 'en proceso':
+          return 'px-2 py-1 rounded-full text-xs font-semibold bg-yellow-200 text-yellow-800';
+        case 'pendiente':
+          return 'px-2 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-800';
+        default:
+          return 'px-2 py-1 rounded-full text-xs font-semibold bg-gray-300 text-gray-900';
+      }
+    };
+
+    const verDetalles = (servicio) => {
+      // Implementa la lógica para mostrar detalles si lo deseas
+      alert('Detalles del servicio: ' + JSON.stringify(servicio, null, 2));
+    };
+
+    const generarPDF = (servicio) => {
+      const url = `https://toyotaback.onrender.com/api/ordenes-servicio/${servicio.id}/pdf`;
+      window.open(url, '_blank');
+    };
+
+    onMounted(() => {
+      cargarServicios();
+    });
+
+    return {
+      busqueda,
+      filtroEstado,
+      servicios,
+      serviciosFiltrados,
+      cargando,
+      error,
+      paginacion,
+      estadisticas,
+      estadosDisponibles,
+      cambiarPagina,
+      badgeEstado,
+      verDetalles,
+      generarPDF
+    };
   }
-  </script>
+};
+</script>
