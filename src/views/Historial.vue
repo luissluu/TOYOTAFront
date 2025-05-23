@@ -368,8 +368,7 @@ export default {
       const e = estado.toLowerCase().trim();
       if (e === 'completado' || e === 'finalizado' || e === 'finalizada') return 'finalizada';
       if (e === 'en proceso' || e === 'en progreso') return 'en progreso';
-      if (e === 'pendiente') return 'pendiente';
-      if (e === 'abierta') return 'abierta';
+      if (e === 'pendiente' || e === 'abierta') return 'pendiente';
       return e;
     }
 
