@@ -266,7 +266,7 @@
                   <span class="text-gray-400">Teléfono:</span> {{ servicioDetalle.cliente.telefono }}
                 </p>
                 <p class="text-gray-300">
-                  <span class="text-gray-400">Email:</span> {{ servicioDetalle.cliente.correoElectronico }}
+                  <span class="text-gray-400">Email:</span> {{ servicioDetalle.cliente.email }}
                 </p>
               </div>
             </div>
