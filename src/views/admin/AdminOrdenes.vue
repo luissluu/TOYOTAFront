@@ -141,7 +141,7 @@ export default {
     const cargarOrdenes = async () => {
       try {
         const { data } = await axios.get('/api/ordenes-servicio')
-        ordenes.value = data.filter(o => o.estado === 'abierta' || o.estado === 'en proceso')
+        ordenes.value = data.filter(o => o.estado === 'abierta' || o.estado === 'en progreso')
       } catch (error) {
         console.error('Error al cargar órdenes:', error)
         notificacionStore.mostrar('Error al cargar las órdenes', 'error')
