@@ -24,8 +24,10 @@ import { ref, onMounted } from 'vue'
 const servicios = ref([])
 
 onMounted(async () => {
+  console.log('MONTADO Servicios.vue')
   try {
     const { data } = await axios.get('/api/servicios')
+    console.log('Respuesta servicios:', data)
     servicios.value = data
   } catch (error) {
     console.error('Error al cargar servicios:', error)
@@ -35,6 +37,7 @@ onMounted(async () => {
 export default {
   name: 'Servicios',
   setup() {
+    console.log('SETUP Servicios.vue')
     return { servicios }
   }
 }
