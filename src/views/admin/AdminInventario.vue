@@ -1292,11 +1292,33 @@ export default {
 
     // Filtrar préstamos
     const prestamosFiltrados = computed(() => {
-      return prestamosActivos.value.filter(prestamo => {
-        const coincideBusqueda = prestamo.nombre_articulo.toLowerCase().includes(busquedaPrestamos.value.toLowerCase()) ||
-                                prestamo.nombre_usuario.toLowerCase().includes(busquedaPrestamos.value.toLowerCase());
-        return coincideBusqueda;
-      });
+      // Agrupa devoluciones por articulo_id y usuario_id
+      const devoluciones = prestamosActivos.value
+        .filter(mov => mov.tipo_movimiento === 'devolucion')
+        .map(mov => ({
+          articulo_id: mov.articulo_id,
+          usuario_id: mov.usuario_id,
+          fecha_movimiento: new Date(mov.fecha_movimiento)
+        }));
+
+      // Solo prestamos sin devolución posterior
+      return prestamosActivos.value
+        .filter(mov => mov.tipo_movimiento === 'prestamo')
+        .filter(prestamo => {
+          // ¿Hay una devolución para este artículo y usuario después de este préstamo?
+          const devolucion = devoluciones.find(dev =>
+            dev.articulo_id === prestamo.articulo_id &&
+            dev.usuario_id === prestamo.usuario_id &&
+            dev.fecha_movimiento > new Date(prestamo.fecha_movimiento)
+          );
+          return !devolucion;
+        })
+        .filter(prestamo => {
+          // Filtro de búsqueda
+          const coincideBusqueda = prestamo.nombre_articulo.toLowerCase().includes(busquedaPrestamos.value.toLowerCase()) ||
+                                  prestamo.nombre_usuario.toLowerCase().includes(busquedaPrestamos.value.toLowerCase());
+          return coincideBusqueda;
+        });
     });
 
     const busquedaPrestamos = ref('');
