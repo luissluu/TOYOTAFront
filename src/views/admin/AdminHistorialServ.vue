@@ -108,16 +108,7 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ servicio.fecha }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-white">${{ servicio.precio }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" 
-                        :class="{
-                          'bg-green-100 text-green-800': servicio.estado === 'completado',
-                          'bg-yellow-100 text-yellow-800': servicio.estado === 'en-proceso',
-                          'bg-blue-100 text-blue-800': servicio.estado === 'pendiente',
-                          'bg-red-100 text-red-800': servicio.estado === 'cancelado'
-                        }"
-                      >
-                        {{ servicio.estado }}
-                      </span>
+                      <span :class="badgeEstado(servicio.estado)">{{ servicio.estado }}</span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div class="flex space-x-3">
@@ -230,26 +221,6 @@
                 <div class="ml-5">
                   <p class="text-sm font-medium text-gray-300">Servicios Totales</p>
                   <p class="text-2xl font-semibold text-white">{{ estadisticas.total }}</p>
-                  <p class="text-sm" :class="estadisticas.cambioTotal >= 0 ? 'text-green-400' : 'text-red-400'">
-                    {{ estadisticas.cambioTotal >= 0 ? '+' : '' }}{{ estadisticas.cambioTotal }}% este mes
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            <div class="bg-gray-700 p-5 rounded-lg shadow-sm hover:bg-gray-600 transition-colors duration-200">
-              <div class="flex items-center">
-                <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
-                  <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div class="ml-5">
-                  <p class="text-sm font-medium text-gray-300">Completados</p>
-                  <p class="text-2xl font-semibold text-white">{{ estadisticas.completados }}</p>
-                  <p class="text-sm" :class="estadisticas.cambioCompletados >= 0 ? 'text-green-400' : 'text-red-400'">
-                    {{ estadisticas.cambioCompletados >= 0 ? '+' : '' }}{{ estadisticas.cambioCompletados }}% este mes
-                  </p>
                 </div>
               </div>
             </div>
@@ -262,11 +233,8 @@
                   </svg>
                 </div>
                 <div class="ml-5">
-                  <p class="text-sm font-medium text-gray-300">En Proceso</p>
-                  <p class="text-2xl font-semibold text-white">{{ estadisticas.enProceso }}</p>
-                  <p class="text-sm" :class="estadisticas.cambioEnProceso >= 0 ? 'text-green-400' : 'text-red-400'">
-                    {{ estadisticas.cambioEnProceso >= 0 ? '+' : '' }}{{ estadisticas.cambioEnProceso }}% este mes
-                  </p>
+                  <p class="text-sm font-medium text-gray-300">Abiertas</p>
+                  <p class="text-2xl font-semibold text-white">{{ estadisticas.abiertas }}</p>
                 </div>
               </div>
             </div>
@@ -279,11 +247,36 @@
                   </svg>
                 </div>
                 <div class="ml-5">
+                  <p class="text-sm font-medium text-gray-300">En Proceso</p>
+                  <p class="text-2xl font-semibold text-white">{{ estadisticas.enProceso }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-gray-700 p-5 rounded-lg shadow-sm hover:bg-gray-600 transition-colors duration-200">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                  <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div class="ml-5">
+                  <p class="text-sm font-medium text-gray-300">Finalizadas</p>
+                  <p class="text-2xl font-semibold text-white">{{ estadisticas.finalizadas }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-gray-700 p-5 rounded-lg shadow-sm hover:bg-gray-600 transition-colors duration-200">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 bg-gray-500 rounded-md p-3">
+                  <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                  </svg>
+                </div>
+                <div class="ml-5">
                   <p class="text-sm font-medium text-gray-300">Pendientes</p>
                   <p class="text-2xl font-semibold text-white">{{ estadisticas.pendientes }}</p>
-                  <p class="text-sm" :class="estadisticas.cambioPendientes >= 0 ? 'text-green-400' : 'text-red-400'">
-                    {{ estadisticas.cambioPendientes >= 0 ? '+' : '' }}{{ estadisticas.cambioPendientes }}% este mes
-                  </p>
                 </div>
               </div>
             </div>
@@ -308,16 +301,7 @@
               <h3 class="text-xl font-medium text-white">Detalles del Servicio #{{ servicioDetalle.id }}</h3>
               <p class="text-gray-400 mt-1">{{ servicioDetalle.fecha }}</p>
             </div>
-            <span class="px-3 py-1 rounded-full text-sm font-medium" 
-              :class="{
-                'bg-green-100 text-green-800': servicioDetalle.estado === 'completado',
-                'bg-yellow-100 text-yellow-800': servicioDetalle.estado === 'en-proceso',
-                'bg-blue-100 text-blue-800': servicioDetalle.estado === 'pendiente',
-                'bg-red-100 text-red-800': servicioDetalle.estado === 'cancelado'
-              }"
-            >
-              {{ servicioDetalle.estado }}
-            </span>
+            <span :class="badgeEstado(servicioDetalle.estado)">{{ servicioDetalle.estado }}</span>
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -409,13 +393,10 @@ export default {
 
     const estadisticas = ref({
       total: 0,
-      completados: 0,
+      abiertas: 0,
       enProceso: 0,
-      pendientes: 0,
-      cambioTotal: 0,
-      cambioCompletados: 0,
-      cambioEnProceso: 0,
-      cambioPendientes: 0
+      finalizadas: 0,
+      pendientes: 0
     });
 
     const paginacion = ref({
@@ -456,21 +437,20 @@ export default {
           ]
         }));
 
-        // Calcular estadísticas
+        // Calcular estadísticas dinámicamente según los estados presentes (excepto cancelada)
         const total = servicios.value.length;
-        const completados = servicios.value.filter(s => s.estado === 'completado').length;
-        const enProceso = servicios.value.filter(s => s.estado === 'en-proceso').length;
-        const pendientes = servicios.value.filter(s => s.estado === 'pendiente').length;
+        const estados = ['abierta', 'en proceso', 'finalizada', 'pendiente'];
+        const conteos = {};
+        estados.forEach(e => {
+          conteos[e] = servicios.value.filter(s => s.estado === e).length;
+        });
 
         estadisticas.value = {
           total,
-          completados,
-          enProceso,
-          pendientes,
-          cambioTotal: calcularCambioPorcentual(total, total),
-          cambioCompletados: calcularCambioPorcentual(completados, total),
-          cambioEnProceso: calcularCambioPorcentual(enProceso, total),
-          cambioPendientes: calcularCambioPorcentual(pendientes, total)
+          abiertas: conteos['abierta'],
+          enProceso: conteos['en proceso'],
+          finalizadas: conteos['finalizada'],
+          pendientes: conteos['pendiente']
         };
 
         // Actualizar paginación
@@ -481,18 +461,12 @@ export default {
           hasta: Math.min(10, total),
           total
         };
-
       } catch (err) {
         error.value = 'Error al cargar el historial de servicios';
         console.error('Error:', err);
       } finally {
         cargando.value = false;
       }
-    };
-
-    const calcularCambioPorcentual = (actual, total) => {
-      if (total === 0) return 0;
-      return Math.round((actual / total) * 100);
     };
 
     const serviciosFiltrados = computed(() => {
@@ -545,6 +519,21 @@ export default {
       paginacion.value.hasta = Math.min(pagina * 10, paginacion.value.total);
     };
 
+    const badgeEstado = (estado) => {
+      switch (estado) {
+        case 'finalizada':
+          return 'px-2 py-1 rounded-full text-xs font-semibold bg-green-200 text-green-800';
+        case 'en proceso':
+          return 'px-2 py-1 rounded-full text-xs font-semibold bg-blue-200 text-blue-800';
+        case 'abierta':
+          return 'px-2 py-1 rounded-full text-xs font-semibold bg-yellow-200 text-yellow-800';
+        case 'pendiente':
+          return 'px-2 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-800';
+        default:
+          return 'px-2 py-1 rounded-full text-xs font-semibold bg-gray-300 text-gray-900';
+      }
+    };
+
     onMounted(() => {
       cargarServicios();
     });
@@ -564,7 +553,8 @@ export default {
       verDetalles,
       generarPDF,
       exportarServicios,
-      cambiarPagina
+      cambiarPagina,
+      badgeEstado
     };
   }
 };
