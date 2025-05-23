@@ -429,7 +429,7 @@ export default {
     const cargarServicios = async () => {
       try {
         cargando.value = true;
-        const response = await axios.get('/api/historial');
+        const response = await axios.get('/api/historial-vehiculo');
         servicios.value = response.data.map(servicio => ({
           id: servicio.historial_id,
           tipo: servicio.descripcion_servicio,
@@ -533,7 +533,7 @@ export default {
 
     const generarPDF = async (servicio) => {
       try {
-        const response = await axios.get(`/api/historial/${servicio.id}/pdf`, {
+        const response = await axios.get(`/api/historial-vehiculo/${servicio.id}/pdf`, {
           responseType: 'blob'
         });
         const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -551,7 +551,7 @@ export default {
 
     const exportarServicios = async () => {
       try {
-        const response = await axios.get('/api/historial/export', {
+        const response = await axios.get('/api/historial-vehiculo/export', {
           responseType: 'blob'
         });
         const url = window.URL.createObjectURL(new Blob([response.data]));
