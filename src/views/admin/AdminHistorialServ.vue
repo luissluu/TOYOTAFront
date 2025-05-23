@@ -55,8 +55,18 @@
             </select>
           </div>
           
+          <!-- Estado de carga y error -->
+          <div v-if="cargando" class="flex justify-center items-center py-8">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          </div>
+
+          <div v-else-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong class="font-bold">Error:</strong>
+            <span class="block sm:inline">{{ error }}</span>
+          </div>
+
           <!-- Tabla de historial de servicios -->
-          <div class="bg-gray-700 rounded-lg overflow-hidden">
+          <div v-else class="bg-gray-700 rounded-lg overflow-hidden">
             <div class="overflow-x-auto">
               <table class="min-w-full divide-y divide-gray-600">
                 <thead class="bg-gray-800">
@@ -72,6 +82,11 @@
                   </tr>
                 </thead>
                 <tbody class="bg-gray-700 divide-y divide-gray-600">
+                  <tr v-if="serviciosFiltrados.length === 0" class="hover:bg-gray-600 transition-colors duration-200">
+                    <td colspan="8" class="px-6 py-4 text-center text-sm text-gray-400">
+                      No se encontraron servicios
+                    </td>
+                  </tr>
                   <tr v-for="servicio in serviciosFiltrados" :key="servicio.id" class="hover:bg-gray-600 transition-colors duration-200">
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ servicio.id }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ servicio.tipo }}</td>
@@ -109,6 +124,7 @@
                         <button 
                           @click="generarPDF(servicio)" 
                           class="text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                          title="Generar PDF"
                         >
                           <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
@@ -117,6 +133,7 @@
                         <button 
                           @click="verDetalles(servicio)" 
                           class="text-gray-400 hover:text-gray-300 transition-colors duration-200"
+                          title="Ver detalles"
                         >
                           <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -131,12 +148,20 @@
             </div>
             
             <!-- Paginación -->
-            <div class="bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-700 sm:px-6">
+            <div v-if="serviciosFiltrados.length > 0" class="bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-700 sm:px-6">
               <div class="flex-1 flex justify-between sm:hidden">
-                <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                <button 
+                  @click="cambiarPagina(paginacion.paginaActual - 1)"
+                  :disabled="paginacion.paginaActual === 1"
+                  class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                   Anterior
                 </button>
-                <button class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                <button 
+                  @click="cambiarPagina(paginacion.paginaActual + 1)"
+                  :disabled="paginacion.paginaActual === paginacion.totalPaginas"
+                  class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                   Siguiente
                 </button>
               </div>
@@ -367,7 +392,8 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import axios from 'axios';
 
 export default {
   name: 'AdminHistorialServicios',
@@ -377,58 +403,97 @@ export default {
     const busqueda = ref('');
     const filtroEstado = ref('');
     const filtroPeriodo = ref('');
-
-    // Datos de ejemplo
-    const servicios = ref([
-      {
-        id: '#8742',
-        tipo: 'Cambio de aceite y filtro',
-        cliente: {
-          nombre: 'Luis González',
-          telefono: '555-0123',
-          email: 'luis@ejemplo.com',
-          avatar: 'https://ui-avatars.com/api/?name=Luis+Gonzalez&background=random'
-        },
-        vehiculo: {
-          modelo: 'Toyota Corolla 2020',
-          placa: 'ABC123',
-          anio: '2020'
-        },
-        fecha: '05/05/2025',
-        precio: '750',
-        estado: 'completado',
-        descripcion: 'Cambio de aceite sintético y filtro de aceite',
-        historial: [
-          {
-            fecha: '05/05/2025 14:30',
-            descripcion: 'Servicio completado'
-          },
-          {
-            fecha: '05/05/2025 10:15',
-            descripcion: 'Inicio del servicio'
-          }
-        ]
-      }
-    ]);
+    const servicios = ref([]);
+    const cargando = ref(true);
+    const error = ref(null);
 
     const estadisticas = ref({
-      total: 267,
-      completados: 182,
-      enProceso: 53,
-      pendientes: 32,
-      cambioTotal: 12,
-      cambioCompletados: 8,
-      cambioEnProceso: 3,
-      cambioPendientes: 2
+      total: 0,
+      completados: 0,
+      enProceso: 0,
+      pendientes: 0,
+      cambioTotal: 0,
+      cambioCompletados: 0,
+      cambioEnProceso: 0,
+      cambioPendientes: 0
     });
 
     const paginacion = ref({
       paginaActual: 1,
-      totalPaginas: 3,
-      desde: 1,
-      hasta: 4,
-      total: 27
+      totalPaginas: 1,
+      desde: 0,
+      hasta: 0,
+      total: 0
     });
+
+    const cargarServicios = async () => {
+      try {
+        cargando.value = true;
+        const response = await axios.get('/api/historial');
+        servicios.value = response.data.map(servicio => ({
+          id: servicio.historial_id,
+          tipo: servicio.descripcion_servicio,
+          cliente: {
+            nombre: `${servicio.nombre_usuario} ${servicio.apellido_usuario}`,
+            telefono: servicio.telefono || 'No disponible',
+            email: servicio.email || 'No disponible',
+            avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(servicio.nombre_usuario)}+${encodeURIComponent(servicio.apellido_usuario)}&background=random`
+          },
+          vehiculo: {
+            modelo: `${servicio.marca} ${servicio.modelo}`,
+            placa: servicio.placa,
+            anio: servicio.anio || 'No disponible'
+          },
+          fecha: new Date(servicio.fecha).toLocaleDateString(),
+          precio: servicio.costo_total || '0',
+          estado: servicio.estado.toLowerCase(),
+          descripcion: servicio.descripcion_servicio,
+          historial: [
+            {
+              fecha: new Date(servicio.fecha).toLocaleString(),
+              descripcion: `Servicio realizado por ${servicio.nombre_mecanico} ${servicio.apellido_mecanico}`
+            }
+          ]
+        }));
+
+        // Calcular estadísticas
+        const total = servicios.value.length;
+        const completados = servicios.value.filter(s => s.estado === 'completado').length;
+        const enProceso = servicios.value.filter(s => s.estado === 'en-proceso').length;
+        const pendientes = servicios.value.filter(s => s.estado === 'pendiente').length;
+
+        estadisticas.value = {
+          total,
+          completados,
+          enProceso,
+          pendientes,
+          cambioTotal: calcularCambioPorcentual(total, total),
+          cambioCompletados: calcularCambioPorcentual(completados, total),
+          cambioEnProceso: calcularCambioPorcentual(enProceso, total),
+          cambioPendientes: calcularCambioPorcentual(pendientes, total)
+        };
+
+        // Actualizar paginación
+        paginacion.value = {
+          paginaActual: 1,
+          totalPaginas: Math.ceil(total / 10),
+          desde: 1,
+          hasta: Math.min(10, total),
+          total
+        };
+
+      } catch (err) {
+        error.value = 'Error al cargar el historial de servicios';
+        console.error('Error:', err);
+      } finally {
+        cargando.value = false;
+      }
+    };
+
+    const calcularCambioPorcentual = (actual, total) => {
+      if (total === 0) return 0;
+      return Math.round((actual / total) * 100);
+    };
 
     const serviciosFiltrados = computed(() => {
       return servicios.value.filter(servicio => {
@@ -466,20 +531,51 @@ export default {
       mostrarDetalles.value = true;
     };
 
-    const generarPDF = (servicio) => {
-      // Implementar generación de PDF
-      console.log('Generando PDF para:', servicio);
+    const generarPDF = async (servicio) => {
+      try {
+        const response = await axios.get(`/api/historial/${servicio.id}/pdf`, {
+          responseType: 'blob'
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `servicio-${servicio.id}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      } catch (err) {
+        console.error('Error al generar PDF:', err);
+        alert('Error al generar el PDF');
+      }
     };
 
-    const exportarServicios = () => {
-      // Implementar exportación de servicios
-      console.log('Exportando historial de servicios...');
+    const exportarServicios = async () => {
+      try {
+        const response = await axios.get('/api/historial/export', {
+          responseType: 'blob'
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'historial-servicios.xlsx');
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      } catch (err) {
+        console.error('Error al exportar servicios:', err);
+        alert('Error al exportar el historial');
+      }
     };
 
     const cambiarPagina = (pagina) => {
       paginacion.value.paginaActual = pagina;
-      // Aquí iría la lógica para cargar los datos de la nueva página
+      paginacion.value.desde = (pagina - 1) * 10 + 1;
+      paginacion.value.hasta = Math.min(pagina * 10, paginacion.value.total);
     };
+
+    onMounted(() => {
+      cargarServicios();
+    });
 
     return {
       mostrarDetalles,
@@ -491,6 +587,8 @@ export default {
       estadisticas,
       paginacion,
       serviciosFiltrados,
+      cargando,
+      error,
       verDetalles,
       generarPDF,
       exportarServicios,
