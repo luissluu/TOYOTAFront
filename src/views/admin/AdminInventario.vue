@@ -907,6 +907,7 @@ export default {
       articuloSeleccionado.value = null;
       cantidadAEliminar.value = 1;
       errorEliminar.value = '';
+      cargarArticulos(); // Actualiza la lista en tiempo real
     };
 
     const confirmarEliminar = async () => {
@@ -1061,6 +1062,7 @@ export default {
       articuloAgregarStock.value = null;
       cantidadAAgregar.value = 1;
       errorAgregar.value = '';
+      cargarArticulos(); // Actualiza la lista en tiempo real
     };
 
     const confirmarAgregarStock = async () => {
@@ -1166,6 +1168,7 @@ export default {
       mostrarModalAgregarStockHerramienta.value = false;
       herramientaSeleccionadaStock.value = null;
       cantidadAgregarStockHerramienta.value = 1;
+      cargarHerramientas(); // Actualiza la lista en tiempo real
     };
 
     const confirmarAgregarStockHerramienta = async () => {
@@ -1193,6 +1196,7 @@ export default {
       mostrarModalRestarStockHerramienta.value = false;
       herramientaSeleccionadaStock.value = null;
       cantidadRestarStockHerramienta.value = 1;
+      cargarHerramientas(); // Actualiza la lista en tiempo real
     };
 
     const confirmarRestarStockHerramienta = async () => {
