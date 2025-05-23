@@ -308,6 +308,7 @@
                 <div class="relative">
                   <input 
                     type="text" 
+                    v-model="busquedaHerramientas"
                     placeholder="Buscar herramienta..." 
                     class="w-full rounded-md bg-gray-600 border-gray-500 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
@@ -316,7 +317,7 @@
                   </svg>
                 </div>
                 
-                <select class="rounded-md bg-gray-600 border-gray-500 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select v-model="filtroTipoHerramienta" class="rounded-md bg-gray-600 border-gray-500 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                   <option value="">Todos los tipos</option>
                   <option value="manual">Herramientas Manuales</option>
                   <option value="electrica">Herramientas Eléctricas</option>
@@ -324,7 +325,7 @@
                   <option value="diagnostico">Diagnóstico</option>
                 </select>
                 
-                <select class="rounded-md bg-gray-600 border-gray-500 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select v-model="filtroEstadoHerramienta" class="rounded-md bg-gray-600 border-gray-500 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                   <option value="">Todos los estados</option>
                   <option value="disponible">Disponible</option>
                   <option value="prestado">Prestado</option>
@@ -347,7 +348,13 @@
             
             <!-- Tabla de herramientas -->
             <div class="overflow-x-auto">
-              <table class="min-w-full bg-gray-600 rounded-lg overflow-hidden">
+              <div v-if="cargandoHerramientas" class="text-center py-4">
+                <span class="text-white">Cargando...</span>
+              </div>
+              <div v-else-if="errorHerramientas" class="text-center py-4">
+                <span class="text-red-500">{{ errorHerramientas }}</span>
+              </div>
+              <table v-else class="min-w-full bg-gray-600 rounded-lg overflow-hidden">
                 <thead class="bg-gray-700">
                   <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">ID</th>
@@ -359,44 +366,16 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-500">
-                  <!-- Ejemplo de filas de herramientas -->
-                  <tr class="hover:bg-gray-500">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">H001</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">Llave dinamométrica</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">Manual</td>
+                  <tr v-for="herramienta in herramientasFiltradas" :key="herramienta.id" class="hover:bg-gray-500">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ herramienta.id }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ herramienta.nombre }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ herramienta.tipo }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Disponible</span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-white">03/05/2025</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
-                      <button @click="abrirPrestamoModal('H001', 'Llave dinamométrica')" class="text-blue-400 hover:text-blue-300 mr-2">Prestar</button>
-                      <button class="text-yellow-400 hover:text-yellow-300 mr-2">Editar</button>
-                    </td>
-                  </tr>
-                  
-                  <tr class="hover:bg-gray-500">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">H002</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">Escáner OBD2</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">Diagnóstico</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Prestado</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">05/05/2025</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
-                      <button @click="registrarDevolucion('H002')" class="text-green-400 hover:text-green-300 mr-2">Devolver</button>
-                      <button class="text-yellow-400 hover:text-yellow-300 mr-2">Editar</button>
-                    </td>
-                  </tr>
-                  
-                  <tr class="hover:bg-gray-500">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">H003</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">Gato hidráulico</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">Manual</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Mantenimiento</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">28/04/2025</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
+                      <button @click="abrirPrestamoModal(herramienta.id, herramienta.nombre)" class="text-blue-400 hover:text-blue-300 mr-2">Prestar</button>
                       <button class="text-yellow-400 hover:text-yellow-300 mr-2">Editar</button>
                     </td>
                   </tr>
@@ -653,6 +632,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { inventarioService } from '@/services/inventarioService';
 import { notificacionStore } from '../../components/stores/notificacion';
+import axios from 'axios';
 
 export default {
   name: 'AdminInventario',
@@ -685,9 +665,18 @@ export default {
       precio_venta: 0
     });
     
+    const herramientas = ref([]);
+    const cargandoHerramientas = ref(true);
+    const errorHerramientas = ref(null);
+    const busquedaHerramientas = ref('');
+    const filtroTipoHerramienta = ref('');
+    const filtroEstadoHerramienta = ref('');
     const nuevaHerramienta = ref({
       nombre: '',
-      tipo: ''
+      tipo: '',
+      descripcion: '',
+      estado: 'disponible',
+      ultima_actualizacion: new Date().toISOString()
     });
     
     const prestamo = ref({
@@ -771,14 +760,34 @@ export default {
     
     const guardarHerramienta = async () => {
       try {
-        await inventarioService.createArticulo({ ...nuevaHerramienta.value, tipo: 'herramienta' });
-        await cargarArticulos();
+        const herramientaData = {
+          codigo: `H${Date.now().toString().slice(-4)}`,
+          nombre: nuevaHerramienta.value.nombre,
+          descripcion: nuevaHerramienta.value.descripcion || '',
+          categoria: 'herramientas',
+          subcategoria: nuevaHerramienta.value.tipo,
+          stock_actual: 1,
+          stock_minimo: 1,
+          stock_maximo: 1,
+          unidad_medida: 'unidad',
+          precio_compra: 0,
+          precio_venta: 0
+        };
+
+        await axios.post('/api/inventario', herramientaData);
+        await cargarHerramientas();
         mostrarFormularioHerramienta.value = false;
         notificacionStore.mostrar('Herramienta agregada exitosamente', 'success');
-        nuevaHerramienta.value = { nombre: '', tipo: '' };
+        nuevaHerramienta.value = {
+          nombre: '',
+          tipo: '',
+          descripcion: '',
+          estado: 'disponible',
+          ultima_actualizacion: new Date().toISOString()
+        };
       } catch (err) {
         notificacionStore.mostrar('Error al guardar la herramienta', 'error');
-        console.error(err);
+        console.error('Error:', err);
       }
     };
     
@@ -832,25 +841,69 @@ export default {
     const abrirPrestamoModal = (id, nombre) => {
       prestamo.value.herramientaId = id;
       prestamo.value.herramientaNombre = nombre;
+      prestamo.value.fechaHora = new Date().toISOString().slice(0, 16);
       mostrarModalPrestamo.value = true;
     };
     
     const registrarPrestamo = async () => {
       try {
-        // Aquí implementaremos la lógica para registrar el préstamo
+        const movimientoData = {
+          articulo_id: prestamo.value.herramientaId,
+          tipo_movimiento: 'prestamo',
+          cantidad: 1,
+          usuario_id: prestamo.value.usuario,
+          motivo: 'Préstamo de herramienta',
+          notas: prestamo.value.notas
+        };
+
+        await axios.post('/api/movimientos-inventario', movimientoData);
+        
+        // Actualizar estado de la herramienta
+        await axios.patch(`/api/inventario/${prestamo.value.herramientaId}/stock`, {
+          cantidad: -1
+        });
+
+        await cargarHerramientas();
         mostrarModalPrestamo.value = false;
+        notificacionStore.mostrar('Préstamo registrado exitosamente', 'success');
+        
+        // Limpiar formulario
+        prestamo.value = {
+          herramientaId: '',
+          herramientaNombre: '',
+          usuario: '',
+          fechaHora: '',
+          notas: ''
+        };
       } catch (err) {
-        error.value = 'Error al registrar el préstamo';
-        console.error(err);
+        notificacionStore.mostrar('Error al registrar el préstamo', 'error');
+        console.error('Error:', err);
       }
     };
     
-    const registrarDevolucion = async (id) => {
+    const registrarDevolucion = async (herramientaId) => {
       try {
-        // Aquí implementaremos la lógica para registrar la devolución
+        const movimientoData = {
+          articulo_id: herramientaId,
+          tipo_movimiento: 'devolucion',
+          cantidad: 1,
+          usuario_id: prestamo.value.usuario,
+          motivo: 'Devolución de herramienta',
+          notas: 'Devolución de herramienta prestada'
+        };
+
+        await axios.post('/api/movimientos-inventario', movimientoData);
+        
+        // Actualizar estado de la herramienta
+        await axios.patch(`/api/inventario/${herramientaId}/stock`, {
+          cantidad: 1
+        });
+
+        await cargarHerramientas();
+        notificacionStore.mostrar('Devolución registrada exitosamente', 'success');
       } catch (err) {
-        error.value = 'Error al registrar la devolución';
-        console.error(err);
+        notificacionStore.mostrar('Error al registrar la devolución', 'error');
+        console.error('Error:', err);
       }
     };
 
@@ -923,8 +976,33 @@ export default {
       }
     };
 
+    // Cargar herramientas
+    const cargarHerramientas = async () => {
+      try {
+        cargandoHerramientas.value = true;
+        const response = await axios.get('/api/inventario/categoria/herramientas');
+        herramientas.value = response.data;
+      } catch (err) {
+        errorHerramientas.value = 'Error al cargar las herramientas';
+        console.error('Error:', err);
+      } finally {
+        cargandoHerramientas.value = false;
+      }
+    };
+
+    // Filtrar herramientas
+    const herramientasFiltradas = computed(() => {
+      return herramientas.value.filter(herramienta => {
+        const coincideBusqueda = herramienta.nombre.toLowerCase().includes(busquedaHerramientas.value.toLowerCase());
+        const coincideTipo = !filtroTipoHerramienta.value || herramienta.tipo === filtroTipoHerramienta.value;
+        const coincideEstado = !filtroEstadoHerramienta.value || herramienta.estado === filtroEstadoHerramienta.value;
+        return coincideBusqueda && coincideTipo && coincideEstado;
+      });
+    });
+
     onMounted(() => {
       cargarArticulos();
+      cargarHerramientas();
     });
     
     return {
@@ -934,17 +1012,19 @@ export default {
       mostrarModalPrestamo,
       exito,
       nuevaPieza,
+      herramientas,
+      cargandoHerramientas,
+      errorHerramientas,
+      busquedaHerramientas,
+      filtroTipoHerramienta,
+      filtroEstadoHerramienta,
       nuevaHerramienta,
       prestamo,
       articulos,
       articulosFiltrados,
       loading,
       error,
-      filtroCategoria,
-      filtroEstado,
-      busqueda,
       guardarPieza,
-      guardarHerramienta,
       editarArticulo,
       abrirPrestamoModal,
       registrarPrestamo,
@@ -964,7 +1044,11 @@ export default {
       mostrarModalAgregarStock,
       articuloAgregarStock,
       cantidadAAgregar,
-      errorAgregar
+      errorAgregar,
+      herramientasFiltradas,
+      cargarHerramientas,
+      guardarHerramienta,
+      editarHerramienta
     };
   }
 };
