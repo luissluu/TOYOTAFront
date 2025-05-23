@@ -190,7 +190,7 @@
               </div>
               <div>
                 <p class="text-sm font-medium text-gray-300">Servicios Completados</p>
-                <p class="text-xl font-bold text-white">{{ estadisticas.completados }}</p>
+                <p class="text-xl font-bold text-white">{{ estadisticas.finalizadas }}</p>
               </div>
             </div>
             <div class="bg-gray-700 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-gray-600">
@@ -211,8 +211,8 @@
                 </svg>
               </div>
               <div>
-                <p class="text-sm font-medium text-gray-300">Pendientes</p>
-                <p class="text-xl font-bold text-white">{{ estadisticas.pendientes }}</p>
+                <p class="text-sm font-medium text-gray-300">Abiertas</p>
+                <p class="text-xl font-bold text-white">{{ estadisticas.abiertas }}</p>
               </div>
             </div>
           </div>
@@ -314,9 +314,9 @@ export default {
     });
     const estadisticas = ref({
       totalGastado: 0,
-      completados: 0,
+      abiertas: 0,
       enProceso: 0,
-      pendientes: 0
+      finalizadas: 0
     });
     const mostrarDetalles = ref(false);
     const servicioDetalle = ref(null);
@@ -325,8 +325,7 @@ export default {
       { value: '', label: 'Todos los estados' },
       { value: 'abierta', label: 'Abierta' },
       { value: 'en progreso', label: 'En Progreso' },
-      { value: 'finalizada', label: 'Finalizada' },
-      { value: 'pendiente', label: 'Pendiente' }
+      { value: 'finalizada', label: 'Finalizada' }
     ];
 
     const cargarServicios = async () => {
@@ -358,9 +357,9 @@ export default {
         // Estadísticas
         estadisticas.value = {
           totalGastado: servicios.value.reduce((acc, s) => acc + Number(s.precio), 0),
-          completados: servicios.value.filter(s => s.estado === 'finalizada').length,
+          abiertas: servicios.value.filter(s => s.estado === 'abierta').length,
           enProceso: servicios.value.filter(s => s.estado === 'en progreso').length,
-          pendientes: servicios.value.filter(s => s.estado === 'pendiente').length
+          finalizadas: servicios.value.filter(s => s.estado === 'finalizada').length
         };
         // Paginación
         const total = servicios.value.length;
@@ -384,7 +383,7 @@ export default {
       const e = estado.toLowerCase().trim();
       if (e === 'completado' || e === 'finalizado' || e === 'finalizada') return 'finalizada';
       if (e === 'en proceso' || e === 'en progreso') return 'en progreso';
-      if (e === 'pendiente' || e === 'abierta') return 'pendiente';
+      if (e === 'pendiente' || e === 'abierta') return 'abierta';
       return e;
     }
 
@@ -410,8 +409,6 @@ export default {
           return 'px-2 py-1 rounded-full text-xs font-semibold bg-blue-200 text-blue-800';
         case 'abierta':
           return 'px-2 py-1 rounded-full text-xs font-semibold bg-yellow-200 text-yellow-800';
-        case 'pendiente':
-          return 'px-2 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-800';
         default:
           return 'px-2 py-1 rounded-full text-xs font-semibold bg-gray-300 text-gray-900';
       }
