@@ -546,7 +546,7 @@
                     <label class="block text-sm font-medium text-gray-400 mb-1">Usuario (Mecánico)</label>
                     <select v-model.number="prestamoHerramienta.usuario" @change="errorPrestamoHerramienta = ''" class="w-full rounded-md bg-gray-700 border-gray-600 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                       <option value="">Selecciona un mecánico</option>
-                      <option v-for="mecanico in mecanicos" :key="mecanico.id" :value="mecanico.id">{{ mecanico.nombre }}</option>
+                      <option v-for="mecanico in mecanicos" :key="mecanico.usuario_id" :value="mecanico.usuario_id">{{ mecanico.nombre }}</option>
                     </select>
                   </div>
                   <div>
