@@ -193,60 +193,49 @@
           </div>
           
           <!-- Resumen de estadísticas -->
-          <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6 animate-fade-in">
-            <div class="bg-gray-700 p-5 rounded-lg shadow-sm hover:bg-gray-600 transition-colors duration-200 flex items-center">
-              <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
-                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div class="bg-gray-700 p-7 rounded-2xl shadow-xl flex items-center gap-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 border border-gray-600">
+              <div class="flex-shrink-0 bg-blue-500 rounded-xl h-16 w-16 flex items-center justify-center">
+                <svg class="h-9 w-9 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <div class="ml-5">
-                <p class="text-sm font-medium text-gray-300">Servicios Totales</p>
-                <p class="text-2xl font-semibold text-white">{{ estadisticas.total }}</p>
+              <div>
+                <p class="text-base font-medium text-gray-300">Servicios Totales</p>
+                <p class="text-3xl font-bold text-white">{{ estadisticas.total }}</p>
               </div>
             </div>
-            <div class="bg-gray-700 p-5 rounded-lg shadow-sm hover:bg-gray-600 transition-colors duration-200 flex items-center">
-              <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
-                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="bg-gray-700 p-7 rounded-2xl shadow-xl flex items-center gap-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 border border-gray-600">
+              <div class="flex-shrink-0 bg-yellow-400 rounded-xl h-16 w-16 flex items-center justify-center">
+                <svg class="h-9 w-9 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <div class="ml-5">
-                <p class="text-sm font-medium text-gray-300">Abiertas</p>
-                <p class="text-2xl font-semibold text-white">{{ estadisticas.abiertas }}</p>
+              <div>
+                <p class="text-base font-medium text-gray-300">Abiertas</p>
+                <p class="text-3xl font-bold text-white">{{ estadisticas.abiertas }}</p>
               </div>
             </div>
-            <div class="bg-gray-700 p-5 rounded-lg shadow-sm hover:bg-gray-600 transition-colors duration-200 flex items-center">
-              <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
-                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="bg-gray-700 p-7 rounded-2xl shadow-xl flex items-center gap-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 border border-gray-600">
+              <div class="flex-shrink-0 bg-blue-400 rounded-xl h-16 w-16 flex items-center justify-center">
+                <svg class="h-9 w-9 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                 </svg>
               </div>
-              <div class="ml-5">
-                <p class="text-sm font-medium text-gray-300">En Proceso</p>
-                <p class="text-2xl font-semibold text-white">{{ estadisticas.enProceso }}</p>
+              <div>
+                <p class="text-base font-medium text-gray-300">En Progreso</p>
+                <p class="text-3xl font-bold text-white">{{ estadisticas.enProgreso }}</p>
               </div>
             </div>
-            <div class="bg-gray-700 p-5 rounded-lg shadow-sm hover:bg-gray-600 transition-colors duration-200 flex items-center">
-              <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
-                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="bg-gray-700 p-7 rounded-2xl shadow-xl flex items-center gap-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 border border-gray-600">
+              <div class="flex-shrink-0 bg-green-500 rounded-xl h-16 w-16 flex items-center justify-center">
+                <svg class="h-9 w-9 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <div class="ml-5">
-                <p class="text-sm font-medium text-gray-300">Finalizadas</p>
-                <p class="text-2xl font-semibold text-white">{{ estadisticas.finalizadas }}</p>
-              </div>
-            </div>
-            <div class="bg-gray-700 p-5 rounded-lg shadow-sm hover:bg-gray-600 transition-colors duration-200 flex items-center">
-              <div class="flex-shrink-0 bg-gray-500 rounded-md p-3">
-                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                </svg>
-              </div>
-              <div class="ml-5">
-                <p class="text-sm font-medium text-gray-300">Pendientes</p>
-                <p class="text-2xl font-semibold text-white">{{ estadisticas.pendientes }}</p>
+              <div>
+                <p class="text-base font-medium text-gray-300">Finalizadas</p>
+                <p class="text-3xl font-bold text-white">{{ estadisticas.finalizadas }}</p>
               </div>
             </div>
           </div>
@@ -365,7 +354,7 @@ export default {
     const estadisticas = ref({
       total: 0,
       abiertas: 0,
-      enProceso: 0,
+      enProgreso: 0,
       finalizadas: 0,
       pendientes: 0
     });
@@ -410,7 +399,7 @@ export default {
 
         // Calcular estadísticas dinámicamente según los estados presentes (excepto cancelada)
         const total = servicios.value.length;
-        const estados = ['abierta', 'en proceso', 'finalizada', 'pendiente'];
+        const estados = ['abierta', 'en progreso', 'finalizada'];
         const conteos = {};
         estados.forEach(e => {
           conteos[e] = servicios.value.filter(s => s.estado === e).length;
@@ -419,7 +408,7 @@ export default {
         estadisticas.value = {
           total,
           abiertas: conteos['abierta'],
-          enProceso: conteos['en proceso'],
+          enProgreso: conteos['en progreso'],
           finalizadas: conteos['finalizada'],
           pendientes: conteos['pendiente']
         };
@@ -443,7 +432,7 @@ export default {
     const estadosDisponibles = [
       { value: '', label: 'Todos los estados' },
       { value: 'abierta', label: 'Abierta' },
-      { value: 'en proceso', label: 'En Proceso' },
+      { value: 'en progreso', label: 'En Progreso' },
       { value: 'finalizada', label: 'Finalizada' },
       { value: 'pendiente', label: 'Pendiente' }
     ];
@@ -523,7 +512,7 @@ export default {
       switch (estado) {
         case 'finalizada':
           return 'px-2 py-1 rounded-full text-xs font-semibold bg-green-200 text-green-800';
-        case 'en proceso':
+        case 'en progreso':
           return 'px-2 py-1 rounded-full text-xs font-semibold bg-blue-200 text-blue-800';
         case 'abierta':
           return 'px-2 py-1 rounded-full text-xs font-semibold bg-yellow-200 text-yellow-800';
@@ -550,8 +539,8 @@ export default {
         iconBg: 'bg-yellow-500'
       },
       {
-        titulo: 'En Proceso',
-        valor: estadisticas.value.enProceso,
+        titulo: 'En Progreso',
+        valor: estadisticas.value.enProgreso,
         icon: '⚙️',
         bg: 'bg-gray-700',
         iconBg: 'bg-blue-500'
