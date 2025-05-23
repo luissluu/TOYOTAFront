@@ -37,6 +37,7 @@
     try {
       const { data } = await axios.get('/api/servicios')
       servicios.value = data
+      console.log('Servicios cargados:', servicios.value)
     } catch (error) {
       console.error('Error al cargar servicios:', error)
     }
