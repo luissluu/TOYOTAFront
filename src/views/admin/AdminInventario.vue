@@ -375,8 +375,7 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-white">03/05/2025</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
-                      <button @click="abrirPrestamoModal(herramienta.id, herramienta.nombre)" class="text-blue-400 hover:text-blue-300 mr-2">Prestar</button>
-                      <button class="text-yellow-400 hover:text-yellow-300 mr-2">Editar</button>
+                      <button @click="editarHerramienta(herramienta)" class="text-yellow-400 hover:text-yellow-300 mr-2">Editar</button>
                     </td>
                   </tr>
                 </tbody>
@@ -407,9 +406,9 @@
                   </svg>
                 </button>
                 
-                <h3 class="text-xl font-medium text-white mb-4">Añadir Nueva Herramienta</h3>
+                <h3 class="text-xl font-medium text-white mb-4">{{ editandoHerramienta ? 'Editar Herramienta' : 'Añadir Nueva Herramienta' }}</h3>
                 
-                <form @submit.prevent="guardarHerramienta" class="space-y-4">
+                <form @submit.prevent="editandoHerramienta ? actualizarHerramienta() : guardarHerramienta" class="space-y-4">
                   <div>
                     <label class="block text-sm font-medium text-gray-400 mb-1">Nombre</label>
                     <input type="text" v-model="nuevaHerramienta.nombre" class="w-full rounded-md bg-gray-700 border-gray-600 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
@@ -698,6 +697,9 @@ export default {
     const articuloAgregarStock = ref(null);
     const cantidadAAgregar = ref(1);
     const errorAgregar = ref('');
+
+    const editandoHerramienta = ref(false);
+    let idHerramientaEditando = null;
 
     // Cargar artículos al montar el componente
     const cargarArticulos = async () => {
@@ -1000,6 +1002,54 @@ export default {
       });
     });
 
+    const editarHerramienta = (herramienta) => {
+      nuevaHerramienta.value = {
+        nombre: herramienta.nombre,
+        tipo: herramienta.subcategoria || herramienta.tipo,
+        descripcion: herramienta.descripcion || '',
+        estado: herramienta.estado || 'disponible',
+        ultima_actualizacion: herramienta.ultima_actualizacion || new Date().toISOString()
+      };
+      editandoHerramienta.value = true;
+      idHerramientaEditando = herramienta.id || herramienta.articulo_id;
+      mostrarFormularioHerramienta.value = true;
+    };
+
+    const actualizarHerramienta = async () => {
+      try {
+        const herramientaData = {
+          nombre: nuevaHerramienta.value.nombre,
+          descripcion: nuevaHerramienta.value.descripcion || '',
+          categoria: 'herramientas',
+          subcategoria: nuevaHerramienta.value.tipo,
+          stock_actual: 1,
+          stock_minimo: 1,
+          stock_maximo: 1,
+          unidad_medida: 'unidad',
+          precio_compra: 0,
+          precio_venta: 0,
+          estado: nuevaHerramienta.value.estado,
+          ultima_actualizacion: new Date().toISOString()
+        };
+        await axios.put(`/api/inventario/${idHerramientaEditando}`, herramientaData);
+        await cargarHerramientas();
+        mostrarFormularioHerramienta.value = false;
+        editandoHerramienta.value = false;
+        idHerramientaEditando = null;
+        notificacionStore.mostrar('Herramienta actualizada exitosamente', 'success');
+        nuevaHerramienta.value = {
+          nombre: '',
+          tipo: '',
+          descripcion: '',
+          estado: 'disponible',
+          ultima_actualizacion: new Date().toISOString()
+        };
+      } catch (err) {
+        notificacionStore.mostrar('Error al actualizar la herramienta', 'error');
+        console.error('Error:', err);
+      }
+    };
+
     onMounted(() => {
       cargarArticulos();
       cargarHerramientas();
@@ -1048,7 +1098,10 @@ export default {
       herramientasFiltradas,
       cargarHerramientas,
       guardarHerramienta,
-      editarHerramienta
+      editarHerramienta,
+      editandoHerramienta,
+      idHerramientaEditando,
+      actualizarHerramienta
     };
   }
 };
