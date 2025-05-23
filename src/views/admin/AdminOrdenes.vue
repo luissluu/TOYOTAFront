@@ -25,9 +25,9 @@
             v-model="filtroEstado" 
             class="bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">Todos los estados</option>
-            <option value="abierta">Abierta</option>
+            <option value="">Abierta</option>
             <option value="en proceso">En Proceso</option>
+            <option value="finalizada">Finalizada</option>
           </select>
         </div>
       </div>
@@ -156,7 +156,7 @@ export default {
           orden.apellido_usuario.toLowerCase().includes(busqueda.value.toLowerCase()) ||
           orden.placa_vehiculo.toLowerCase().includes(busqueda.value.toLowerCase())
         
-        const coincideEstado = filtroEstado.value === '' || orden.estado === filtroEstado.value
+        const coincideEstado = filtroEstado.value === '' ? orden.estado === 'abierta' : orden.estado === filtroEstado.value
         
         return coincideBusqueda && coincideEstado
       })
