@@ -569,6 +569,7 @@
                 <div class="relative">
                   <input 
                     type="text" 
+                    v-model="busquedaPrestamos"
                     placeholder="Buscar por herramienta o usuario..." 
                     class="w-full rounded-md bg-gray-600 border-gray-500 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
@@ -576,14 +577,6 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
-                
-                <select class="rounded-md bg-gray-600 border-gray-500 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                  <option value="">Todos los usuarios</option>
-                  <option value="Luis González">Luis González</option>
-                  <option value="María García">María García</option>
-                  <option value="Carlos Rodríguez">Carlos Rodríguez</option>
-                  <option value="Ana López">Ana López</option>
-                </select>
               </div>
               
               <div class="flex gap-2">                
@@ -598,7 +591,13 @@
             
             <!-- Tabla de préstamos activos -->
             <div class="overflow-x-auto">
-              <table class="min-w-full bg-gray-600 rounded-lg overflow-hidden">
+              <div v-if="cargandoPrestamos" class="text-center py-4">
+                <span class="text-white">Cargando...</span>
+              </div>
+              <div v-else-if="errorPrestamos" class="text-center py-4">
+                <span class="text-red-500">{{ errorPrestamos }}</span>
+              </div>
+              <table v-else class="min-w-full bg-gray-600 rounded-lg overflow-hidden">
                 <thead class="bg-gray-700">
                   <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">ID Herramienta</th>
@@ -610,16 +609,16 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-500">
-                  <tr class="hover:bg-gray-500">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">H002</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">Escáner OBD2</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">Carlos Rodríguez</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">05/05/2025 14:30</td>
+                  <tr v-for="prestamo in prestamosFiltrados" :key="prestamo.movimiento_id" class="hover:bg-gray-500">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ prestamo.articulo_id }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ prestamo.nombre_articulo }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ prestamo.nombre_usuario }} {{ prestamo.apellido_usuario }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ new Date(prestamo.fecha_movimiento).toLocaleString() }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Prestado</span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
-                      <button @click="registrarDevolucion('H002')" class="text-green-400 hover:text-green-300 mr-2">Devolver</button>
+                      <button @click="registrarDevolucion(prestamo.movimiento_id)" class="text-green-400 hover:text-green-300 mr-2">Devolver</button>
                       <button class="text-blue-400 hover:text-blue-300">Ver Detalles</button>
                     </td>
                   </tr>
@@ -630,13 +629,8 @@
             <!-- Paginación -->
             <div class="flex justify-between items-center mt-6">
               <div class="text-sm text-gray-400">
-                Mostrando 1-1 de 1 resultados
+                Mostrando {{ prestamosFiltrados.length }} resultados
               </div>
-              <nav class="flex items-center">
-                <button class="px-3 py-1 bg-gray-600 text-white rounded-l-md hover:bg-gray-500">Anterior</button>
-                <button class="px-3 py-1 bg-blue-600 text-white">1</button>
-                <button class="px-3 py-1 bg-gray-600 text-white rounded-r-md hover:bg-gray-500">Siguiente</button>
-              </nav>
             </div>
           </div>
         </div>
@@ -808,6 +802,10 @@ export default {
     const herramientaSeleccionadaPrestamo = ref(null);
     const errorPrestamoHerramienta = ref('');
     const mecanicos = ref([]);
+
+    const prestamosActivos = ref([]);
+    const cargandoPrestamos = ref(true);
+    const errorPrestamos = ref(null);
 
     // Cargar artículos al montar el componente
     const cargarArticulos = async () => {
@@ -992,25 +990,28 @@ export default {
       }
     };
     
-    const registrarDevolucion = async (herramientaId) => {
+    const registrarDevolucion = async (movimientoId) => {
       try {
-        const movimientoData = {
-          articulo_id: herramientaId,
+        const movimiento = prestamosActivos.value.find(p => p.movimiento_id === movimientoId);
+        if (!movimiento) return;
+
+        // Registrar la devolución
+        await axios.post('/api/movimientos-inventario', {
+          articulo_id: movimiento.articulo_id,
           tipo_movimiento: 'devolucion',
           cantidad: 1,
-          usuario_id: prestamo.value.usuario,
+          usuario_id: movimiento.usuario_id,
           motivo: 'Devolución de herramienta',
           notas: 'Devolución de herramienta prestada'
-        };
+        });
 
-        await axios.post('/api/movimientos-inventario', movimientoData);
-        
-        // Actualizar estado de la herramienta
-        await axios.patch(`/api/inventario/${herramientaId}/stock`, {
+        // Actualizar el stock
+        await axios.patch(`/api/inventario/${movimiento.articulo_id}/stock`, {
           cantidad: 1
         });
 
-        await cargarHerramientas();
+        // Recargar los préstamos activos
+        await cargarPrestamosActivos();
         notificacionStore.mostrar('Devolución registrada exitosamente', 'success');
       } catch (err) {
         notificacionStore.mostrar('Error al registrar la devolución', 'error');
@@ -1272,9 +1273,38 @@ export default {
       }
     };
 
+    // Cargar préstamos activos
+    const cargarPrestamosActivos = async () => {
+      try {
+        cargandoPrestamos.value = true;
+        const response = await axios.get('/api/movimientos-inventario?tipo=prestamo');
+        prestamosActivos.value = response.data.filter(movimiento => {
+          // Verificar si hay una devolución correspondiente
+          return !movimiento.devolucion_id;
+        });
+      } catch (err) {
+        errorPrestamos.value = 'Error al cargar los préstamos activos';
+        console.error('Error:', err);
+      } finally {
+        cargandoPrestamos.value = false;
+      }
+    };
+
+    // Filtrar préstamos
+    const prestamosFiltrados = computed(() => {
+      return prestamosActivos.value.filter(prestamo => {
+        const coincideBusqueda = prestamo.nombre_articulo.toLowerCase().includes(busquedaPrestamos.value.toLowerCase()) ||
+                                prestamo.nombre_usuario.toLowerCase().includes(busquedaPrestamos.value.toLowerCase());
+        return coincideBusqueda;
+      });
+    });
+
+    const busquedaPrestamos = ref('');
+
     onMounted(() => {
       cargarArticulos();
       cargarHerramientas();
+      cargarPrestamosActivos();
     });
     
     return {
@@ -1342,7 +1372,14 @@ export default {
       mecanicos,
       abrirModalPrestarHerramienta,
       cerrarModalPrestarHerramienta,
-      confirmarPrestamoHerramienta
+      confirmarPrestamoHerramienta,
+      prestamosActivos,
+      cargandoPrestamos,
+      errorPrestamos,
+      busquedaPrestamos,
+      prestamosFiltrados,
+      cargarPrestamosActivos,
+      registrarDevolucion
     };
   }
 };
