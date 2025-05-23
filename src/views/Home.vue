@@ -58,88 +58,38 @@
         </div>
     </div>
 
-    <section class="flex flex-col w-full px-6  md:justify-between md:items-center md:flex-row rounded-lg">
-    <div class="max-w-5xl mx-auto w-full">
-        <!-- Title for the progress bar -->
-        <h2 class="text-lg font-bold text-white mb-0 text-center">Estado del Servicio</h2>
-        
-        <ol class="flex flex-row items-center justify-between w-full mb-3">
-            <!-- Paso 1: Orden recibida (Completado) -->
-            <li class="flex flex-col items-center">
-                <div class="relative flex items-center justify-center">
-                    <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full shrink-0 z-10">
-                        <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
-                        </svg>
-                    </div>
-                    <!-- Connector line to next step -->
-                    <div class="absolute w-full h-0.5 bg-blue-500 right-1/2 top-6"></div>
-                </div>
-                <span class="mt-1 text-center text-sm font-medium text-blue-300">Orden recibida</span>
-                <span class="text-xs text-blue-200">Completado</span>
-            </li>
-            
-            <!-- Paso 2: Recibido (Activo) -->
-            <li class="flex flex-col items-center">
-                <div class="relative flex items-center justify-center">
-                    <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full shrink-0 z-10 animate-pulse">
-                        <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
-                            <path d="M18 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2ZM6.5 3a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5Z"/>
-                        </svg>
-                    </div>
-                    <!-- Connector line to next step -->
-                    <div class="absolute w-full h-0.5 bg-gray-500 right-1/2 top-6"></div>
-                </div>
-                <span class="mt-1 text-center text-sm font-medium text-blue-300">Recibido</span>
-                <span class="text-xs text-white">En proceso</span>
-            </li>
-            
-            <!-- Paso 3: Mantenimiento (Pendiente) -->
-            <li class="flex flex-col items-center">
-                <div class="relative flex items-center justify-center">
-                    <div class="flex items-center justify-center w-12 h-12 bg-gray-600 rounded-full shrink-0 z-10">
-                        <svg class="w-6 h-6 text-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
-                            <path d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Z"/>
-                        </svg>
-                    </div>
-                    <!-- Connector line to next step -->
-                    <div class="absolute w-full h-0.5 bg-gray-500 right-1/2 top-6"></div>
-                </div>
-                <span class="mt-1 text-center text-sm font-medium text-gray-300">Mantenimiento</span>
-                <span class="text-xs text-gray-400">Pendiente</span>
-            </li>
-            
-            <!-- Paso 4: Control de Calidad (Pendiente) -->
-            <li class="flex flex-col items-center">
-                <div class="relative flex items-center justify-center">
-                    <div class="flex items-center justify-center w-12 h-12 bg-gray-600 rounded-full shrink-0 z-10">
-                        <svg class="w-6 h-6 text-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
-                        </svg>
-                    </div>
-                    <!-- Connector line to next step -->
-                    <div class="absolute w-full h-0.5 bg-gray-500 right-1/2 top-6"></div>
-                </div>
-                <span class="mt-1 text-center text-sm font-medium text-gray-300">Control de Calidad</span>
-                <span class="text-xs text-gray-400">Pendiente</span>
-            </li>
-            
-            <!-- Paso 5: Entrega (Pendiente) -->
-            <li class="flex flex-col items-center">
-                <div class="flex items-center justify-center w-12 h-12 bg-gray-600 rounded-full shrink-0">
-                    <svg class="w-6 h-6 text-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
-                    </svg>
-                </div>
-                <span class="mt-1 text-center text-sm font-medium text-gray-300">Entrega</span>
-                <span class="text-xs text-gray-400">Pendiente</span>
-            </li>
-        </ol>
-        
-        <!-- Tiempo estimado de entrega -->
-        <div class="flex items-center justify-center">
+    <!-- Filtro de órdenes -->
+    <div v-if="ordenes.length" class="flex flex-col items-center mb-6">
+        <label class="text-white font-semibold mb-2">Selecciona tu orden:</label>
+        <select
+            v-model="ordenSeleccionadaId"
+            class="bg-gray-800 text-white px-4 py-2 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+            <option v-for="orden in ordenes" :key="orden.orden_id" :value="orden.orden_id">
+                Orden #{{ orden.orden_id }} - {{ orden.detalles[0]?.nombre_servicio || 'Servicio' }}
+            </option>
+        </select>
+    </div>
+
+    <!-- Barra de progreso dinámica -->
+    <div v-if="ordenSeleccionada" class="w-full max-w-3xl mx-auto mb-8">
+        <h2 class="text-2xl font-bold text-white text-center mb-4">Estado del Servicio</h2>
+        <div class="relative w-full h-6 bg-gray-700 rounded-full overflow-hidden shadow-lg mb-4">
+            <div
+                class="h-full bg-gradient-to-r from-blue-500 to-green-400 transition-all duration-700"
+                :style="{ width: progresoOrden + '%' }"
+            ></div>
+            <div
+                class="absolute top-0 left-0 w-full h-full flex items-center justify-between px-4 text-xs font-bold text-white"
+            >
+                <span v-for="(etapa, idx) in etapas" :key="etapa.key" :class="{'text-blue-200': idx <= etapaActual}">
+                    {{ etapa.label }}
+                </span>
+            </div>
+        </div>
+        <div class="flex justify-center">
             <div class="bg-gray-700 rounded-lg px-4 py-2 inline-flex items-center">
-                <svg class="w-5 h-5 text-blue-300 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="w-5 h-5 text-blue-300 mr-2" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
                     <path d="M12 7V12L15 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -150,7 +100,6 @@
             </div>
         </div>
     </div>
-</section>
 
     <!-- Estructura de dos columnas -->
     <div class="flex flex-wrap">
@@ -235,7 +184,7 @@
 
 <script>
 import axios from 'axios'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useAuthStore } from '@/components/stores/auth'
 
 const steps = [
@@ -307,6 +256,28 @@ export default {
   setup() {
     const authStore = useAuthStore()
     const ordenes = ref([])
+    const ordenSeleccionadaId = ref(null)
+    const ordenSeleccionada = computed(() =>
+      ordenes.value.find(o => o.orden_id === ordenSeleccionadaId.value)
+    )
+    const etapaActual = computed(() => {
+      if (!ordenSeleccionada.value) return 0
+      // Puedes ajustar este mapeo según los estados reales de tu backend
+      const estado = (ordenSeleccionada.value.detalles[0]?.estado || '').toLowerCase()
+      if (estado.includes('entrega')) return 4
+      if (estado.includes('control')) return 3
+      if (estado.includes('mantenimiento')) return 2
+      if (estado.includes('progreso') || estado.includes('recibido')) return 1
+      return 0 // Orden recibida
+    })
+    const progresoOrden = computed(() => (etapaActual.value / (etapas.length - 1)) * 100)
+    const etapas = ref([
+      { key: 'orden_recibida', label: 'Orden recibida' },
+      { key: 'recibido', label: 'Recibido' },
+      { key: 'mantenimiento', label: 'Mantenimiento' },
+      { key: 'control_calidad', label: 'Control de Calidad' },
+      { key: 'entrega', label: 'Entrega' }
+    ])
 
     const cargarOrdenes = async () => {
       try {
@@ -323,9 +294,12 @@ export default {
     onMounted(() => {
       cargarOrdenes()
       cargarServiciosAleatorios()
+      if (ordenes.value.length) {
+        ordenSeleccionadaId.value = ordenes.value[0].orden_id
+      }
     })
 
-    return { ordenes, steps, getStepClass, getStepTextClass, mapEstadoStepper, serviciosAleatorios }
+    return { ordenes, steps, getStepClass, getStepTextClass, mapEstadoStepper, serviciosAleatorios, ordenSeleccionadaId, ordenSeleccionada, progresoOrden, etapaActual, etapas }
   }
 }
 </script>
