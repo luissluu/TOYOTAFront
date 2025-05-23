@@ -72,17 +72,24 @@
                       <div class="flex space-x-3">
                         <button 
                           @click="verDetalles(servicio)" 
-                          class="text-blue-400 hover:text-blue-300 transition-colors duration-200"
-                          title="Ver detalles"
+                          class="text-blue-400 hover:text-blue-300 transition-colors duration-200 relative group"
+                          aria-label="Ver detalles"
                         >
-                          Ver
+                          <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                          <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-2 py-1 rounded bg-gray-900 text-xs text-white opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">Ver detalles</span>
                         </button>
                         <button 
                           @click="generarPDF(servicio)" 
-                          class="text-blue-400 hover:text-blue-300 transition-colors duration-200"
-                          title="Generar PDF"
+                          class="text-blue-400 hover:text-blue-300 transition-colors duration-200 relative group"
+                          aria-label="Generar PDF"
                         >
-                          Descargar
+                          <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                          </svg>
+                          <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-2 py-1 rounded bg-gray-900 text-xs text-white opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">Generar PDF</span>
                         </button>
                       </div>
                     </td>
