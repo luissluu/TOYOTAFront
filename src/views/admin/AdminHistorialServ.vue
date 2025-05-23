@@ -429,29 +429,29 @@ export default {
     const cargarServicios = async () => {
       try {
         cargando.value = true;
-        const response = await axios.get('/api/historial-vehiculo');
-        servicios.value = response.data.map(servicio => ({
-          id: servicio.historial_id,
-          tipo: servicio.descripcion_servicio,
+        const response = await axios.get('/api/ordenes-servicio');
+        servicios.value = response.data.map(orden => ({
+          id: orden.orden_id,
+          tipo: orden.diagnostico || 'Sin diagnóstico',
           cliente: {
-            nombre: `${servicio.nombre_usuario} ${servicio.apellido_usuario}`,
-            telefono: servicio.telefono || 'No disponible',
-            email: servicio.email || 'No disponible',
-            avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(servicio.nombre_usuario)}+${encodeURIComponent(servicio.apellido_usuario)}&background=random`
+            nombre: `${orden.nombre_usuario} ${orden.apellido_usuario}`,
+            telefono: orden.telefono || 'No disponible',
+            email: orden.email || 'No disponible',
+            avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(orden.nombre_usuario)}+${encodeURIComponent(orden.apellido_usuario)}&background=random`
           },
           vehiculo: {
-            modelo: `${servicio.marca} ${servicio.modelo}`,
-            placa: servicio.placa,
-            anio: servicio.anio || 'No disponible'
+            modelo: `${orden.marca_vehiculo} ${orden.modelo_vehiculo}`,
+            placa: orden.placa_vehiculo,
+            anio: orden.anio || 'No disponible'
           },
-          fecha: new Date(servicio.fecha).toLocaleDateString(),
-          precio: servicio.costo_total || '0',
-          estado: servicio.estado.toLowerCase(),
-          descripcion: servicio.descripcion_servicio,
+          fecha: new Date(orden.fecha_inicio).toLocaleDateString(),
+          precio: orden.total || '0',
+          estado: orden.estado ? orden.estado.toLowerCase() : 'desconocido',
+          descripcion: orden.notas || '',
           historial: [
             {
-              fecha: new Date(servicio.fecha).toLocaleString(),
-              descripcion: `Servicio realizado por ${servicio.nombre_mecanico} ${servicio.apellido_mecanico}`
+              fecha: new Date(orden.fecha_inicio).toLocaleString(),
+              descripcion: `Orden creada por ${orden.nombre_usuario} ${orden.apellido_usuario}`
             }
           ]
         }));
@@ -532,39 +532,11 @@ export default {
     };
 
     const generarPDF = async (servicio) => {
-      try {
-        const response = await axios.get(`/api/historial-vehiculo/${servicio.id}/pdf`, {
-          responseType: 'blob'
-        });
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', `servicio-${servicio.id}.pdf`);
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-      } catch (err) {
-        console.error('Error al generar PDF:', err);
-        alert('Error al generar el PDF');
-      }
+      alert('Funcionalidad de exportar PDF aún no implementada para órdenes de servicio.');
     };
 
     const exportarServicios = async () => {
-      try {
-        const response = await axios.get('/api/historial-vehiculo/export', {
-          responseType: 'blob'
-        });
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'historial-servicios.xlsx');
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-      } catch (err) {
-        console.error('Error al exportar servicios:', err);
-        alert('Error al exportar el historial');
-      }
+      alert('Funcionalidad de exportar Excel aún no implementada para órdenes de servicio.');
     };
 
     const cambiarPagina = (pagina) => {
