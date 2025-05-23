@@ -270,7 +270,6 @@
                 </p>
               </div>
             </div>
-            
             <div class="bg-gray-700 p-4 rounded-lg">
               <h4 class="text-lg font-medium text-white mb-3">Información del Vehículo</h4>
               <div class="space-y-2">
@@ -286,20 +285,16 @@
               </div>
             </div>
           </div>
-          
           <div class="bg-gray-700 p-4 rounded-lg">
-            <h4 class="text-lg font-medium text-white mb-3">Detalles del Servicio</h4>
-            <div class="space-y-2">
-              <p class="text-gray-300">
-                <span class="text-gray-400">Tipo:</span> {{ servicioDetalle.tipo }}
-              </p>
-              <p class="text-gray-300">
-                <span class="text-gray-400">Descripción:</span> {{ servicioDetalle.descripcion }}
-              </p>
-              <p class="text-gray-300">
-                <span class="text-gray-400">Precio:</span> ${{ servicioDetalle.precio }}
-              </p>
+            <h4 class="text-lg font-medium text-white mb-3">Servicios de la Orden</h4>
+            <div v-if="servicioDetalle.detalles && servicioDetalle.detalles.length" class="space-y-4">
+              <div v-for="(detalle, idx) in servicioDetalle.detalles" :key="idx" class="border-b border-gray-600 pb-2 mb-2 last:border-b-0 last:mb-0">
+                <p class="text-gray-300"><span class="text-gray-400">Servicio:</span> {{ detalle.nombre_servicio || detalle.nombre || 'Sin nombre' }}</p>
+                <p class="text-gray-300"><span class="text-gray-400">Descripción:</span> {{ detalle.descripcion || 'Sin descripción' }}</p>
+                <p class="text-gray-300"><span class="text-gray-400">Precio:</span> ${{ detalle.precio || detalle.precio_estimado || '0' }}</p>
+              </div>
             </div>
+            <div v-else class="text-gray-400 text-sm">Sin servicios asociados.</div>
           </div>
           
           <div class="bg-gray-700 p-4 rounded-lg">
@@ -452,9 +447,9 @@ export default {
     };
 
     const generarPDF = (servicio) => {
-  const url = `https://toyotaback.onrender.com/api/ordenes-servicio/${servicio.id}/pdf`;
-  window.open(url, '_blank');
-};
+      const url = `https://toyotaback.onrender.com/api/ordenes-servicio/${servicio.id}/pdf`;
+      window.open(url, '_blank');
+    };
 
     const exportarServicios = async () => {
       alert('Funcionalidad de exportar Excel aún no implementada para órdenes de servicio.');

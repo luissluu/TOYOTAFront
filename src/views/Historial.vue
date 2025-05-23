@@ -182,6 +182,28 @@
                 <p class="text-xl font-bold text-white">{{ estadisticas.totalGastado }}</p>
               </div>
             </div>
+            <div class="bg-yellow-400 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-yellow-300">
+              <div class="flex-shrink-0 bg-yellow-400 rounded-lg h-12 w-12 flex items-center justify-center">
+                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-white">Abiertas</p>
+                <p class="text-xl font-bold text-white">{{ estadisticas.abiertas }}</p>
+              </div>
+            </div>
+            <div class="bg-blue-400 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-blue-300">
+              <div class="flex-shrink-0 bg-blue-400 rounded-lg h-12 w-12 flex items-center justify-center">
+                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-white">En Progreso</p>
+                <p class="text-xl font-bold text-white">{{ estadisticas.enProceso }}</p>
+              </div>
+            </div>
             <div class="bg-gray-700 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-gray-600">
               <div class="flex-shrink-0 bg-green-500 rounded-lg h-12 w-12 flex items-center justify-center">
                 <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -200,7 +222,7 @@
                 </svg>
               </div>
               <div>
-                <p class="text-sm font-medium text-gray-300">En Proceso</p>
+                <p class="text-sm font-medium text-gray-300">En Progreso</p>
                 <p class="text-xl font-bold text-white">{{ estadisticas.enProceso }}</p>
               </div>
             </div>
@@ -267,10 +289,21 @@
               </div>
             </div>
           </div>
-          <div v-if="servicioDetalle.historial && servicioDetalle.historial.length" class="bg-gray-700 p-4 rounded-lg">
+          <div class="bg-gray-700 p-4 rounded-lg">
+            <h4 class="text-lg font-medium text-white mb-3">Servicios de la Orden</h4>
+            <div v-if="servicioDetalle.detalles && servicioDetalle.detalles.length" class="space-y-4">
+              <div v-for="(detalle, idx) in servicioDetalle.detalles" :key="idx" class="border-b border-gray-600 pb-2 mb-2 last:border-b-0 last:mb-0">
+                <p class="text-gray-300"><span class="text-gray-400">Servicio:</span> {{ detalle.nombre_servicio || detalle.nombre || 'Sin nombre' }}</p>
+                <p class="text-gray-300"><span class="text-gray-400">Descripción:</span> {{ detalle.descripcion || 'Sin descripción' }}</p>
+                <p class="text-gray-300"><span class="text-gray-400">Precio:</span> ${{ detalle.precio || detalle.precio_estimado || '0' }}</p>
+              </div>
+            </div>
+            <div v-else class="text-gray-400 text-sm">Sin servicios asociados.</div>
+          </div>
+          <div class="bg-gray-700 p-4 rounded-lg">
             <h4 class="text-lg font-medium text-white mb-3">Historial de Actualizaciones</h4>
             <div class="space-y-4">
-              <div v-for="(actualizacion, index) in servicioDetalle.historial" :key="index" class="flex items-start">
+              <div v-if="servicioDetalle.historial && servicioDetalle.historial.length" v-for="(actualizacion, index) in servicioDetalle.historial" :key="index" class="flex items-start">
                 <div class="flex-shrink-0">
                   <div class="h-8 w-8 rounded-full bg-gray-600 flex items-center justify-center">
                     <svg class="h-4 w-4 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -283,6 +316,7 @@
                   <p class="text-sm text-gray-400">{{ actualizacion.descripcion }}</p>
                 </div>
               </div>
+              <div v-else class="text-gray-400 text-sm">Sin historial de actualizaciones.</div>
             </div>
           </div>
         </div>
@@ -352,7 +386,8 @@ export default {
             placa: orden.placa_vehiculo || 'No disponible',
             anio: orden.anio || 'No disponible'
           },
-          historial: orden.historial || []
+          historial: orden.historial || [],
+          detalles: orden.detalles || []
         }));
         // Estadísticas
         estadisticas.value = {
