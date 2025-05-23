@@ -72,7 +72,7 @@
                       <div class="flex space-x-3">
                         <button 
                           @click="verDetalles(servicio)" 
-                          class="text-blue-400 hover:text-blue-300 transition-colors duration-200 relative group"
+                          class="text-gray-400 hover:text-gray-300 transition-colors duration-200 relative group"
                           aria-label="Ver detalles"
                         >
                           <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -239,6 +239,20 @@
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="bg-gray-700 p-4 rounded-lg">
+              <h4 class="text-lg font-medium text-white mb-3">Información del Cliente</h4>
+              <div class="space-y-2">
+                <p class="text-gray-300">
+                  <span class="text-gray-400">Nombre:</span> {{ servicioDetalle.cliente?.nombre || 'No disponible' }}
+                </p>
+                <p class="text-gray-300">
+                  <span class="text-gray-400">Teléfono:</span> {{ servicioDetalle.cliente?.telefono || 'No disponible' }}
+                </p>
+                <p class="text-gray-300">
+                  <span class="text-gray-400">Email:</span> {{ servicioDetalle.cliente?.email || 'No disponible' }}
+                </p>
+              </div>
+            </div>
+            <div class="bg-gray-700 p-4 rounded-lg">
               <h4 class="text-lg font-medium text-white mb-3">Información del Vehículo</h4>
               <div class="space-y-2">
                 <p class="text-gray-300">
@@ -249,20 +263,6 @@
                 </p>
                 <p class="text-gray-300">
                   <span class="text-gray-400">Año:</span> {{ servicioDetalle.vehiculo?.anio || 'No disponible' }}
-                </p>
-              </div>
-            </div>
-            <div class="bg-gray-700 p-4 rounded-lg">
-              <h4 class="text-lg font-medium text-white mb-3">Detalles del Servicio</h4>
-              <div class="space-y-2">
-                <p class="text-gray-300">
-                  <span class="text-gray-400">Tipo:</span> {{ servicioDetalle.tipo }}
-                </p>
-                <p class="text-gray-300">
-                  <span class="text-gray-400">Descripción:</span> {{ servicioDetalle.descripcion || 'Sin descripción' }}
-                </p>
-                <p class="text-gray-300">
-                  <span class="text-gray-400">Precio:</span> ${{ servicioDetalle.precio }}
                 </p>
               </div>
             </div>
@@ -343,6 +343,11 @@ export default {
           precio: orden.total || '0',
           estado: normalizarEstado(orden.estado),
           descripcion: orden.notas || '',
+          cliente: {
+            nombre: `${orden.nombre_usuario || ''} ${orden.apellido_usuario || ''}`.trim() || 'No disponible',
+            telefono: orden.telefono || 'No disponible',
+            email: orden.email || 'No disponible',
+          },
           vehiculo: {
             modelo: `${orden.marca_vehiculo || ''} ${orden.modelo_vehiculo || ''}`.trim() || 'No disponible',
             placa: orden.placa_vehiculo || 'No disponible',
