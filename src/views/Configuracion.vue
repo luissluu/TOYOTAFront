@@ -96,117 +96,6 @@
                   </div>
                 </div>
               </div>
-              
-              <!-- Sección 3: Preferencias de la aplicación -->
-              <div class="mb-8">
-                <h3 class="text-xl font-semibold text-white border-b border-gray-600 pb-2 mb-4">Preferencias de la Aplicación</h3>
-                <div class="bg-gray-700 rounded-lg p-6 space-y-4">
-                  <!-- Opción 1: Notificaciones -->
-                  <div class="flex justify-between items-center">
-                    <div>
-                      <h4 class="text-white font-medium">Notificaciones</h4>
-                      <p class="text-gray-400 text-sm">Recibe notificaciones de la aplicación</p>
-                    </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" value="" class="sr-only peer" checked>
-                      <div class="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                    </label>
-                  </div>
-                  
-                  <!-- Opción 2: Recordatorios de servicio -->
-                  <div class="flex justify-between items-center">
-                    <div>
-                      <h4 class="text-white font-medium">Recordatorios de servicio</h4>
-                      <p class="text-gray-400 text-sm">Recibe alertas sobre mantenimientos programados</p>
-                    </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" value="" class="sr-only peer" checked>
-                      <div class="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                    </label>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Sección 4: Métodos de pago -->
-              <div class="mb-8">
-                <h3 class="text-xl font-semibold text-white border-b border-gray-600 pb-2 mb-4">Métodos de Pago</h3>
-                <div class="bg-gray-700 rounded-lg p-6">
-                  <div class="flex justify-between items-center mb-4">
-                    <h4 class="text-lg font-medium text-white">Tarjetas Guardadas</h4>
-                    <button 
-                      @click="mostrarFormularioPago = true; modoFormularioPago = 'agregar'; metodoPagoEditando = null"
-                      class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
-                    >
-                      + Añadir Tarjeta
-                    </button>
-                  </div>
-                  
-                  <!-- Lista de tarjetas -->
-                  <div class="space-y-4">
-                    <div 
-                      v-for="metodoPago in metodosPago" 
-                      :key="metodoPago.id" 
-                      class="bg-gray-800 rounded-lg p-4 flex flex-col md:flex-row justify-between items-start md:items-center"
-                    >
-                      <div class="flex items-center">
-                        <!-- Icono según tipo de tarjeta -->
-                        <div class="w-10 h-10 mr-3 flex items-center justify-center">
-                          <svg v-if="metodoPago.tipo === 'visa'" class="w-10 h-6" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="48" height="48" rx="4" fill="#1434CB" />
-                            <path d="M14.5 24.5H25.5V28H14.5V24.5Z" fill="#F7B600" />
-                            <path d="M14.5 12H25.5V20.5H14.5V12Z" fill="#FFFFFF" />
-                          </svg>
-                          <svg v-else-if="metodoPago.tipo === 'mastercard'" class="w-10 h-6" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="48" height="48" rx="4" fill="#EB001B" />
-                            <circle cx="16" cy="24" r="8" fill="#FF5F00" />
-                            <circle cx="32" cy="24" r="8" fill="#F79E1B" />
-                          </svg>
-                          <svg v-else-if="metodoPago.tipo === 'amex'" class="w-10 h-6" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="48" height="48" rx="4" fill="#016FD0" />
-                            <path d="M24 31H36V17H24V31Z" fill="#FFFFFF" />
-                          </svg>
-                        </div>
-                        <div>
-                          <h5 class="text-white font-medium">{{ metodoPago.tipo.charAt(0).toUpperCase() + metodoPago.tipo.slice(1) }} terminada en {{ metodoPago.numeroVisible }}</h5>
-                          <p class="text-gray-400 text-sm">Expiración: {{ metodoPago.fechaExpiracion }}</p>
-                          <p v-if="metodoPago.predeterminada" class="mt-1 text-xs bg-blue-600 text-white px-2 py-0.5 rounded-sm inline-block">Predeterminada</p>
-                        </div>
-                      </div>
-                      <div class="flex mt-2 md:mt-0">
-                        <button 
-                          @click="editarMetodoPago(metodoPago)" 
-                          class="text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-md mr-2"
-                        >
-                          Editar
-                        </button>
-                        <button 
-                          @click="eliminarMetodoPago(metodoPago.id)" 
-                          class="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-md"
-                        >
-                          Eliminar
-                        </button>
-                      </div>
-                    </div>
-                    
-                    <!-- Mensaje si no hay tarjetas -->
-                    <div v-if="metodosPago.length === 0" class="text-center text-gray-400 py-4">
-                      No tienes tarjetas guardadas.
-                    </div>
-                  </div>
-                </div>
-                
-                <!-- Formulario de método de pago (modal) -->
-                <div v-if="mostrarFormularioPago" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                  <div class="w-full max-w-2xl max-h-[80vh] overflow-y-auto">
-                    <FormularioMetodoPago 
-                      :metodoPago="metodoPagoEditando" 
-                      :modo="modoFormularioPago" 
-                      @guardar="guardarMetodoPago" 
-                      @cancelar="cancelarFormularioPago"
-                    />
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -220,7 +109,6 @@
 import { ref, reactive, onMounted } from 'vue';
 import { useAuthStore } from '../components/stores/auth';
 import FormularioVehiculo from '../components/configuracion/FormularioVehiculo.vue';
-import FormularioMetodoPago from '../components/configuracion/FormularioMetodoPago.vue';
 import FormularioPerfil from '../components/perfil/FormularioPerfil.vue';
 import ToastNotificacion from '../components/ui/ToastNotificacion.vue';
 import * as vehiculoService from '../services/vehiculoService';
@@ -229,7 +117,6 @@ export default {
   name: 'ConfiguracionPage',
   components: {
     FormularioVehiculo,
-    FormularioMetodoPago,
     FormularioPerfil,
     ToastNotificacion
   },
@@ -269,39 +156,10 @@ export default {
       }
     };
     
-    // Estado para métodos de pago
-    const metodosPago = ref([
-      {
-        id: '1',
-        tipo: 'visa',
-        numeroTarjeta: '4111 1111 1111 1111',
-        numeroVisible: '1111',
-        nombreTitular: 'Luis González',
-        fechaExpiracion: '05/27',
-        cvv: '123',
-        predeterminada: true
-      },
-      {
-        id: '2',
-        tipo: 'mastercard',
-        numeroTarjeta: '5555 5555 5555 4444',
-        numeroVisible: '4444',
-        nombreTitular: 'Luis González',
-        fechaExpiracion: '11/26',
-        cvv: '456',
-        predeterminada: false
-      }
-    ]);
-    
     // Estado para el formulario de vehículos
     const mostrarFormularioVehiculo = ref(false);
     const modoFormularioVehiculo = ref('agregar');
     const vehiculoEditando = ref(null);
-    
-    // Estado para el formulario de métodos de pago
-    const mostrarFormularioPago = ref(false);
-    const modoFormularioPago = ref('agregar');
-    const metodoPagoEditando = ref(null);
     
     // Métodos para el formulario de vehículos
     const editarVehiculo = (vehiculo) => {
@@ -349,55 +207,6 @@ export default {
       vehiculoEditando.value = null;
     };
     
-    // Métodos para el formulario de métodos de pago
-    const editarMetodoPago = (metodoPago) => {
-      metodoPagoEditando.value = { ...metodoPago };
-      modoFormularioPago.value = 'editar';
-      mostrarFormularioPago.value = true;
-    };
-    
-    const eliminarMetodoPago = (id) => {
-      if (confirm('¿Estás seguro de eliminar este método de pago?')) {
-        metodosPago.value = metodosPago.value.filter(m => m.id !== id);
-      }
-    };
-    
-    const guardarMetodoPago = (metodoPago) => {
-      if (modoFormularioPago.value === 'editar') {
-        // Si es predeterminado, quitar la marca de predeterminado de los demás
-        if (metodoPago.predeterminada) {
-          metodosPago.value = metodosPago.value.map(m => {
-            if (m.id !== metodoPago.id) {
-              return { ...m, predeterminada: false };
-            }
-            return m;
-          });
-        }
-        
-        // Actualizar método de pago existente
-        const index = metodosPago.value.findIndex(m => m.id === metodoPago.id);
-        if (index !== -1) {
-          metodosPago.value[index] = metodoPago;
-        }
-      } else {
-        // Si es predeterminado, quitar la marca de predeterminado de los demás
-        if (metodoPago.predeterminada) {
-          metodosPago.value = metodosPago.value.map(m => ({ ...m, predeterminada: false }));
-        }
-        
-        // Agregar nuevo método de pago
-        metodosPago.value.push(metodoPago);
-      }
-      
-      mostrarFormularioPago.value = false;
-      metodoPagoEditando.value = null;
-    };
-    
-    const cancelarFormularioPago = () => {
-      mostrarFormularioPago.value = false;
-      metodoPagoEditando.value = null;
-    };
-    
     // Métodos para el formulario de perfil
     const guardarPerfilUsuario = (datos) => {
       console.log('Guardando datos del perfil:', datos);
@@ -434,22 +243,14 @@ export default {
     
     return {
       vehiculos,
-      metodosPago,
       mostrarFormularioVehiculo,
       modoFormularioVehiculo,
       vehiculoEditando,
-      mostrarFormularioPago,
-      modoFormularioPago,
-      metodoPagoEditando,
       usuarioPerfil,
       editarVehiculo,
       eliminarVehiculo,
       guardarVehiculo,
       cancelarFormularioVehiculo,
-      editarMetodoPago,
-      eliminarMetodoPago,
-      guardarMetodoPago,
-      cancelarFormularioPago,
       guardarPerfilUsuario,
       cancelarEdicionPerfil,
       toast,
