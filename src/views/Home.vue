@@ -13,20 +13,24 @@
         </select>
     </div>
 
-    <!-- Barra de progreso dinámica -->
-    <div v-if="ordenSeleccionada" class="w-full max-w-3xl mx-auto mb-8">
+    <!-- Barra de progreso de 3 estados -->
+    <div v-if="ordenSeleccionada" class="w-full max-w-xl mx-auto mb-8">
         <h2 class="text-2xl font-bold text-white text-center mb-4">Estado del Servicio</h2>
-        <div class="relative w-full h-6 bg-gray-700 rounded-full overflow-hidden shadow-lg mb-4">
-            <div
-                class="h-full bg-gradient-to-r from-blue-500 to-green-400 transition-all duration-700"
-                :style="{ width: progresoOrden + '%' }"
-            ></div>
-            <div
-                class="absolute top-0 left-0 w-full h-full flex items-center justify-between px-4 text-xs font-bold text-white"
-            >
-                <span v-for="(etapa, idx) in etapas" :key="etapa.key" :class="{'text-blue-200': idx <= etapaActual}">
-                    {{ etapa.label }}
-                </span>
+        <div class="flex items-center justify-between w-full mb-4">
+            <div v-for="(step, idx) in steps" :key="step.key" class="flex items-center w-1/3">
+                <div :class="[
+                    'w-12 h-12 flex items-center justify-center rounded-full border-2 font-bold text-lg transition-all duration-300',
+                    getStepClass(mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado), step.key)
+                ]">
+                    <span>{{ step.icon }}</span>
+                </div>
+                <div class="flex flex-col ml-2">
+                    <span :class="getStepTextClass(mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado), step.key)">{{ step.label }}</span>
+                </div>
+                <span v-if="idx < steps.length - 1" class="flex-1 h-1 mx-2 rounded transition-all duration-300" :class="{
+                    'bg-blue-500': mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) === steps[idx].key || mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) === steps[idx+1].key,
+                    'bg-gray-600': mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) !== steps[idx].key && mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) !== steps[idx+1].key
+                }"></span>
             </div>
         </div>
         <div class="flex justify-center">
