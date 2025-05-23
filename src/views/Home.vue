@@ -57,25 +57,29 @@
             <h2 class="text-2xl font-bold tracking-tight text-white">Servicios recomendados</h2>
 
             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            <div v-for="servicio in serviciosAleatorios" :key="servicio.servicio_id" class="w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col">
+            <div v-for="servicio in serviciosAleatorios" :key="servicio.servicio_id" class="w-full bg-white border border-gray-200 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col">
                 <a href="#" class="flex-shrink-0">
-                    <div class="w-full h-48 overflow-hidden rounded-t-lg">
-                        <img class="w-full h-full object-cover" :src="getImagenServicio(servicio.nombre)" :alt="servicio.nombre" />
+                    <div class="w-full h-48 overflow-hidden rounded-t-lg relative group">
+                        <img class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300" :src="getImagenServicio(servicio.nombre)" :alt="servicio.nombre" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
                 </a>
-                <div class="px-5 py-4 flex-grow flex flex-col">
+                <div class="px-6 py-5 flex-grow flex flex-col">
                     <a href="#" class="mb-auto">
-                        <h5 class="text-xl font-semibold tracking-tight text-gray-900 h-14">{{ servicio.nombre }}</h5>
+                        <h5 class="text-xl font-bold tracking-tight text-gray-900 mb-2 line-clamp-2">{{ servicio.nombre }}</h5>
+                        <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{ servicio.descripcion || 'Servicio profesional con garantía Toyota' }}</p>
                     </a>
-                    <div class="flex items-center mt-2 mb-4">
-                        <div class="flex items-center space-x-1 rtl:space-x-reverse">
-                            <svg class="w-4 h-4 text-yellow-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20"><path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/></svg>
-                        </div>
-                        <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-sm ms-3">{{ servicio.calificacion || '4.0' }}</span>
-                    </div>
-                    <div class="flex items-center justify-between mt-auto">
-                        <span class="text-3xl font-bold text-gray-900">${{ servicio.precio_estimado }}</span>
-                        <a href="#" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Agregar</a>
+                    <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                        <span class="text-3xl font-bold text-blue-600">${{ servicio.precio_estimado }}</span>
+                        <router-link 
+                            :to="{ name: 'Servicios', query: { servicio: servicio.servicio_id }}"
+                            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200"
+                        >
+                            <span>Detalles</span>
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </router-link>
                     </div>
                 </div>
             </div>

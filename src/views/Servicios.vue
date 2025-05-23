@@ -519,6 +519,33 @@ export default {
       },
       cerrarModal() {
         this.servicioSeleccionado = null;
+      },
+      abrirServicioPorId(id) {
+        const servicio = this.servicios.find(s => s.id === parseInt(id));
+        if (servicio) {
+          this.servicioSeleccionado = servicio;
+          // Actualizar la categoría activa
+          this.activeCategory = servicio.categoria;
+        }
+      }
+    },
+    mounted() {
+      // Verificar si hay un servicio en la URL
+      const servicioId = this.$route.query.servicio;
+      if (servicioId) {
+        this.$nextTick(() => {
+          this.abrirServicioPorId(servicioId);
+        });
+      }
+    },
+    watch: {
+      '$route.query.servicio': {
+        handler(newId) {
+          if (newId) {
+            this.abrirServicioPorId(newId);
+          }
+        },
+        immediate: true
       }
     }
   }
