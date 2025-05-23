@@ -377,12 +377,8 @@ export default {
           precio: orden.total || '0',
           estado: orden.estado ? orden.estado.toLowerCase() : 'desconocido',
           descripcion: orden.notas || '',
-          historial: [
-            {
-              fecha: new Date(orden.fecha_inicio).toLocaleString(),
-              descripcion: `Orden creada por ${orden.nombre_usuario} ${orden.apellido_usuario}`
-            }
-          ]
+          historial: orden.historial || [],
+          detalles: orden.detalles || []
         }));
 
         // Calcular estadísticas dinámicamente según los estados presentes (excepto cancelada)

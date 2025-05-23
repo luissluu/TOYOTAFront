@@ -184,7 +184,7 @@
             </div>
             <div class="bg-yellow-400 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-yellow-300">
               <div class="flex-shrink-0 bg-yellow-400 rounded-lg h-12 w-12 flex items-center justify-center">
-                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="h-6 w-6 text-yellow-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
@@ -195,7 +195,7 @@
             </div>
             <div class="bg-blue-400 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-blue-300">
               <div class="flex-shrink-0 bg-blue-400 rounded-lg h-12 w-12 flex items-center justify-center">
-                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="h-6 w-6 text-blue-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
@@ -270,7 +270,7 @@
                   <span class="text-gray-400">Teléfono:</span> {{ servicioDetalle.cliente?.telefono || 'No disponible' }}
                 </p>
                 <p class="text-gray-300">
-                  <span class="text-gray-400">Email:</span> {{ servicioDetalle.cliente?.email || 'No disponible' }}
+                  <span class="text-gray-400">Email:</span> {{ servicioDetalle.cliente?.correoElectronico || 'No disponible' }}
                 </p>
               </div>
             </div>
