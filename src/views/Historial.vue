@@ -82,7 +82,7 @@
                           class="text-blue-400 hover:text-blue-300 transition-colors duration-200"
                           title="Generar PDF"
                         >
-                          Factura
+                          Descargar
                         </button>
                       </div>
                     </td>
@@ -212,6 +212,75 @@
         </div>
       </div>
     </section>
+
+    <!-- Modal de detalles del servicio -->
+    <div v-if="mostrarDetalles" class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="absolute inset-0 bg-black opacity-50" @click="mostrarDetalles = false"></div>
+      <div class="relative bg-gray-800 max-w-4xl w-full mx-auto rounded-lg shadow-lg p-6">
+        <button @click="mostrarDetalles = false" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+          <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <div v-if="servicioDetalle" class="space-y-6">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="text-xl font-medium text-white">Detalles del Servicio #{{ servicioDetalle.id }}</h3>
+              <p class="text-gray-400 mt-1">{{ servicioDetalle.fecha }}</p>
+            </div>
+            <span :class="badgeEstado(servicioDetalle.estado)">{{ servicioDetalle.estado }}</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-gray-700 p-4 rounded-lg">
+              <h4 class="text-lg font-medium text-white mb-3">Información del Vehículo</h4>
+              <div class="space-y-2">
+                <p class="text-gray-300">
+                  <span class="text-gray-400">Modelo:</span> {{ servicioDetalle.vehiculo?.modelo || 'No disponible' }}
+                </p>
+                <p class="text-gray-300">
+                  <span class="text-gray-400">Placa:</span> {{ servicioDetalle.vehiculo?.placa || 'No disponible' }}
+                </p>
+                <p class="text-gray-300">
+                  <span class="text-gray-400">Año:</span> {{ servicioDetalle.vehiculo?.anio || 'No disponible' }}
+                </p>
+              </div>
+            </div>
+            <div class="bg-gray-700 p-4 rounded-lg">
+              <h4 class="text-lg font-medium text-white mb-3">Detalles del Servicio</h4>
+              <div class="space-y-2">
+                <p class="text-gray-300">
+                  <span class="text-gray-400">Tipo:</span> {{ servicioDetalle.tipo }}
+                </p>
+                <p class="text-gray-300">
+                  <span class="text-gray-400">Descripción:</span> {{ servicioDetalle.descripcion || 'Sin descripción' }}
+                </p>
+                <p class="text-gray-300">
+                  <span class="text-gray-400">Precio:</span> ${{ servicioDetalle.precio }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div v-if="servicioDetalle.historial && servicioDetalle.historial.length" class="bg-gray-700 p-4 rounded-lg">
+            <h4 class="text-lg font-medium text-white mb-3">Historial de Actualizaciones</h4>
+            <div class="space-y-4">
+              <div v-for="(actualizacion, index) in servicioDetalle.historial" :key="index" class="flex items-start">
+                <div class="flex-shrink-0">
+                  <div class="h-8 w-8 rounded-full bg-gray-600 flex items-center justify-center">
+                    <svg class="h-4 w-4 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="ml-4">
+                  <p class="text-sm text-gray-300">{{ actualizacion.fecha }}</p>
+                  <p class="text-sm text-gray-400">{{ actualizacion.descripcion }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -242,11 +311,14 @@ export default {
       enProceso: 0,
       pendientes: 0
     });
+    const mostrarDetalles = ref(false);
+    const servicioDetalle = ref(null);
 
     const estadosDisponibles = [
       { value: '', label: 'Todos los estados' },
-      { value: 'completado', label: 'Completado' },
-      { value: 'en proceso', label: 'En Proceso' },
+      { value: 'abierta', label: 'Abierta' },
+      { value: 'en progreso', label: 'En Progreso' },
+      { value: 'finalizada', label: 'Finalizada' },
       { value: 'pendiente', label: 'Pendiente' }
     ];
 
@@ -262,13 +334,16 @@ export default {
           tipo: orden.diagnostico || 'Sin diagnóstico',
           fecha: new Date(orden.fecha_inicio).toLocaleDateString(),
           precio: orden.total || '0',
-          estado: orden.estado ? orden.estado.toLowerCase() : 'desconocido',
+          estado: normalizarEstado(orden.estado),
+          descripcion: orden.notas || '',
+          vehiculo: orden.vehiculo || {},
+          historial: orden.historial || []
         }));
         // Estadísticas
         estadisticas.value = {
           totalGastado: servicios.value.reduce((acc, s) => acc + Number(s.precio), 0),
-          completados: servicios.value.filter(s => s.estado === 'completado').length,
-          enProceso: servicios.value.filter(s => s.estado === 'en proceso').length,
+          completados: servicios.value.filter(s => s.estado === 'finalizada').length,
+          enProceso: servicios.value.filter(s => s.estado === 'en progreso').length,
           pendientes: servicios.value.filter(s => s.estado === 'pendiente').length
         };
         // Paginación
@@ -288,6 +363,16 @@ export default {
       }
     };
 
+    function normalizarEstado(estado) {
+      if (!estado) return 'desconocido';
+      const e = estado.toLowerCase().trim();
+      if (e === 'completado' || e === 'finalizado' || e === 'finalizada') return 'finalizada';
+      if (e === 'en proceso' || e === 'en progreso') return 'en progreso';
+      if (e === 'pendiente') return 'pendiente';
+      if (e === 'abierta') return 'abierta';
+      return e;
+    }
+
     const serviciosFiltrados = computed(() => {
       return servicios.value.filter(servicio => {
         const coincideEstado = !filtroEstado.value || servicio.estado === filtroEstado.value;
@@ -304,9 +389,11 @@ export default {
 
     const badgeEstado = (estado) => {
       switch (estado) {
-        case 'completado':
+        case 'finalizada':
           return 'px-2 py-1 rounded-full text-xs font-semibold bg-green-200 text-green-800';
-        case 'en proceso':
+        case 'en progreso':
+          return 'px-2 py-1 rounded-full text-xs font-semibold bg-blue-200 text-blue-800';
+        case 'abierta':
           return 'px-2 py-1 rounded-full text-xs font-semibold bg-yellow-200 text-yellow-800';
         case 'pendiente':
           return 'px-2 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-800';
@@ -316,8 +403,10 @@ export default {
     };
 
     const verDetalles = (servicio) => {
-      // Implementa la lógica para mostrar detalles si lo deseas
-      alert('Detalles del servicio: ' + JSON.stringify(servicio, null, 2));
+      // Obtener detalles extendidos si es necesario, aquí solo se usa el objeto ya cargado
+      // Si el backend lo permite, podrías hacer una petición por id aquí
+      servicioDetalle.value = servicio;
+      mostrarDetalles.value = true;
     };
 
     const generarPDF = (servicio) => {
@@ -342,7 +431,9 @@ export default {
       cambiarPagina,
       badgeEstado,
       verDetalles,
-      generarPDF
+      generarPDF,
+      mostrarDetalles,
+      servicioDetalle
     };
   }
 };
