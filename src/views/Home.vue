@@ -64,25 +64,25 @@
                         <div class="inline-block bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold mb-3">
                             Servicio Toyota
                         </div>
-                        <h5 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2">{{ servicio.nombre }}</h5>
-                        <p class="text-sm text-gray-600 line-clamp-2">{{ servicio.descripcion || 'Servicio profesional con garantía Toyota' }}</p>
+                        <h5 class="text-xl font-bold text-gray-900 mb-6 line-clamp-2">{{ servicio.nombre }}</h5>
+                    </div>
+                    
+                    <div class="flex-grow flex items-center justify-center my-4">
+                        <router-link 
+                            :to="{ name: 'Servicios', query: { servicio: servicio.servicio_id }}"
+                            class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105"
+                        >
+                            <span>Ver Detalles</span>
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </router-link>
                     </div>
                     
                     <div class="mt-auto pt-4 border-t border-gray-100">
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-col">
-                                <span class="text-sm text-gray-500">Precio desde</span>
-                                <span class="text-3xl font-bold text-blue-600">${{ servicio.precio_estimado }}</span>
-                            </div>
-                            <router-link 
-                                :to="{ name: 'Servicios', query: { servicio: servicio.servicio_id }}"
-                                class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
-                            >
-                                <span>Ver Detalles</span>
-                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                </svg>
-                            </router-link>
+                        <div class="flex flex-col items-center">
+                            <span class="text-sm text-gray-500">Precio desde</span>
+                            <span class="text-3xl font-bold text-blue-600">${{ servicio.precio_estimado }}</span>
                         </div>
                     </div>
                 </div>
