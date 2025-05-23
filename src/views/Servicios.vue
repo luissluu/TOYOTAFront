@@ -52,34 +52,19 @@
             <h2 class="text-2xl font-bold tracking-tight text-white mb-4">Mantenimiento básico</h2>
             
             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-              <!-- Tu tarjeta de Cambio de aceite -->
               <div v-for="servicio in serviciosPorCategoria('mantenimiento')" :key="servicio.id" 
-                   class="w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col">
-                <a href="#" class="flex-shrink-0">
+                   class="w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col cursor-pointer transition-transform duration-300 hover:scale-105"
+                   @click="seleccionarServicio(servicio)">
+                <div class="flex-shrink-0">
                   <div class="w-full h-48 overflow-hidden rounded-t-lg">
-                    <img class="w-full h-full object-cover" :src="servicio.imagen" alt="servicio.titulo" />
+                    <img class="w-full h-full object-cover" :src="servicio.imagen" :alt="servicio.titulo" />
                   </div>
-                </a>
+                </div>
                 <div class="px-5 py-4 flex-grow flex flex-col">
-                  <a href="#" class="mb-auto">
-                    <h5 class="text-xl font-semibold tracking-tight text-gray-900 h-14">{{ servicio.titulo }}</h5>
-                  </a>
+                  <h5 class="text-xl font-semibold tracking-tight text-gray-900 h-14">{{ servicio.titulo }}</h5>
                   <p class="text-sm text-gray-600 mb-3">{{ servicio.descripcion }}</p>
-                  <!-- Estrellas de calificación -->
-                  <div class="flex items-center mt-2 mb-4">
-                    <div class="flex items-center space-x-1 rtl:space-x-reverse">
-                      <div v-for="i in 5" :key="i">
-                        <svg class="w-4 h-4" :class="i <= servicio.calificacion ? 'text-yellow-300' : 'text-gray-200'" 
-                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                        </svg>
-                      </div>
-                    </div>
-                    <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-sm ms-3">{{ servicio.calificacion }}.0</span>
-                  </div>
                   <div class="flex items-center justify-between mt-auto">
                     <span class="text-3xl font-bold text-gray-900">${{ servicio.precio }}</span>
-                    <a href="#" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Solicitar</a>
                   </div>
                 </div>
               </div>
@@ -93,34 +78,19 @@
             <h2 class="text-2xl font-bold tracking-tight text-white mb-4">Sistema de motor</h2>
             
             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-              <!-- Las mismas tarjetas de arriba pero con serviciosPorCategoria('motor') -->
               <div v-for="servicio in serviciosPorCategoria('motor')" :key="servicio.id" 
-                   class="w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col">
-                <!-- Mismo contenido de la tarjeta anterior -->
-                <a href="#" class="flex-shrink-0">
+                   class="w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col cursor-pointer transition-transform duration-300 hover:scale-105"
+                   @click="seleccionarServicio(servicio)">
+                <div class="flex-shrink-0">
                   <div class="w-full h-48 overflow-hidden rounded-t-lg">
-                    <img class="w-full h-full object-cover" :src="servicio.imagen" alt="servicio.titulo" />
+                    <img class="w-full h-full object-cover" :src="servicio.imagen" :alt="servicio.titulo" />
                   </div>
-                </a>
+                </div>
                 <div class="px-5 py-4 flex-grow flex flex-col">
-                  <a href="#" class="mb-auto">
-                    <h5 class="text-xl font-semibold tracking-tight text-gray-900 h-14">{{ servicio.titulo }}</h5>
-                  </a>
+                  <h5 class="text-xl font-semibold tracking-tight text-gray-900 h-14">{{ servicio.titulo }}</h5>
                   <p class="text-sm text-gray-600 mb-3">{{ servicio.descripcion }}</p>
-                  <div class="flex items-center mt-2 mb-4">
-                    <div class="flex items-center space-x-1 rtl:space-x-reverse">
-                      <div v-for="i in 5" :key="i">
-                        <svg class="w-4 h-4" :class="i <= servicio.calificacion ? 'text-yellow-300' : 'text-gray-200'" 
-                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                        </svg>
-                      </div>
-                    </div>
-                    <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-sm ms-3">{{ servicio.calificacion }}.0</span>
-                  </div>
                   <div class="flex items-center justify-between mt-auto">
                     <span class="text-3xl font-bold text-gray-900">${{ servicio.precio }}</span>
-                    <a href="#" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Solicitar</a>
                   </div>
                 </div>
               </div>
@@ -134,34 +104,19 @@
             <h2 class="text-2xl font-bold tracking-tight text-white mb-4">Sistema de frenos</h2>
             
             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-              <!-- Las mismas tarjetas pero con serviciosPorCategoria('frenos') -->
               <div v-for="servicio in serviciosPorCategoria('frenos')" :key="servicio.id" 
-                   class="w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col">
-                <!-- Mismo contenido de tarjeta -->
-                <a href="#" class="flex-shrink-0">
+                   class="w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col cursor-pointer transition-transform duration-300 hover:scale-105"
+                   @click="seleccionarServicio(servicio)">
+                <div class="flex-shrink-0">
                   <div class="w-full h-48 overflow-hidden rounded-t-lg">
-                    <img class="w-full h-full object-cover" :src="servicio.imagen" alt="servicio.titulo" />
+                    <img class="w-full h-full object-cover" :src="servicio.imagen" :alt="servicio.titulo" />
                   </div>
-                </a>
+                </div>
                 <div class="px-5 py-4 flex-grow flex flex-col">
-                  <a href="#" class="mb-auto">
-                    <h5 class="text-xl font-semibold tracking-tight text-gray-900 h-14">{{ servicio.titulo }}</h5>
-                  </a>
+                  <h5 class="text-xl font-semibold tracking-tight text-gray-900 h-14">{{ servicio.titulo }}</h5>
                   <p class="text-sm text-gray-600 mb-3">{{ servicio.descripcion }}</p>
-                  <div class="flex items-center mt-2 mb-4">
-                    <div class="flex items-center space-x-1 rtl:space-x-reverse">
-                      <div v-for="i in 5" :key="i">
-                        <svg class="w-4 h-4" :class="i <= servicio.calificacion ? 'text-yellow-300' : 'text-gray-200'" 
-                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                        </svg>
-                      </div>
-                    </div>
-                    <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-sm ms-3">{{ servicio.calificacion }}.0</span>
-                  </div>
                   <div class="flex items-center justify-between mt-auto">
                     <span class="text-3xl font-bold text-gray-900">${{ servicio.precio }}</span>
-                    <a href="#" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Solicitar</a>
                   </div>
                 </div>
               </div>
@@ -175,34 +130,19 @@
             <h2 class="text-2xl font-bold tracking-tight text-white mb-4">Suspensión y dirección</h2>
             
             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-              <!-- Las mismas tarjetas pero con serviciosPorCategoria('suspension') -->
               <div v-for="servicio in serviciosPorCategoria('suspension')" :key="servicio.id" 
-                   class="w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col">
-                <!-- Mismo contenido de tarjeta -->
-                <a href="#" class="flex-shrink-0">
+                   class="w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col cursor-pointer transition-transform duration-300 hover:scale-105"
+                   @click="seleccionarServicio(servicio)">
+                <div class="flex-shrink-0">
                   <div class="w-full h-48 overflow-hidden rounded-t-lg">
-                    <img class="w-full h-full object-cover" :src="servicio.imagen" alt="servicio.titulo" />
+                    <img class="w-full h-full object-cover" :src="servicio.imagen" :alt="servicio.titulo" />
                   </div>
-                </a>
+                </div>
                 <div class="px-5 py-4 flex-grow flex flex-col">
-                  <a href="#" class="mb-auto">
-                    <h5 class="text-xl font-semibold tracking-tight text-gray-900 h-14">{{ servicio.titulo }}</h5>
-                  </a>
+                  <h5 class="text-xl font-semibold tracking-tight text-gray-900 h-14">{{ servicio.titulo }}</h5>
                   <p class="text-sm text-gray-600 mb-3">{{ servicio.descripcion }}</p>
-                  <div class="flex items-center mt-2 mb-4">
-                    <div class="flex items-center space-x-1 rtl:space-x-reverse">
-                      <div v-for="i in 5" :key="i">
-                        <svg class="w-4 h-4" :class="i <= servicio.calificacion ? 'text-yellow-300' : 'text-gray-200'" 
-                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                        </svg>
-                      </div>
-                    </div>
-                    <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-sm ms-3">{{ servicio.calificacion }}.0</span>
-                  </div>
                   <div class="flex items-center justify-between mt-auto">
                     <span class="text-3xl font-bold text-gray-900">${{ servicio.precio }}</span>
-                    <a href="#" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Solicitar</a>
                   </div>
                 </div>
               </div>
@@ -218,34 +158,19 @@
             <h2 class="text-2xl font-bold tracking-tight text-white mb-4">{{ getCategoryTitle() }}</h2>
             
             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-              <!-- Tarjetas filtradas por categoría -->
               <div v-for="servicio in serviciosPorCategoria(activeCategory)" :key="servicio.id" 
-                   class="w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col">
-                <!-- Mismo contenido de tarjeta -->
-                <a href="#" class="flex-shrink-0">
+                   class="w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col cursor-pointer transition-transform duration-300 hover:scale-105"
+                   @click="seleccionarServicio(servicio)">
+                <div class="flex-shrink-0">
                   <div class="w-full h-48 overflow-hidden rounded-t-lg">
-                    <img class="w-full h-full object-cover" :src="servicio.imagen" alt="servicio.titulo" />
+                    <img class="w-full h-full object-cover" :src="servicio.imagen" :alt="servicio.titulo" />
                   </div>
-                </a>
+                </div>
                 <div class="px-5 py-4 flex-grow flex flex-col">
-                  <a href="#" class="mb-auto">
-                    <h5 class="text-xl font-semibold tracking-tight text-gray-900 h-14">{{ servicio.titulo }}</h5>
-                  </a>
+                  <h5 class="text-xl font-semibold tracking-tight text-gray-900 h-14">{{ servicio.titulo }}</h5>
                   <p class="text-sm text-gray-600 mb-3">{{ servicio.descripcion }}</p>
-                  <div class="flex items-center mt-2 mb-4">
-                    <div class="flex items-center space-x-1 rtl:space-x-reverse">
-                      <div v-for="i in 5" :key="i">
-                        <svg class="w-4 h-4" :class="i <= servicio.calificacion ? 'text-yellow-300' : 'text-gray-200'" 
-                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-                        </svg>
-                      </div>
-                    </div>
-                    <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-sm ms-3">{{ servicio.calificacion }}.0</span>
-                  </div>
                   <div class="flex items-center justify-between mt-auto">
                     <span class="text-3xl font-bold text-gray-900">${{ servicio.precio }}</span>
-                    <a href="#" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Solicitar</a>
                   </div>
                 </div>
               </div>
@@ -254,6 +179,35 @@
         </div>
       </template>
     </section>
+
+    <!-- Modal -->
+    <div v-if="servicioSeleccionado" 
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300"
+         @click="cerrarModal">
+      <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 transform transition-all duration-300 scale-100"
+           @click.stop>
+        <div class="relative">
+          <button @click="cerrarModal" 
+                  class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <div class="flex flex-col md:flex-row gap-6">
+            <div class="w-full md:w-1/2">
+              <img :src="servicioSeleccionado.imagen" 
+                   :alt="servicioSeleccionado.titulo"
+                   class="w-full h-64 object-cover rounded-lg">
+            </div>
+            <div class="w-full md:w-1/2">
+              <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ servicioSeleccionado.titulo }}</h3>
+              <p class="text-gray-600 mb-4">{{ servicioSeleccionado.descripcion }}</p>
+              <div class="text-3xl font-bold text-gray-900">${{ servicioSeleccionado.precio }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -279,6 +233,7 @@ export default {
     data() {
       return {
         activeCategory: 'todos',
+        servicioSeleccionado: null,
         servicios: [
           // Categoría: mantenimiento
           {
@@ -550,7 +505,35 @@ export default {
           default:
             return 'Servicios';
         }
+      },
+      seleccionarServicio(servicio) {
+        this.servicioSeleccionado = servicio;
+      },
+      cerrarModal() {
+        this.servicioSeleccionado = null;
       }
     }
   }
 </script>
+
+<style scoped>
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-content-enter-active,
+.modal-content-leave-active {
+  transition: transform 0.3s ease;
+}
+
+.modal-content-enter-from,
+.modal-content-leave-to {
+  transform: scale(0.9);
+}
+</style>
