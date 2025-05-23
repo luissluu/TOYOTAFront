@@ -336,7 +336,11 @@ export default {
           precio: orden.total || '0',
           estado: normalizarEstado(orden.estado),
           descripcion: orden.notas || '',
-          vehiculo: orden.vehiculo || {},
+          vehiculo: {
+            modelo: `${orden.marca_vehiculo || ''} ${orden.modelo_vehiculo || ''}`.trim() || 'No disponible',
+            placa: orden.placa_vehiculo || 'No disponible',
+            anio: orden.anio || 'No disponible'
+          },
           historial: orden.historial || []
         }));
         // Estadísticas
