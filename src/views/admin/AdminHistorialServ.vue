@@ -18,15 +18,6 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-              <button 
-                @click="exportarServicios" 
-                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center transition-colors duration-200"
-              >
-                <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                Exportar Historial
-              </button>
             </div>
           </div>
 
@@ -36,22 +27,14 @@
               v-model="filtroEstado" 
               class="rounded-md bg-gray-600 border-gray-500 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="">Todos los estados</option>
-              <option value="completado">Completado</option>
-              <option value="en-proceso">En proceso</option>
-              <option value="pendiente">Pendiente</option>
-              <option value="cancelado">Cancelado</option>
+              <option v-for="estado in estadosDisponibles" :key="estado.value" :value="estado.value">{{ estado.label }}</option>
             </select>
             
             <select 
               v-model="filtroPeriodo" 
               class="rounded-md bg-gray-600 border-gray-500 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="">Todos los períodos</option>
-              <option value="hoy">Hoy</option>
-              <option value="semana">Esta semana</option>
-              <option value="mes">Este mes</option>
-              <option value="anio">Este año</option>
+              <option v-for="periodo in periodosDisponibles" :key="periodo.value" :value="periodo.value">{{ periodo.label }}</option>
             </select>
           </div>
           
@@ -210,76 +193,16 @@
           </div>
           
           <!-- Resumen de estadísticas -->
-          <div class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div class="bg-gray-700 p-5 rounded-lg shadow-sm hover:bg-gray-600 transition-colors duration-200">
-              <div class="flex items-center">
-                <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
-                  <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                </div>
-                <div class="ml-5">
-                  <p class="text-sm font-medium text-gray-300">Servicios Totales</p>
-                  <p class="text-2xl font-semibold text-white">{{ estadisticas.total }}</p>
+          <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6 animate-fade-in">
+            <transition-group name="fade" tag="template">
+              <div v-for="(tarjeta, i) in tarjetas.slice(0,4)" :key="tarjeta.titulo" :class="[tarjeta.bg, 'p-6 rounded-xl shadow-lg flex items-center gap-4 hover:scale-105 transition-transform duration-300']">
+                <div :class="[tarjeta.iconBg, 'rounded-full h-14 w-14 flex items-center justify-center text-3xl text-white shadow']">{{ tarjeta.icon }}</div>
+                <div>
+                  <p class="text-lg font-semibold text-white">{{ tarjeta.valor }}</p>
+                  <p class="text-gray-300">{{ tarjeta.titulo }}</p>
                 </div>
               </div>
-            </div>
-            
-            <div class="bg-gray-700 p-5 rounded-lg shadow-sm hover:bg-gray-600 transition-colors duration-200">
-              <div class="flex items-center">
-                <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
-                  <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div class="ml-5">
-                  <p class="text-sm font-medium text-gray-300">Abiertas</p>
-                  <p class="text-2xl font-semibold text-white">{{ estadisticas.abiertas }}</p>
-                </div>
-              </div>
-            </div>
-            
-            <div class="bg-gray-700 p-5 rounded-lg shadow-sm hover:bg-gray-600 transition-colors duration-200">
-              <div class="flex items-center">
-                <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
-                  <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                  </svg>
-                </div>
-                <div class="ml-5">
-                  <p class="text-sm font-medium text-gray-300">En Proceso</p>
-                  <p class="text-2xl font-semibold text-white">{{ estadisticas.enProceso }}</p>
-                </div>
-              </div>
-            </div>
-            
-            <div class="bg-gray-700 p-5 rounded-lg shadow-sm hover:bg-gray-600 transition-colors duration-200">
-              <div class="flex items-center">
-                <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
-                  <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div class="ml-5">
-                  <p class="text-sm font-medium text-gray-300">Finalizadas</p>
-                  <p class="text-2xl font-semibold text-white">{{ estadisticas.finalizadas }}</p>
-                </div>
-              </div>
-            </div>
-            
-            <div class="bg-gray-700 p-5 rounded-lg shadow-sm hover:bg-gray-600 transition-colors duration-200">
-              <div class="flex items-center">
-                <div class="flex-shrink-0 bg-gray-500 rounded-md p-3">
-                  <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                  </svg>
-                </div>
-                <div class="ml-5">
-                  <p class="text-sm font-medium text-gray-300">Pendientes</p>
-                  <p class="text-2xl font-semibold text-white">{{ estadisticas.pendientes }}</p>
-                </div>
-              </div>
-            </div>
+            </transition-group>
           </div>
         </div>
       </div>
@@ -378,6 +301,8 @@
 <script>
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 export default {
   name: 'AdminHistorialServicios',
@@ -469,13 +394,25 @@ export default {
       }
     };
 
-    const estadosDisponibles = ['todos', 'abierta', 'en proceso', 'finalizada', 'pendiente'];
-    const periodosDisponibles = ['todos', 'hoy', 'semana', 'mes', 'anio'];
+    const estadosDisponibles = [
+      { value: '', label: 'Todos los estados' },
+      { value: 'abierta', label: 'Abierta' },
+      { value: 'en proceso', label: 'En Proceso' },
+      { value: 'finalizada', label: 'Finalizada' },
+      { value: 'pendiente', label: 'Pendiente' }
+    ];
+    const periodosDisponibles = [
+      { value: '', label: 'Todos los períodos' },
+      { value: 'hoy', label: 'Hoy' },
+      { value: 'semana', label: 'Esta semana' },
+      { value: 'mes', label: 'Este mes' },
+      { value: 'anio', label: 'Este año' }
+    ];
 
     const serviciosFiltrados = computed(() => {
       return servicios.value.filter(servicio => {
-        const coincideEstado = filtroEstado.value === '' || filtroEstado.value === 'todos' || servicio.estado === filtroEstado.value;
-        const coincidePeriodo = filtroPeriodo.value === '' || filtroPeriodo.value === 'todos' || filtrarPorPeriodo(servicio.fecha, filtroPeriodo.value);
+        const coincideEstado = !filtroEstado.value || servicio.estado === filtroEstado.value;
+        const coincidePeriodo = !filtroPeriodo.value || filtrarPorPeriodo(servicio.fecha, filtroPeriodo.value);
         const coincideBusqueda = servicio.tipo.toLowerCase().includes(busqueda.value.toLowerCase()) ||
                                 servicio.cliente.nombre.toLowerCase().includes(busqueda.value.toLowerCase());
         return coincideEstado && coincidePeriodo && coincideBusqueda;
@@ -508,7 +445,22 @@ export default {
     };
 
     const generarPDF = async (servicio) => {
-      alert('Funcionalidad de exportar PDF aún no implementada para órdenes de servicio.');
+      try {
+        const doc = new jsPDF();
+        doc.setFontSize(18);
+        doc.text('Detalle de Orden de Servicio', 14, 18);
+        doc.setFontSize(12);
+        doc.text(`ID: ${servicio.id}`, 14, 30);
+        doc.text(`Cliente: ${servicio.cliente.nombre}`, 14, 38);
+        doc.text(`Vehículo: ${servicio.vehiculo.modelo} (${servicio.vehiculo.placa})`, 14, 46);
+        doc.text(`Fecha: ${servicio.fecha}`, 14, 54);
+        doc.text(`Precio: $${servicio.precio}`, 14, 62);
+        doc.text(`Estado: ${servicio.estado}`, 14, 70);
+        doc.text(`Descripción: ${servicio.descripcion}`, 14, 78);
+        doc.save(`orden-servicio-${servicio.id}.pdf`);
+      } catch (err) {
+        alert('Error al generar el PDF');
+      }
     };
 
     const exportarServicios = async () => {
@@ -540,35 +492,35 @@ export default {
       {
         titulo: 'Servicios Totales',
         valor: estadisticas.value.total,
-        icon: 'LightningIcon',
+        icon: '⚡',
         bg: 'bg-gray-700',
         iconBg: 'bg-blue-500'
       },
       {
         titulo: 'Abiertas',
         valor: estadisticas.value.abiertas,
-        icon: 'ClockIcon',
+        icon: '⏰',
         bg: 'bg-gray-700',
         iconBg: 'bg-yellow-500'
       },
       {
         titulo: 'En Proceso',
         valor: estadisticas.value.enProceso,
-        icon: 'CogIcon',
+        icon: '⚙️',
         bg: 'bg-gray-700',
         iconBg: 'bg-blue-500'
       },
       {
         titulo: 'Finalizadas',
         valor: estadisticas.value.finalizadas,
-        icon: 'CheckCircleIcon',
+        icon: '✅',
         bg: 'bg-gray-700',
         iconBg: 'bg-green-500'
       },
       {
         titulo: 'Pendientes',
         valor: estadisticas.value.pendientes,
-        icon: 'InboxIcon',
+        icon: '📥',
         bg: 'bg-gray-700',
         iconBg: 'bg-gray-500'
       }
@@ -595,7 +547,9 @@ export default {
       exportarServicios,
       cambiarPagina,
       badgeEstado,
-      tarjetas
+      tarjetas,
+      estadosDisponibles,
+      periodosDisponibles
     };
   }
 };
