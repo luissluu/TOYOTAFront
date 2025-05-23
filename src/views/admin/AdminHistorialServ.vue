@@ -193,49 +193,49 @@
           </div>
           
           <!-- Resumen de estadísticas -->
-          <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-8">
-            <div class="bg-gray-700 p-7 rounded-2xl shadow-xl flex items-center gap-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 border border-gray-600">
-              <div class="flex-shrink-0 bg-blue-500 rounded-xl h-16 w-16 flex items-center justify-center">
-                <svg class="h-9 w-9 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="bg-gray-700 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-gray-600">
+              <div class="flex-shrink-0 bg-blue-500 rounded-lg h-12 w-12 flex items-center justify-center">
+                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2m-6 4h6a2 2 0 002-2v-6a2 2 0 00-2-2h-2a2 2 0 00-2 2v6a2 2 0 002 2z" />
                 </svg>
               </div>
               <div>
-                <p class="text-base font-medium text-gray-300">Servicios Totales</p>
-                <p class="text-3xl font-bold text-white">{{ estadisticas.total }}</p>
+                <p class="text-sm font-medium text-gray-300">Servicios Totales</p>
+                <p class="text-xl font-bold text-white">{{ estadisticas.total }}</p>
               </div>
             </div>
-            <div class="bg-gray-700 p-7 rounded-2xl shadow-xl flex items-center gap-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 border border-gray-600">
-              <div class="flex-shrink-0 bg-yellow-400 rounded-xl h-16 w-16 flex items-center justify-center">
-                <svg class="h-9 w-9 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="bg-gray-700 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-gray-600">
+              <div class="flex-shrink-0 bg-yellow-400 rounded-lg h-12 w-12 flex items-center justify-center">
+                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <div>
-                <p class="text-base font-medium text-gray-300">Abiertas</p>
-                <p class="text-3xl font-bold text-white">{{ estadisticas.abiertas }}</p>
+                <p class="text-sm font-medium text-gray-300">Abiertas</p>
+                <p class="text-xl font-bold text-white">{{ estadisticas.abiertas }}</p>
               </div>
             </div>
-            <div class="bg-gray-700 p-7 rounded-2xl shadow-xl flex items-center gap-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 border border-gray-600">
-              <div class="flex-shrink-0 bg-blue-400 rounded-xl h-16 w-16 flex items-center justify-center">
-                <svg class="h-9 w-9 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+            <div class="bg-gray-700 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-gray-600">
+              <div class="flex-shrink-0 bg-blue-400 rounded-lg h-12 w-12 flex items-center justify-center">
+                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 0l3 3m-3-3l-3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <div>
-                <p class="text-base font-medium text-gray-300">En Progreso</p>
-                <p class="text-3xl font-bold text-white">{{ estadisticas.enProgreso }}</p>
+                <p class="text-sm font-medium text-gray-300">En Progreso</p>
+                <p class="text-xl font-bold text-white">{{ estadisticas.enProgreso }}</p>
               </div>
             </div>
-            <div class="bg-gray-700 p-7 rounded-2xl shadow-xl flex items-center gap-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 border border-gray-600">
-              <div class="flex-shrink-0 bg-green-500 rounded-xl h-16 w-16 flex items-center justify-center">
-                <svg class="h-9 w-9 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="bg-gray-700 p-4 rounded-xl shadow flex items-center gap-4 hover:scale-105 hover:shadow-lg transition-all duration-300 border border-gray-600">
+              <div class="flex-shrink-0 bg-green-500 rounded-lg h-12 w-12 flex items-center justify-center">
+                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <div>
-                <p class="text-base font-medium text-gray-300">Finalizadas</p>
-                <p class="text-3xl font-bold text-white">{{ estadisticas.finalizadas }}</p>
+                <p class="text-sm font-medium text-gray-300">Finalizadas</p>
+                <p class="text-xl font-bold text-white">{{ estadisticas.finalizadas }}</p>
               </div>
             </div>
           </div>
@@ -456,17 +456,19 @@ export default {
 
     const filtrarPorPeriodo = (fecha, periodo) => {
       const hoy = new Date();
-      const fechaServicio = new Date(fecha);
-      
+      const fechaServicio = new Date(fecha.split('/').reverse().join('-'));
       switch (periodo) {
         case 'hoy':
           return fechaServicio.toDateString() === hoy.toDateString();
-        case 'semana':
-          const inicioSemana = new Date(hoy.setDate(hoy.getDate() - hoy.getDay()));
-          return fechaServicio >= inicioSemana;
+        case 'semana': {
+          const inicioSemana = new Date(hoy);
+          inicioSemana.setDate(hoy.getDate() - hoy.getDay());
+          const finSemana = new Date(inicioSemana);
+          finSemana.setDate(inicioSemana.getDate() + 6);
+          return fechaServicio >= inicioSemana && fechaServicio <= finSemana;
+        }
         case 'mes':
-          return fechaServicio.getMonth() === hoy.getMonth() && 
-                 fechaServicio.getFullYear() === hoy.getFullYear();
+          return fechaServicio.getMonth() === hoy.getMonth() && fechaServicio.getFullYear() === hoy.getFullYear();
         case 'anio':
           return fechaServicio.getFullYear() === hoy.getFullYear();
         default:
