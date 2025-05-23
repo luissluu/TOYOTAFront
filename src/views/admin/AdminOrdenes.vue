@@ -136,7 +136,7 @@ export default {
     const ordenes = ref([])
     const router = useRouter()
     const busqueda = ref('')
-    const filtroEstado = ref('')
+    const filtroEstado = ref('abierta')
 
     const cargarOrdenes = async () => {
       try {
@@ -201,19 +201,20 @@ export default {
 <style scoped>
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, 320px);
   gap: 1.5rem;
+  justify-content: start;
 }
 
 @media (min-width: 768px) {
   .grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, 320px);
   }
 }
 
 @media (min-width: 1024px) {
   .grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, 320px);
   }
 }
 </style> 
