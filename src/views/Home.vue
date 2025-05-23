@@ -58,6 +58,11 @@
 
             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
             <div v-for="servicio in serviciosAleatorios" :key="servicio.servicio_id" class="w-full bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col">
+                <a href="#" class="flex-shrink-0">
+                    <div class="w-full h-48 overflow-hidden rounded-t-lg">
+                        <img class="w-full h-full object-cover" :src="getImagenServicio(servicio.nombre)" :alt="servicio.nombre" />
+                    </div>
+                </a>
                 <div class="px-5 py-4 flex-grow flex flex-col">
                     <a href="#" class="mb-auto">
                         <h5 class="text-xl font-semibold tracking-tight text-gray-900 h-14">{{ servicio.nombre }}</h5>
@@ -185,6 +190,17 @@ function mapEstadoStepper(estado) {
 
 const serviciosAleatorios = ref([])
 
+function getImagenServicio(nombreServicio) {
+  const nombreNormalizado = nombreServicio.toLowerCase().replace(/\s+/g, '')
+  const imagenes = {
+    'cambiodeaceiteyfiltro': '/Images/CambioAceiteyFiltro.jpg',
+    'alineacionybalanceo': '/Images/AlineacionYBalanceo.jpg',
+    'cambiodebujias': '/Images/CambioBujias.jpg',
+    'limpiezafiltrodeaire': '/Images/LimpiezaFiltroAire.jpg'
+  }
+  return imagenes[nombreNormalizado] || '/Images/default-service.jpg'
+}
+
 async function cargarServiciosAleatorios() {
   try {
     const { data } = await axios.get('/api/servicios')
@@ -245,7 +261,20 @@ export default {
       }
     })
 
-    return { ordenes, steps, getStepClass, getStepTextClass, mapEstadoStepper, serviciosAleatorios, ordenSeleccionadaId, ordenSeleccionada, progresoOrden, etapaActual, etapas }
+    return { 
+      ordenes, 
+      steps, 
+      getStepClass, 
+      getStepTextClass, 
+      mapEstadoStepper, 
+      serviciosAleatorios, 
+      ordenSeleccionadaId, 
+      ordenSeleccionada, 
+      progresoOrden, 
+      etapaActual, 
+      etapas,
+      getImagenServicio 
+    }
   }
 }
 </script>
