@@ -329,7 +329,6 @@
                   <option value="">Todos los estados</option>
                   <option value="disponible">Disponible</option>
                   <option value="prestado">Prestado</option>
-                  <option value="mantenimiento">En Mantenimiento</option>
                 </select>
               </div>
               
@@ -392,6 +391,11 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="#ef4444"/>
                           <path stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M8 12h8"/>
+                        </svg>
+                      </button>
+                      <button @click="abrirModalPrestarHerramienta(herramienta)" class="hover:text-blue-400" title="Prestar">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17l9-5-9-5v10z" />
                         </svg>
                       </button>
                     </td>
@@ -516,6 +520,35 @@
                     >
                       Registrar Préstamo
                     </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div v-if="mostrarModalPrestarHerramienta" class="fixed inset-0 flex items-center justify-center z-50">
+              <div class="absolute inset-0 bg-black opacity-50" @click="cerrarModalPrestarHerramienta"></div>
+              <div class="relative bg-gray-800 max-w-md w-full mx-auto rounded-lg shadow-lg p-6 max-h-[80vh] overflow-y-auto">
+                <button @click="cerrarModalPrestarHerramienta" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                  <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+                <h3 class="text-xl font-medium text-white mb-4">Registrar Préstamo de Herramienta</h3>
+                <div v-if="errorPrestamoHerramienta" class="text-red-500 mb-2">{{ errorPrestamoHerramienta }}</div>
+                <form @submit.prevent="confirmarPrestamoHerramienta" class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-1">Usuario (Mecánico)</label>
+                    <select v-model="prestamoHerramienta.usuario" class="w-full rounded-md bg-gray-700 border-gray-600 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                      <option value="">Selecciona un mecánico</option>
+                      <option v-for="mecanico in mecanicos" :key="mecanico.id" :value="mecanico.id">{{ mecanico.nombre }}</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-1">Fecha de Préstamo</label>
+                    <input type="date" v-model="prestamoHerramienta.fecha" class="w-full rounded-md bg-gray-700 border-gray-600 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                  </div>
+                  <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" @click="cerrarModalPrestarHerramienta" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Prestar</button>
                   </div>
                 </form>
               </div>
@@ -762,6 +795,12 @@ export default {
     const herramientaSeleccionadaStock = ref(null);
     const cantidadAgregarStockHerramienta = ref(1);
     const cantidadRestarStockHerramienta = ref(1);
+
+    const mostrarModalPrestarHerramienta = ref(false);
+    const prestamoHerramienta = ref({ usuario: '', fecha: '' });
+    const herramientaSeleccionadaPrestamo = ref(null);
+    const errorPrestamoHerramienta = ref('');
+    const mecanicos = ref([]);
 
     // Cargar artículos al montar el componente
     const cargarArticulos = async () => {
@@ -1168,6 +1207,63 @@ export default {
       }
     };
 
+    const abrirModalPrestarHerramienta = async (herramienta) => {
+      herramientaSeleccionadaPrestamo.value = herramienta;
+      prestamoHerramienta.value = { usuario: '', fecha: '' };
+      errorPrestamoHerramienta.value = '';
+      // Validar stock antes de abrir el modal
+      if (!herramienta.stock_actual || herramienta.stock_actual < 1) {
+        errorPrestamoHerramienta.value = 'No hay stock disponible para prestar esta herramienta.';
+        mostrarModalPrestarHerramienta.value = true;
+        return;
+      }
+      // Obtener mecánicos del backend
+      try {
+        const response = await axios.get('/api/usuarios?rol=mecanico');
+        mecanicos.value = response.data;
+      } catch (err) {
+        mecanicos.value = [];
+      }
+      mostrarModalPrestarHerramienta.value = true;
+    };
+    const cerrarModalPrestarHerramienta = () => {
+      mostrarModalPrestarHerramienta.value = false;
+      herramientaSeleccionadaPrestamo.value = null;
+      prestamoHerramienta.value = { usuario: '', fecha: '' };
+      errorPrestamoHerramienta.value = '';
+    };
+    const confirmarPrestamoHerramienta = async () => {
+      if (!prestamoHerramienta.value.usuario || !prestamoHerramienta.value.fecha) {
+        errorPrestamoHerramienta.value = 'Todos los campos son obligatorios.';
+        return;
+      }
+      if (!herramientaSeleccionadaPrestamo.value.stock_actual || herramientaSeleccionadaPrestamo.value.stock_actual < 1) {
+        errorPrestamoHerramienta.value = 'No hay stock disponible para prestar esta herramienta.';
+        return;
+      }
+      try {
+        // Registrar el préstamo
+        await axios.post('/api/movimientos-inventario', {
+          articulo_id: herramientaSeleccionadaPrestamo.value.id || herramientaSeleccionadaPrestamo.value.articulo_id,
+          tipo_movimiento: 'prestamo',
+          cantidad: 1,
+          usuario_id: prestamoHerramienta.value.usuario,
+          motivo: 'Préstamo de herramienta',
+          fecha: prestamoHerramienta.value.fecha
+        });
+        // Descontar stock
+        await axios.patch(`/api/inventario/${herramientaSeleccionadaPrestamo.value.id || herramientaSeleccionadaPrestamo.value.articulo_id}/stock`, {
+          cantidad: -1
+        });
+        await cargarHerramientas();
+        cerrarModalPrestarHerramienta();
+        notificacionStore.mostrar('Préstamo registrado exitosamente', 'success');
+      } catch (err) {
+        errorPrestamoHerramienta.value = 'Error al registrar el préstamo.';
+        console.error(err);
+      }
+    };
+
     onMounted(() => {
       cargarArticulos();
       cargarHerramientas();
@@ -1230,7 +1326,15 @@ export default {
       confirmarAgregarStockHerramienta,
       abrirModalRestarStockHerramienta,
       cerrarModalRestarStockHerramienta,
-      confirmarRestarStockHerramienta
+      confirmarRestarStockHerramienta,
+      mostrarModalPrestarHerramienta,
+      prestamoHerramienta,
+      herramientaSeleccionadaPrestamo,
+      errorPrestamoHerramienta,
+      mecanicos,
+      abrirModalPrestarHerramienta,
+      cerrarModalPrestarHerramienta,
+      confirmarPrestamoHerramienta
     };
   }
 };
