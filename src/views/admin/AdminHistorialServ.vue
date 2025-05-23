@@ -194,15 +194,61 @@
           
           <!-- Resumen de estadísticas -->
           <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6 animate-fade-in">
-            <transition-group name="fade" tag="template">
-              <div v-for="(tarjeta, i) in tarjetas.slice(0,4)" :key="tarjeta.titulo" :class="[tarjeta.bg, 'p-6 rounded-xl shadow-lg flex items-center gap-4 hover:scale-105 transition-transform duration-300']">
-                <div :class="[tarjeta.iconBg, 'rounded-full h-14 w-14 flex items-center justify-center text-3xl text-white shadow']">{{ tarjeta.icon }}</div>
-                <div>
-                  <p class="text-lg font-semibold text-white">{{ tarjeta.valor }}</p>
-                  <p class="text-gray-300">{{ tarjeta.titulo }}</p>
-                </div>
+            <div class="bg-gray-700 p-5 rounded-lg shadow-sm hover:bg-gray-600 transition-colors duration-200 flex items-center">
+              <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
               </div>
-            </transition-group>
+              <div class="ml-5">
+                <p class="text-sm font-medium text-gray-300">Servicios Totales</p>
+                <p class="text-2xl font-semibold text-white">{{ estadisticas.total }}</p>
+              </div>
+            </div>
+            <div class="bg-gray-700 p-5 rounded-lg shadow-sm hover:bg-gray-600 transition-colors duration-200 flex items-center">
+              <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
+                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div class="ml-5">
+                <p class="text-sm font-medium text-gray-300">Abiertas</p>
+                <p class="text-2xl font-semibold text-white">{{ estadisticas.abiertas }}</p>
+              </div>
+            </div>
+            <div class="bg-gray-700 p-5 rounded-lg shadow-sm hover:bg-gray-600 transition-colors duration-200 flex items-center">
+              <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                </svg>
+              </div>
+              <div class="ml-5">
+                <p class="text-sm font-medium text-gray-300">En Proceso</p>
+                <p class="text-2xl font-semibold text-white">{{ estadisticas.enProceso }}</p>
+              </div>
+            </div>
+            <div class="bg-gray-700 p-5 rounded-lg shadow-sm hover:bg-gray-600 transition-colors duration-200 flex items-center">
+              <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div class="ml-5">
+                <p class="text-sm font-medium text-gray-300">Finalizadas</p>
+                <p class="text-2xl font-semibold text-white">{{ estadisticas.finalizadas }}</p>
+              </div>
+            </div>
+            <div class="bg-gray-700 p-5 rounded-lg shadow-sm hover:bg-gray-600 transition-colors duration-200 flex items-center">
+              <div class="flex-shrink-0 bg-gray-500 rounded-md p-3">
+                <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                </svg>
+              </div>
+              <div class="ml-5">
+                <p class="text-sm font-medium text-gray-300">Pendientes</p>
+                <p class="text-2xl font-semibold text-white">{{ estadisticas.pendientes }}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
