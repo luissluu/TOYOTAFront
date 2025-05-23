@@ -360,6 +360,7 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">ID</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Nombre</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Tipo</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Stock</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Estado</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Último Préstamo</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Acciones</th>
@@ -369,7 +370,8 @@
                   <tr v-for="herramienta in herramientasFiltradas" :key="herramienta.id" class="hover:bg-gray-500">
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ herramienta.id }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ herramienta.nombre }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ herramienta.tipo }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ herramienta.subcategoria || herramienta.tipo }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ herramienta.stock_actual }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Disponible</span>
                     </td>
