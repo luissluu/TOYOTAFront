@@ -373,11 +373,27 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ herramienta.subcategoria || herramienta.tipo }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ herramienta.stock_actual }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Disponible</span>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">{{ herramienta.estado === 'disponible' ? 'Disponible' : herramienta.estado === 'prestado' ? 'Prestado' : 'En Mantenimiento' }}</span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-white">03/05/2025</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
-                      <button @click="editarHerramienta(herramienta)" class="text-yellow-400 hover:text-yellow-300 mr-2">Editar</button>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white flex gap-2">
+                      <button @click="editarHerramienta(herramienta)" class="hover:text-yellow-300" title="Editar">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.862 3.487a2.25 2.25 0 113.182 3.182L7.5 19.213l-4 1 1-4 12.362-12.726z" />
+                        </svg>
+                      </button>
+                      <button @click="abrirModalAgregarStockHerramienta(herramienta)" class="hover:text-green-300" title="Agregar stock">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="#22c55e"/>
+                          <path stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m4-4H8"/>
+                        </svg>
+                      </button>
+                      <button @click="abrirModalRestarStockHerramienta(herramienta)" class="hover:text-red-300" title="Restar stock">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="#ef4444"/>
+                          <path stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M8 12h8"/>
+                        </svg>
+                      </button>
                     </td>
                   </tr>
                 </tbody>
@@ -627,6 +643,44 @@
       </div>
     </div>
   </div>
+  <div v-if="mostrarModalAgregarStockHerramienta" class="fixed inset-0 flex items-center justify-center z-50">
+    <div class="absolute inset-0 bg-black opacity-50" @click="cerrarModalAgregarStockHerramienta"></div>
+    <div class="relative bg-gray-800 max-w-md w-full mx-auto rounded-lg shadow-lg p-6 max-h-[80vh] overflow-y-auto">
+      <button @click="cerrarModalAgregarStockHerramienta" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      <h3 class="text-xl font-medium text-white mb-4">Agregar stock a herramienta</h3>
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-400 mb-1">Cantidad a agregar</label>
+        <input type="number" v-model.number="cantidadAgregarStockHerramienta" min="1" class="w-full rounded-md bg-gray-700 border-gray-600 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+      <div class="flex justify-end space-x-3 mt-6">
+        <button type="button" @click="cerrarModalAgregarStockHerramienta" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500">Cancelar</button>
+        <button type="button" @click="confirmarAgregarStockHerramienta" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Agregar</button>
+      </div>
+    </div>
+  </div>
+  <div v-if="mostrarModalRestarStockHerramienta" class="fixed inset-0 flex items-center justify-center z-50">
+    <div class="absolute inset-0 bg-black opacity-50" @click="cerrarModalRestarStockHerramienta"></div>
+    <div class="relative bg-gray-800 max-w-md w-full mx-auto rounded-lg shadow-lg p-6 max-h-[80vh] overflow-y-auto">
+      <button @click="cerrarModalRestarStockHerramienta" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      <h3 class="text-xl font-medium text-white mb-4">Restar stock a herramienta</h3>
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-400 mb-1">Cantidad a restar (máx: {{ herramientaSeleccionadaStock?.stock_actual }})</label>
+        <input type="number" v-model.number="cantidadRestarStockHerramienta" :max="herramientaSeleccionadaStock?.stock_actual" min="1" class="w-full rounded-md bg-gray-700 border-gray-600 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+      <div class="flex justify-end space-x-3 mt-6">
+        <button type="button" @click="cerrarModalRestarStockHerramienta" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500">Cancelar</button>
+        <button type="button" @click="confirmarRestarStockHerramienta" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Restar</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -702,6 +756,12 @@ export default {
 
     const editandoHerramienta = ref(false);
     let idHerramientaEditando = null;
+
+    const mostrarModalAgregarStockHerramienta = ref(false);
+    const mostrarModalRestarStockHerramienta = ref(false);
+    const herramientaSeleccionadaStock = ref(null);
+    const cantidadAgregarStockHerramienta = ref(1);
+    const cantidadRestarStockHerramienta = ref(1);
 
     // Cargar artículos al montar el componente
     const cargarArticulos = async () => {
@@ -999,8 +1059,8 @@ export default {
     const herramientasFiltradas = computed(() => {
       return herramientas.value.filter(herramienta => {
         const coincideBusqueda = herramienta.nombre.toLowerCase().includes(busquedaHerramientas.value.toLowerCase());
-        const coincideTipo = !filtroTipoHerramienta.value || herramienta.tipo === filtroTipoHerramienta.value;
-        const coincideEstado = !filtroEstadoHerramienta.value || herramienta.estado === filtroEstadoHerramienta.value;
+        const coincideTipo = !filtroTipoHerramienta.value || (herramienta.subcategoria && herramienta.subcategoria.toLowerCase() === filtroTipoHerramienta.value.toLowerCase());
+        const coincideEstado = !filtroEstadoHerramienta.value || (herramienta.estado && herramienta.estado.toLowerCase() === filtroEstadoHerramienta.value.toLowerCase());
         return coincideBusqueda && coincideTipo && coincideEstado;
       });
     });
@@ -1050,6 +1110,61 @@ export default {
       } catch (err) {
         notificacionStore.mostrar('Error al actualizar la herramienta', 'error');
         console.error('Error:', err);
+      }
+    };
+
+    const abrirModalAgregarStockHerramienta = (herramienta) => {
+      herramientaSeleccionadaStock.value = herramienta;
+      cantidadAgregarStockHerramienta.value = 1;
+      mostrarModalAgregarStockHerramienta.value = true;
+    };
+
+    const cerrarModalAgregarStockHerramienta = () => {
+      mostrarModalAgregarStockHerramienta.value = false;
+      herramientaSeleccionadaStock.value = null;
+      cantidadAgregarStockHerramienta.value = 1;
+    };
+
+    const confirmarAgregarStockHerramienta = async () => {
+      if (!cantidadAgregarStockHerramienta.value || cantidadAgregarStockHerramienta.value < 1) return;
+      try {
+        await axios.patch(`/api/inventario/${herramientaSeleccionadaStock.value.id || herramientaSeleccionadaStock.value.articulo_id}/stock`, {
+          cantidad: cantidadAgregarStockHerramienta.value
+        });
+        await cargarHerramientas();
+        cerrarModalAgregarStockHerramienta();
+        notificacionStore.mostrar('Stock agregado exitosamente', 'success');
+      } catch (err) {
+        notificacionStore.mostrar('Error al agregar stock', 'error');
+        console.error(err);
+      }
+    };
+
+    const abrirModalRestarStockHerramienta = (herramienta) => {
+      herramientaSeleccionadaStock.value = herramienta;
+      cantidadRestarStockHerramienta.value = 1;
+      mostrarModalRestarStockHerramienta.value = true;
+    };
+
+    const cerrarModalRestarStockHerramienta = () => {
+      mostrarModalRestarStockHerramienta.value = false;
+      herramientaSeleccionadaStock.value = null;
+      cantidadRestarStockHerramienta.value = 1;
+    };
+
+    const confirmarRestarStockHerramienta = async () => {
+      if (!cantidadRestarStockHerramienta.value || cantidadRestarStockHerramienta.value < 1) return;
+      if (cantidadRestarStockHerramienta.value > herramientaSeleccionadaStock.value.stock_actual) return;
+      try {
+        await axios.patch(`/api/inventario/${herramientaSeleccionadaStock.value.id || herramientaSeleccionadaStock.value.articulo_id}/stock`, {
+          cantidad: -cantidadRestarStockHerramienta.value
+        });
+        await cargarHerramientas();
+        cerrarModalRestarStockHerramienta();
+        notificacionStore.mostrar('Stock descontado exitosamente', 'success');
+      } catch (err) {
+        notificacionStore.mostrar('Error al descontar stock', 'error');
+        console.error(err);
       }
     };
 
@@ -1104,7 +1219,18 @@ export default {
       editarHerramienta,
       editandoHerramienta,
       idHerramientaEditando,
-      actualizarHerramienta
+      actualizarHerramienta,
+      mostrarModalAgregarStockHerramienta,
+      mostrarModalRestarStockHerramienta,
+      herramientaSeleccionadaStock,
+      cantidadAgregarStockHerramienta,
+      cantidadRestarStockHerramienta,
+      abrirModalAgregarStockHerramienta,
+      cerrarModalAgregarStockHerramienta,
+      confirmarAgregarStockHerramienta,
+      abrirModalRestarStockHerramienta,
+      cerrarModalRestarStockHerramienta,
+      confirmarRestarStockHerramienta
     };
   }
 };
