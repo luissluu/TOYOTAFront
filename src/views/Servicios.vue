@@ -26,9 +26,9 @@
   const serviciosPorTipo = computed(() => {
     const grupos = {}
     for (const servicio of servicios.value) {
-      const tipo = servicio.tipo || 'Otros'
-      if (!grupos[tipo]) grupos[tipo] = []
-      grupos[tipo].push(servicio)
+      const categoria = servicio.categoria || 'Otros'
+      if (!grupos[categoria]) grupos[categoria] = []
+      grupos[categoria].push(servicio)
     }
     return grupos
   })
