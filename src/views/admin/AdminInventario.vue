@@ -335,7 +335,7 @@
               
               <div class="flex gap-2">                
                 <button 
-                  @click="mostrarFormularioHerramienta = true" 
+                  @click="() => { mostrarFormularioHerramienta = true; editandoHerramienta = false; nuevaHerramienta = { nombre: '', tipo: '', descripcion: '', estado: 'disponible', ultima_actualizacion: new Date().toISOString() }; }"
                   class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center"
                 >
                   <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -398,9 +398,9 @@
             
             <!-- Formulario modal para añadir/editar herramienta -->
             <div v-if="mostrarFormularioHerramienta" class="fixed inset-0 flex items-center justify-center z-50">
-              <div class="absolute inset-0 bg-black opacity-50" @click="mostrarFormularioHerramienta = false"></div>
+              <div class="absolute inset-0 bg-black opacity-50" @click="() => { mostrarFormularioHerramienta = false; editandoHerramienta = false; }"></div>
               <div class="relative bg-gray-800 max-w-md w-full mx-auto rounded-lg shadow-lg p-6 max-h-[80vh] overflow-y-auto">
-                <button @click="mostrarFormularioHerramienta = false" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <button @click="() => { mostrarFormularioHerramienta = false; editandoHerramienta = false; }" class="absolute top-4 right-4 text-gray-400 hover:text-white">
                   <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                   </svg>
@@ -408,7 +408,7 @@
                 
                 <h3 class="text-xl font-medium text-white mb-4">{{ editandoHerramienta ? 'Editar Herramienta' : 'Añadir Nueva Herramienta' }}</h3>
                 
-                <form @submit.prevent="editandoHerramienta ? actualizarHerramienta() : guardarHerramienta" class="space-y-4">
+                <form @submit.prevent="() => { console.log('Submit formulario herramienta', nuevaHerramienta); editandoHerramienta ? actualizarHerramienta() : guardarHerramienta(); }" class="space-y-4">
                   <div>
                     <label class="block text-sm font-medium text-gray-400 mb-1">Nombre</label>
                     <input type="text" v-model="nuevaHerramienta.nombre" class="w-full rounded-md bg-gray-700 border-gray-600 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
@@ -428,7 +428,7 @@
                   <div class="flex justify-end space-x-3 mt-6">
                     <button 
                       type="button" 
-                      @click="mostrarFormularioHerramienta = false" 
+                      @click="() => { mostrarFormularioHerramienta = false; editandoHerramienta = false; }" 
                       class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500"
                     >
                       Cancelar
