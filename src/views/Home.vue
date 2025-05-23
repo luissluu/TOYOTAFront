@@ -191,14 +191,12 @@ function mapEstadoStepper(estado) {
 const serviciosAleatorios = ref([])
 
 function getImagenServicio(nombreServicio) {
-  const nombreNormalizado = nombreServicio.toLowerCase().replace(/\s+/g, '')
-  const imagenes = {
-    'cambiodeaceiteyfiltro': '/Images/CambioAceiteyFiltro.jpg',
-    'alineacionybalanceo': '/Images/AlineacionYBalanceo.jpg',
-    'cambiodebujias': '/Images/CambioBujias.jpg',
-    'limpiezafiltrodeaire': '/Images/LimpiezaFiltroAire.jpg'
-  }
-  return imagenes[nombreNormalizado] || '/Images/default-service.jpg'
+  const nombre = nombreServicio.toLowerCase();
+  if (nombre.includes('aceite')) return '/Images/CambioAceiteyFiltro.jpg';
+  if (nombre.includes('balanceo') || nombre.includes('alineación')) return '/Images/AlineacionYBalanceo.jpg';
+  if (nombre.includes('bujía')) return '/Images/CambioBujias.jpg';
+  if (nombre.includes('filtro')) return '/Images/LimpiezaFiltroAire.jpg';
+  return '/Images/default-service.jpg';
 }
 
 async function cargarServiciosAleatorios() {
