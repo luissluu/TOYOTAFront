@@ -17,12 +17,32 @@
             </div>
             <div class="ml-5">
               <p class="text-sm font-medium text-gray-300">Clientes Totales</p>
-              <p class="text-3xl font-semibold text-white">{{ totalClientes }}</p>
+              <p class="text-3xl font-semibold text-white">385</p>
               <div class="flex items-center mt-1">
                 <svg class="h-4 w-4 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
                 <p class="text-sm text-green-400 ml-1">+12% este mes</p>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg lg:col-span-1 hover:bg-gray-750 transition-colors duration-200">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 bg-red-600 rounded-md p-3">
+              <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="ml-5">
+              <p class="text-sm font-medium text-gray-300">Ingresos Mensuales</p>
+              <p class="text-3xl font-semibold text-white">$48,250</p>
+              <div class="flex items-center mt-1">
+                <svg class="h-4 w-4 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+                <p class="text-sm text-green-400 ml-1">+8.2% vs último mes</p>
               </div>
             </div>
           </div>
@@ -37,7 +57,7 @@
             </div>
             <div class="ml-5">
               <p class="text-sm font-medium text-gray-300">Servicios Completados</p>
-              <p class="text-3xl font-semibold text-white">{{ serviciosCompletados }}</p>
+              <p class="text-3xl font-semibold text-white">267</p>
               <div class="flex items-center mt-1">
                 <svg class="h-4 w-4 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -78,23 +98,16 @@
           </div>
           
           <div class="mt-4 space-y-4">
-            <div v-for="servicio in serviciosRecientes" :key="servicio.orden_id" class="bg-gray-700 p-4 rounded-lg hover:bg-gray-650 transition-colors duration-200">
+            <div class="bg-gray-700 p-4 rounded-lg hover:bg-gray-650 transition-colors duration-200">
               <div class="flex justify-between items-start">
                 <div>
-                  <p class="text-white font-medium">{{ servicio.nombre_servicio }}</p>
+                  <p class="text-white font-medium">Cambio de aceite y filtro</p>
                   <div class="flex items-center mt-1">
-                    <img class="h-6 w-6 rounded-full" :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(servicio.nombre + ' ' + servicio.apellidoPaterno)}&background=random`" :alt="servicio.nombre">
-                    <p class="text-sm text-gray-400 ml-2">{{ servicio.nombre }} {{ servicio.apellidoPaterno }}</p>
+                    <img class="h-6 w-6 rounded-full" src="https://ui-avatars.com/api/?name=Juan+Perez&background=random" alt="Juan Pérez">
+                    <p class="text-sm text-gray-400 ml-2">Juan Pérez</p>
                   </div>
                 </div>
-                <span
-                  class="px-3 py-1 text-xs rounded-full"
-                  :class="{
-                    'bg-green-800 text-green-100': servicio.estado === 'finalizada',
-                    'bg-yellow-800 text-yellow-100': servicio.estado === 'en proceso',
-                    'bg-blue-800 text-blue-100': servicio.estado === 'programado'
-                  }"
-                >{{ servicio.estado }}</span>
+                <span class="px-3 py-1 text-xs bg-green-800 text-green-100 rounded-full">Completado</span>
               </div>
               <div class="flex items-center mt-3 text-sm text-gray-400">
                 <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -103,6 +116,63 @@
                 Hace 2 horas
               </div>
             </div>
+            
+            <div class="bg-gray-700 p-4 rounded-lg hover:bg-gray-650 transition-colors duration-200">
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="text-white font-medium">Alineación y balanceo</p>
+                  <div class="flex items-center mt-1">
+                    <img class="h-6 w-6 rounded-full" src="https://ui-avatars.com/api/?name=Maria+Garcia&background=random" alt="María García">
+                    <p class="text-sm text-gray-400 ml-2">María García</p>
+                  </div>
+                </div>
+                <span class="px-3 py-1 text-xs bg-yellow-800 text-yellow-100 rounded-full">En proceso</span>
+              </div>
+              <div class="flex items-center mt-3 text-sm text-gray-400">
+                <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Hace 4 horas
+              </div>
+            </div>
+            
+            <div class="bg-gray-700 p-4 rounded-lg hover:bg-gray-650 transition-colors duration-200">
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="text-white font-medium">Diagnóstico sistema eléctrico</p>
+                  <div class="flex items-center mt-1">
+                    <img class="h-6 w-6 rounded-full" src="https://ui-avatars.com/api/?name=Roberto+Lopez&background=random" alt="Roberto López">
+                    <p class="text-sm text-gray-400 ml-2">Roberto López</p>
+                  </div>
+                </div>
+                <span class="px-3 py-1 text-xs bg-blue-800 text-blue-100 rounded-full">Programado</span>
+              </div>
+              <div class="flex items-center mt-3 text-sm text-gray-400">
+                <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Para hoy, 16:00
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Gráfico de ingresos por categoría -->
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg lg:col-span-3">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h2 class="text-xl font-bold text-white">Ingresos por Categoría</h2>
+              <p class="text-sm text-gray-400 mt-1">Tendencia de ingresos por tipo de servicio</p>
+            </div>
+            <div class="flex space-x-2">
+              <button class="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200">6 Meses</button>
+              <button class="px-4 py-2 text-sm bg-gray-700 text-gray-300 rounded-md hover:bg-gray-600 transition-colors duration-200">1 Año</button>
+            </div>
+          </div>
+          
+          <!-- Canvas del gráfico -->
+          <div class="mt-4" style="height: 350px;">
+            <canvas id="ingresosCategoriaChart" ref="ingresosCategoriaChart"></canvas>
           </div>
         </div>
       </section>
@@ -111,82 +181,205 @@
   
   <script>
   import { ref, onMounted } from 'vue';
-  import axios from 'axios';
   import Chart from 'chart.js/auto';
   
   export default {
     name: 'AdminHome',
     setup() {
       const serviciosPopularesChart = ref(null);
-      const totalClientes = ref(0);
-      const serviciosCompletados = ref(0);
-      const serviciosPopulares = ref([]);
-      const serviciosRecientes = ref([]);
+      const ingresosCategoriaChart = ref(null);
       
-      // Cargar estadísticas reales
-      const cargarEstadisticas = async () => {
-        try {
-          const [clientesRes, completadosRes, popularesRes, recientesRes] = await Promise.all([
-            axios.get('/api/estadisticas/clientes'),
-            axios.get('/api/estadisticas/completados'),
-            axios.get('/api/estadisticas/populares'),
-            axios.get('/api/estadisticas/recientes')
-          ]);
-          totalClientes.value = clientesRes.data.total;
-          serviciosCompletados.value = completadosRes.data.completados;
-          serviciosPopulares.value = popularesRes.data;
-          serviciosRecientes.value = recientesRes.data;
-        } catch (err) {
-          console.error('Error al cargar estadísticas', err);
-        }
-      };
-
-      // Crear el gráfico de servicios más populares con datos reales
-      const renderServiciosPopularesChart = () => {
-        if (serviciosPopularesChart.value && serviciosPopulares.value.length) {
-          const labels = serviciosPopulares.value.map(s => s.nombre_servicio);
-          const data = serviciosPopulares.value.map(s => s.cantidad);
+      // Crear el gráfico de servicios más populares al montar el componente
+      onMounted(() => {
+        // Datos para el gráfico de servicios más populares
+        const popularServicesData = {
+          labels: [
+            'Cambio de aceite', 
+            'Alineación y balanceo', 
+            'Cambio de bujías',
+            'Cambio filtro de aire',
+            'Sistema de frenos',
+            'Diagnóstico eléctrico',
+            'Mantenimiento suspensión'
+          ],
+          datasets: [{
+            label: 'Cantidad de servicios',
+            data: [142, 98, 75, 63, 52, 48, 35],
+            backgroundColor: [
+              '#3B82F6', // blue-500
+              '#EF4444', // red-500
+              '#10B981', // green-500
+              '#F59E0B', // amber-500
+              '#8B5CF6', // violet-500
+              '#EC4899', // pink-500
+              '#6366F1'  // indigo-500
+            ],
+            borderWidth: 0,
+            borderRadius: 4
+          }]
+        };
+  
+        // Datos para el gráfico de ingresos por categoría
+        const ingresosCategoriasData = {
+          labels: [
+            'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'
+          ],
+          datasets: [
+            {
+              label: 'Mantenimiento básico',
+              data: [12500, 13200, 14100, 13800, 15200, 16300],
+              borderColor: '#3B82F6',
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              tension: 0.4,
+              fill: true
+            },
+            {
+              label: 'Sistema de motor',
+              data: [8200, 9100, 8700, 10200, 11500, 12100],
+              borderColor: '#EF4444',
+              backgroundColor: 'rgba(239, 68, 68, 0.1)',
+              tension: 0.4,
+              fill: true
+            },
+            {
+              label: 'Sistema de frenos',
+              data: [6500, 7200, 6800, 7500, 8300, 9200],
+              borderColor: '#10B981',
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              tension: 0.4,
+              fill: true
+            },
+            {
+              label: 'Suspensión y dirección',
+              data: [7800, 8100, 9200, 8700, 9600, 10500],
+              borderColor: '#F59E0B',
+              backgroundColor: 'rgba(245, 158, 11, 0.1)',
+              tension: 0.4,
+              fill: true
+            }
+          ]
+        };
+  
+        // Crear el gráfico de servicios más populares
+        if (serviciosPopularesChart.value) {
           new Chart(serviciosPopularesChart.value, {
             type: 'bar',
-            data: {
-              labels,
-              datasets: [{
-                label: 'Cantidad de servicios',
-                data,
-                backgroundColor: [
-                  '#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#6366F1'
-                ],
-                borderWidth: 0,
-                borderRadius: 4
-              }]
-            },
+            data: popularServicesData,
             options: {
               responsive: true,
               maintainAspectRatio: false,
               indexAxis: 'y',
               plugins: {
-                legend: { display: false }
+                legend: {
+                  display: false
+                },
+                tooltip: {
+                  backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                  titleColor: '#fff',
+                  bodyColor: '#fff',
+                  padding: 12,
+                  bodyFont: {
+                    size: 14
+                  },
+                  titleFont: {
+                    size: 16,
+                    weight: 'bold'
+                  }
+                }
               },
               scales: {
-                y: { ticks: { color: '#9CA3AF' }, grid: { color: 'rgba(75, 85, 99, 0.2)' } },
-                x: { ticks: { color: '#9CA3AF' }, grid: { color: 'rgba(75, 85, 99, 0.2)' } }
+                y: {
+                  ticks: {
+                    color: '#9CA3AF'
+                  },
+                  grid: {
+                    color: 'rgba(75, 85, 99, 0.2)'
+                  }
+                },
+                x: {
+                  ticks: {
+                    color: '#9CA3AF'
+                  },
+                  grid: {
+                    color: 'rgba(75, 85, 99, 0.2)'
+                  }
+                }
               }
             }
           });
         }
-      };
-
-      onMounted(async () => {
-        await cargarEstadisticas();
-        renderServiciosPopularesChart();
+  
+        // Crear el gráfico de ingresos por categoría
+        if (ingresosCategoriaChart.value) {
+          new Chart(ingresosCategoriaChart.value, {
+            type: 'line',
+            data: ingresosCategoriasData,
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: 'top',
+                  labels: {
+                    color: '#D1D5DB',
+                    padding: 20,
+                    font: {
+                      size: 12
+                    }
+                  }
+                },
+                tooltip: {
+                  backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                  titleColor: '#fff',
+                  bodyColor: '#fff',
+                  padding: 12,
+                  callbacks: {
+                    label: function(context) {
+                      let label = context.dataset.label || '';
+                      if (label) {
+                        label += ': ';
+                      }
+                      if (context.parsed.y !== null) {
+                        label += new Intl.NumberFormat('es-MX', { 
+                          style: 'currency', 
+                          currency: 'MXN' 
+                        }).format(context.parsed.y);
+                      }
+                      return label;
+                    }
+                  }
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    color: '#9CA3AF',
+                    callback: function(value) {
+                      return '$' + value.toLocaleString('es-MX');
+                    }
+                  },
+                  grid: {
+                    color: 'rgba(75, 85, 99, 0.2)'
+                  }
+                },
+                x: {
+                  ticks: {
+                    color: '#9CA3AF'
+                  },
+                  grid: {
+                    color: 'rgba(75, 85, 99, 0.2)'
+                  }
+                }
+              }
+            }
+          });
+        }
       });
-
+  
       return {
         serviciosPopularesChart,
-        totalClientes,
-        serviciosCompletados,
-        serviciosPopulares,
-        serviciosRecientes
+        ingresosCategoriaChart
       };
     }
   };
