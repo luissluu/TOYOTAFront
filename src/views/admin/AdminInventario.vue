@@ -761,6 +761,7 @@ export default {
     };
     
     const guardarHerramienta = async () => {
+      console.log('Intentando guardar herramienta', nuevaHerramienta.value);
       try {
         const herramientaData = {
           codigo: `H${Date.now().toString().slice(-4)}`,
