@@ -4,16 +4,13 @@
     <p class="text-gray-300 mb-8">
       Cuidamos tu vehículo con la más alta calidad y garantía. Todos nuestros servicios incluyen mano de obra certificada y refacciones originales.
     </p>
-    <div v-for="(servicios, categoria) in serviciosPorCategoria" :key="categoria" class="mb-10">
-      <h3 class="text-2xl font-bold text-white mb-4">{{ categoria }}</h3>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <div v-for="servicio in servicios" :key="servicio.servicio_id" class="bg-white rounded-lg shadow p-6 flex flex-col">
-          <h4 class="text-lg font-semibold text-gray-900 mb-2">{{ servicio.nombre }}</h4>
-          <p class="text-gray-600 mb-4">{{ servicio.descripcion }}</p>
-          <div class="flex items-center mt-auto justify-between">
-            <span class="text-2xl font-bold text-gray-900">${{ servicio.precio_estimado }}</span>
-            <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-lg">Solicitar</button>
-          </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div v-for="servicio in servicios" :key="servicio.servicio_id" class="bg-white rounded-lg shadow p-6 flex flex-col">
+        <h4 class="text-lg font-semibold text-gray-900 mb-2">{{ servicio.nombre }}</h4>
+        <p class="text-gray-600 mb-4">{{ servicio.descripcion }}</p>
+        <div class="flex items-center mt-auto justify-between">
+          <span class="text-2xl font-bold text-gray-900">${{ servicio.precio_estimado }}</span>
+          <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-lg">Solicitar</button>
         </div>
       </div>
     </div>
@@ -22,19 +19,9 @@
 
 <script>
 import axios from 'axios'
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const servicios = ref([])
-
-const serviciosPorCategoria = computed(() => {
-  const grupos = {}
-  for (const servicio of servicios.value) {
-    const categoria = servicio.categoria || 'Otros'
-    if (!grupos[categoria]) grupos[categoria] = []
-    grupos[categoria].push(servicio)
-  }
-  return grupos
-})
 
 onMounted(async () => {
   try {
@@ -48,7 +35,7 @@ onMounted(async () => {
 export default {
   name: 'Servicios',
   setup() {
-    return { serviciosPorCategoria }
+    return { servicios }
   }
 }
 </script>
