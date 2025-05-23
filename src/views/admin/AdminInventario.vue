@@ -544,7 +544,7 @@
                 <form @submit.prevent="confirmarPrestamoHerramienta" class="space-y-4">
                   <div>
                     <label class="block text-sm font-medium text-gray-400 mb-1">Usuario (Mecánico)</label>
-                    <select v-model="prestamoHerramienta.usuario" @change="errorPrestamoHerramienta = ''" class="w-full rounded-md bg-gray-700 border-gray-600 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <select v-model.number="prestamoHerramienta.usuario" @change="errorPrestamoHerramienta = ''" class="w-full rounded-md bg-gray-700 border-gray-600 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                       <option value="">Selecciona un mecánico</option>
                       <option v-for="mecanico in mecanicos" :key="mecanico.id" :value="mecanico.id">{{ mecanico.nombre }}</option>
                     </select>
@@ -1240,6 +1240,7 @@ export default {
       errorPrestamoHerramienta.value = '';
     };
     const confirmarPrestamoHerramienta = async () => {
+      console.log('Datos a enviar en préstamo:', prestamoHerramienta.value);
       if (!prestamoHerramienta.value.usuario || !prestamoHerramienta.value.fecha) {
         errorPrestamoHerramienta.value = 'Todos los campos son obligatorios.';
         return;
