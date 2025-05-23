@@ -482,9 +482,9 @@ export default {
     };
 
     const generarPDF = (servicio) => {
-      const url = `/api/ordenes-servicio/${servicio.id}/pdf`;
-      window.open(url, '_blank');
-    };
+  const url = `https://toyotaback.onrender.com/api/ordenes-servicio/${servicio.id}/pdf`;
+  window.open(url, '_blank');
+};
 
     const exportarServicios = async () => {
       alert('Funcionalidad de exportar Excel aún no implementada para órdenes de servicio.');
