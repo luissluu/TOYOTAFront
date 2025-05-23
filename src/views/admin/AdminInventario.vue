@@ -372,7 +372,14 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ herramienta.subcategoria || herramienta.tipo }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-white">{{ herramienta.stock_actual }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">{{ herramienta.estado === 'disponible' ? 'Disponible' : herramienta.estado === 'prestado' ? 'Prestado' : 'En Mantenimiento' }}</span>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                        :class="{
+                          'bg-green-100 text-green-800': herramienta.stock_actual > 0,
+                          'bg-yellow-100 text-yellow-800': herramienta.stock_actual === 0
+                        }"
+                      >
+                        {{ herramienta.stock_actual > 0 ? 'Disponible' : 'Prestado' }}
+                      </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-white">03/05/2025</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-white flex gap-2">
@@ -537,14 +544,14 @@
                 <form @submit.prevent="confirmarPrestamoHerramienta" class="space-y-4">
                   <div>
                     <label class="block text-sm font-medium text-gray-400 mb-1">Usuario (Mecánico)</label>
-                    <select v-model="prestamoHerramienta.usuario" class="w-full rounded-md bg-gray-700 border-gray-600 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <select v-model="prestamoHerramienta.usuario" @change="errorPrestamoHerramienta = ''" class="w-full rounded-md bg-gray-700 border-gray-600 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                       <option value="">Selecciona un mecánico</option>
                       <option v-for="mecanico in mecanicos" :key="mecanico.id" :value="mecanico.id">{{ mecanico.nombre }}</option>
                     </select>
                   </div>
                   <div>
                     <label class="block text-sm font-medium text-gray-400 mb-1">Fecha de Préstamo</label>
-                    <input type="date" v-model="prestamoHerramienta.fecha" class="w-full rounded-md bg-gray-700 border-gray-600 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <input type="date" v-model="prestamoHerramienta.fecha" @input="errorPrestamoHerramienta = ''" class="w-full rounded-md bg-gray-700 border-gray-600 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                   </div>
                   <div class="flex justify-end space-x-3 mt-6">
                     <button type="button" @click="cerrarModalPrestarHerramienta" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500">Cancelar</button>
