@@ -57,7 +57,9 @@
               <span 
                 :class="[
                   'px-3 py-1 rounded-full text-sm font-medium',
-                  orden.estado === 'abierta' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-blue-500/20 text-blue-400'
+                  orden.estado === 'abierta' ? 'bg-yellow-500/20 text-yellow-400' : 
+                  orden.estado === 'en progreso' ? 'bg-blue-500/20 text-blue-400' : 
+                  orden.estado === 'finalizada' ? 'bg-green-500/20 text-green-400' : ''
                 ]"
               >
                 {{ orden.estado }}
