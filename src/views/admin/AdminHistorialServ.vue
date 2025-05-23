@@ -481,11 +481,6 @@ export default {
       mostrarDetalles.value = true;
     };
 
-<<<<<<< HEAD
-    const generarPDF = (servicio) => {
-      const url = `/api/ordenes-servicio/${servicio.id}/pdf`;
-      window.open(url, '_blank');
-=======
     const generarPDF = async (servicio) => {
       try {
         const doc = new jsPDF();
@@ -503,7 +498,6 @@ export default {
       } catch (err) {
         alert('Error al generar el PDF');
       }
->>>>>>> 87446d52242860808d002f192a76e96df6ef091f
     };
 
     const exportarServicios = async () => {
