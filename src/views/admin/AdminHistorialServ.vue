@@ -481,9 +481,29 @@ export default {
       mostrarDetalles.value = true;
     };
 
+<<<<<<< HEAD
     const generarPDF = (servicio) => {
       const url = `/api/ordenes-servicio/${servicio.id}/pdf`;
       window.open(url, '_blank');
+=======
+    const generarPDF = async (servicio) => {
+      try {
+        const doc = new jsPDF();
+        doc.setFontSize(18);
+        doc.text('Detalle de Orden de Servicio', 14, 18);
+        doc.setFontSize(12);
+        doc.text(`ID: ${servicio.id}`, 14, 30);
+        doc.text(`Cliente: ${servicio.cliente.nombre}`, 14, 38);
+        doc.text(`Vehículo: ${servicio.vehiculo.modelo} (${servicio.vehiculo.placa})`, 14, 46);
+        doc.text(`Fecha: ${servicio.fecha}`, 14, 54);
+        doc.text(`Precio: $${servicio.precio}`, 14, 62);
+        doc.text(`Estado: ${servicio.estado}`, 14, 70);
+        doc.text(`Descripción: ${servicio.descripcion}`, 14, 78);
+        doc.save(`orden-servicio-${servicio.id}.pdf`);
+      } catch (err) {
+        alert('Error al generar el PDF');
+      }
+>>>>>>> 87446d52242860808d002f192a76e96df6ef091f
     };
 
     const exportarServicios = async () => {
