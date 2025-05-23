@@ -14,35 +14,23 @@
     </div>
 
     <!-- Barra de progreso de 3 estados -->
-    <div v-if="ordenSeleccionada" class="w-full max-w-xl mx-auto mb-8">
-        <h2 class="text-2xl font-bold text-white text-center mb-4">Estado del Servicio</h2>
-        <div class="flex items-center justify-between w-full mb-4">
+    <div v-if="ordenSeleccionada" class="w-full max-w-3xl mx-auto mb-12">
+        <h2 class="text-4xl font-extrabold text-white text-center mb-8 tracking-wide">Estado del Servicio</h2>
+        <div class="flex items-center justify-between w-full mb-8 scale-125">
             <div v-for="(step, idx) in steps" :key="step.key" class="flex items-center w-1/3">
                 <div :class="[
-                    'w-12 h-12 flex items-center justify-center rounded-full border-2 font-bold text-lg transition-all duration-300',
+                    'w-20 h-20 flex items-center justify-center rounded-full border-4 font-extrabold text-3xl transition-all duration-300 shadow-lg',
                     getStepClass(mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado), step.key)
                 ]">
                     <span>{{ step.icon }}</span>
                 </div>
-                <div class="flex flex-col ml-2">
-                    <span :class="getStepTextClass(mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado), step.key)">{{ step.label }}</span>
+                <div class="flex flex-col ml-4">
+                    <span :class="getStepTextClass(mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado), step.key) + ' text-2xl'">{{ step.label }}</span>
                 </div>
-                <span v-if="idx < steps.length - 1" class="flex-1 h-1 mx-2 rounded transition-all duration-300" :class="{
+                <span v-if="idx < steps.length - 1" class="flex-1 h-2 mx-4 rounded transition-all duration-300" :class="{
                     'bg-blue-500': mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) === steps[idx].key || mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) === steps[idx+1].key,
                     'bg-gray-600': mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) !== steps[idx].key && mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) !== steps[idx+1].key
                 }"></span>
-            </div>
-        </div>
-        <div class="flex justify-center">
-            <div class="bg-gray-700 rounded-lg px-4 py-2 inline-flex items-center">
-                <svg class="w-5 h-5 text-blue-300 mr-2" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M12 7V12L15 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <div>
-                    <p class="text-xs text-blue-200">Tiempo estimado de entrega</p>
-                    <p class="text-base font-bold text-white">1:30 horas</p>
-                </div>
             </div>
         </div>
     </div>
@@ -97,19 +85,7 @@
         <div class="w-full lg:w-1/4 mt-8 lg:mt-0 sticky top-32">
             <div class="flex flex-col space-y-4 px-4">
                 <!-- Tarjeta de Servicios acumulados (abajo) -->
-                <div class="flex items-center px-6 py-8 bg-gray-500 rounded-lg shadow-md shadow-black">
-                    <div class="flex items-center -mx-2">
-                        <svg class="mx-2" width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="35" cy="35" r="35" fill="#222222" fill-opacity="0.8" />
-                            <path d="M46.75 26.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852Z M29.867 39.125h.008v.008h-.008v-.008Z" stroke="#b60c0c" stroke-width="2" stroke-linecap="square" />
-                        </svg>
-
-                        <div class="mx-2">
-                            <h3 class="text-2xl font-medium text-white">7</h3>
-                            <p class="mt-1 text-sm text-white">Servicios acumulados</p>
-                        </div>
-                    </div>
-                </div>
+                <!-- Eliminada la tarjeta de servicios acumulados -->
             </div>
         </div>
     </div>
