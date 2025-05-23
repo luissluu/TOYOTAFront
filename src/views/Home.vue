@@ -57,29 +57,33 @@
             <h2 class="text-2xl font-bold tracking-tight text-white">Servicios recomendados</h2>
 
             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            <div v-for="servicio in serviciosAleatorios" :key="servicio.servicio_id" class="w-full bg-white border border-gray-200 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col">
-                <a href="#" class="flex-shrink-0">
-                    <div class="w-full h-48 overflow-hidden rounded-t-lg relative group">
-                        <img class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300" :src="getImagenServicio(servicio.nombre)" :alt="servicio.nombre" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div v-for="servicio in serviciosAleatorios" :key="servicio.servicio_id" 
+                 class="w-full bg-white border border-gray-200 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col p-6">
+                <div class="flex-grow flex flex-col">
+                    <div class="mb-4">
+                        <div class="inline-block bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold mb-3">
+                            Servicio Toyota
+                        </div>
+                        <h5 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2">{{ servicio.nombre }}</h5>
+                        <p class="text-sm text-gray-600 line-clamp-2">{{ servicio.descripcion || 'Servicio profesional con garantía Toyota' }}</p>
                     </div>
-                </a>
-                <div class="px-6 py-5 flex-grow flex flex-col">
-                    <a href="#" class="mb-auto">
-                        <h5 class="text-xl font-bold tracking-tight text-gray-900 mb-2 line-clamp-2">{{ servicio.nombre }}</h5>
-                        <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{ servicio.descripcion || 'Servicio profesional con garantía Toyota' }}</p>
-                    </a>
-                    <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
-                        <span class="text-3xl font-bold text-blue-600">${{ servicio.precio_estimado }}</span>
-                        <router-link 
-                            :to="{ name: 'Servicios', query: { servicio: servicio.servicio_id }}"
-                            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200"
-                        >
-                            <span>Detalles</span>
-                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                            </svg>
-                        </router-link>
+                    
+                    <div class="mt-auto pt-4 border-t border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <div class="flex flex-col">
+                                <span class="text-sm text-gray-500">Precio desde</span>
+                                <span class="text-3xl font-bold text-blue-600">${{ servicio.precio_estimado }}</span>
+                            </div>
+                            <router-link 
+                                :to="{ name: 'Servicios', query: { servicio: servicio.servicio_id }}"
+                                class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+                            >
+                                <span>Ver Detalles</span>
+                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </router-link>
+                        </div>
                     </div>
                 </div>
             </div>
