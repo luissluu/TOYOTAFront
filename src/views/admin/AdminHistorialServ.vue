@@ -469,14 +469,16 @@ export default {
       }
     };
 
+    const estadosDisponibles = ['todos', 'abierta', 'en proceso', 'finalizada', 'pendiente'];
+    const periodosDisponibles = ['todos', 'hoy', 'semana', 'mes', 'anio'];
+
     const serviciosFiltrados = computed(() => {
       return servicios.value.filter(servicio => {
+        const coincideEstado = filtroEstado.value === '' || filtroEstado.value === 'todos' || servicio.estado === filtroEstado.value;
+        const coincidePeriodo = filtroPeriodo.value === '' || filtroPeriodo.value === 'todos' || filtrarPorPeriodo(servicio.fecha, filtroPeriodo.value);
         const coincideBusqueda = servicio.tipo.toLowerCase().includes(busqueda.value.toLowerCase()) ||
                                 servicio.cliente.nombre.toLowerCase().includes(busqueda.value.toLowerCase());
-        const coincideEstado = !filtroEstado.value || servicio.estado === filtroEstado.value;
-        const coincidePeriodo = !filtroPeriodo.value || filtrarPorPeriodo(servicio.fecha, filtroPeriodo.value);
-        
-        return coincideBusqueda && coincideEstado && coincidePeriodo;
+        return coincideEstado && coincidePeriodo && coincideBusqueda;
       });
     });
 
@@ -534,6 +536,44 @@ export default {
       }
     };
 
+    const tarjetas = computed(() => [
+      {
+        titulo: 'Servicios Totales',
+        valor: estadisticas.value.total,
+        icon: 'LightningIcon',
+        bg: 'bg-gray-700',
+        iconBg: 'bg-blue-500'
+      },
+      {
+        titulo: 'Abiertas',
+        valor: estadisticas.value.abiertas,
+        icon: 'ClockIcon',
+        bg: 'bg-gray-700',
+        iconBg: 'bg-yellow-500'
+      },
+      {
+        titulo: 'En Proceso',
+        valor: estadisticas.value.enProceso,
+        icon: 'CogIcon',
+        bg: 'bg-gray-700',
+        iconBg: 'bg-blue-500'
+      },
+      {
+        titulo: 'Finalizadas',
+        valor: estadisticas.value.finalizadas,
+        icon: 'CheckCircleIcon',
+        bg: 'bg-gray-700',
+        iconBg: 'bg-green-500'
+      },
+      {
+        titulo: 'Pendientes',
+        valor: estadisticas.value.pendientes,
+        icon: 'InboxIcon',
+        bg: 'bg-gray-700',
+        iconBg: 'bg-gray-500'
+      }
+    ]);
+
     onMounted(() => {
       cargarServicios();
     });
@@ -554,7 +594,8 @@ export default {
       generarPDF,
       exportarServicios,
       cambiarPagina,
-      badgeEstado
+      badgeEstado,
+      tarjetas
     };
   }
 };
