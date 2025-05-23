@@ -14,23 +14,25 @@
     </div>
 
     <!-- Barra de progreso de 3 estados -->
-    <div v-if="ordenSeleccionada" class="w-full max-w-3xl mx-auto mb-12">
-        <h2 class="text-4xl font-extrabold text-white text-center mb-8 tracking-wide">Estado del Servicio</h2>
-        <div class="flex items-center justify-between w-full mb-8 scale-125">
-            <div v-for="(step, idx) in steps" :key="step.key" class="flex items-center w-1/3">
-                <div :class="[
-                    'w-20 h-20 flex items-center justify-center rounded-full border-4 font-extrabold text-3xl transition-all duration-300 shadow-lg',
-                    getStepClass(mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado), step.key)
-                ]">
-                    <span>{{ step.icon }}</span>
+    <div v-if="ordenSeleccionada" class="w-full max-w-xl mx-auto mb-10">
+        <div class="bg-gray-800 rounded-2xl shadow-lg p-8 flex flex-col items-center border border-blue-700">
+            <h2 class="text-2xl font-bold text-white text-center mb-6 tracking-wide">Estado del Servicio</h2>
+            <div class="flex items-center justify-between w-full mb-2">
+                <div v-for="(step, idx) in steps" :key="step.key" class="flex items-center w-1/3">
+                    <div :class="[
+                        'w-14 h-14 flex items-center justify-center rounded-full border-4 font-extrabold text-xl transition-all duration-300 shadow-md',
+                        getStepClass(mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado), step.key)
+                    ]">
+                        <span>{{ step.icon }}</span>
+                    </div>
+                    <div class="flex flex-col ml-3">
+                        <span :class="getStepTextClass(mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado), step.key) + ' text-base font-semibold drop-shadow'">{{ step.label }}</span>
+                    </div>
+                    <span v-if="idx < steps.length - 1" class="flex-1 h-2 mx-2 rounded transition-all duration-300 shadow-sm" :class="{
+                        'bg-blue-500': mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) === steps[idx].key || mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) === steps[idx+1].key,
+                        'bg-gray-600': mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) !== steps[idx].key && mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) !== steps[idx+1].key
+                    }"></span>
                 </div>
-                <div class="flex flex-col ml-4">
-                    <span :class="getStepTextClass(mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado), step.key) + ' text-2xl'">{{ step.label }}</span>
-                </div>
-                <span v-if="idx < steps.length - 1" class="flex-1 h-2 mx-4 rounded transition-all duration-300" :class="{
-                    'bg-blue-500': mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) === steps[idx].key || mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) === steps[idx+1].key,
-                    'bg-gray-600': mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) !== steps[idx].key && mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) !== steps[idx+1].key
-                }"></span>
             </div>
         </div>
     </div>
