@@ -2,6 +2,25 @@
     <div class="container mx-auto py-8 px-4">
       <h2 class="text-3xl font-bold text-white mb-6">Servicios Automotrices Toyota</h2>
       <p class="text-gray-300 mb-8">Cuidamos tu vehículo con la más alta calidad y garantía. Todos nuestros servicios incluyen mano de obra certificada y refacciones originales.</p>
+
+      <!-- DEBUG: Mostrar todos los servicios sin agrupar -->
+      <div style="color: white; margin-bottom: 2rem;">
+        <h3>Debug: Servicios sin agrupar</h3>
+        <div v-for="servicio in servicios" :key="servicio.servicio_id">
+          {{ servicio.nombre }} - {{ servicio.categoria }}
+        </div>
+      </div>
+
+      <!-- DEBUG: Mostrar agrupados con fondo -->
+      <div v-for="(servicios, tipo) in serviciosPorTipo" :key="tipo" style="background: #222; color: white; margin-bottom: 1rem; padding: 1rem; border-radius: 8px;">
+        <h3 class="text-2xl font-bold mb-4">{{ tipo }}</h3>
+        <div v-for="servicio in servicios" :key="servicio.servicio_id">
+          {{ servicio.nombre }} - {{ servicio.categoria }}
+        </div>
+      </div>
+
+      <!-- ORIGINAL: Tarjetas bonitas agrupadas -->
+      <!--
       <div v-for="(servicios, tipo) in serviciosPorTipo" :key="tipo" class="mb-10">
         <h3 class="text-2xl font-bold text-white mb-4">{{ tipo }}</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -15,6 +34,7 @@
           </div>
         </div>
       </div>
+      -->
     </div>
   </template>
   
@@ -46,7 +66,7 @@
   export default {
     name: 'Servicios',
     setup() {
-      return { serviciosPorTipo }
+      return { serviciosPorTipo, servicios }
     }
   }
   </script>
