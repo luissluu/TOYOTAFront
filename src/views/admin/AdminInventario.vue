@@ -578,15 +578,7 @@
                   </svg>
                 </div>
               </div>
-              
-              <div class="flex gap-2">                
-                <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center">
-                  <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                  Exportar Reporte
-                </button>
-              </div>
+              <!-- Se elimina el botón Exportar Reporte -->
             </div>
             
             <!-- Tabla de préstamos activos -->
@@ -617,9 +609,12 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                       <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Prestado</span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white">
-                      <button @click="registrarDevolucion(prestamo.movimiento_id)" class="text-green-400 hover:text-green-300 mr-2">Devolver</button>
-                      <button class="text-blue-400 hover:text-blue-300">Ver Detalles</button>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-white flex gap-2">
+                      <button @click="registrarDevolucion(prestamo.movimiento_id)" class="hover:text-green-400" title="Devolver">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11M3 14h7m8-5v6a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h6" />
+                        </svg>
+                      </button>
                     </td>
                   </tr>
                 </tbody>
@@ -973,6 +968,7 @@ export default {
         });
 
         await cargarHerramientas();
+        await cargarPrestamosActivos(); // <--- AGREGAR ESTA LÍNEA
         mostrarModalPrestamo.value = false;
         notificacionStore.mostrar('Préstamo registrado exitosamente', 'success');
         
@@ -1265,6 +1261,7 @@ export default {
           cantidad: -1
         });
         await cargarHerramientas();
+        await cargarPrestamosActivos(); // <--- AGREGAR ESTA LÍNEA
         cerrarModalPrestarHerramienta();
         notificacionStore.mostrar('Préstamo registrado exitosamente', 'success');
       } catch (err) {
