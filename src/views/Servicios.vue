@@ -182,27 +182,35 @@
 
     <!-- Modal -->
     <div v-if="servicioSeleccionado" 
-         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300"
+         class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 transition-all duration-500 ease-in-out"
          @click="cerrarModal">
-      <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 transform transition-all duration-300 scale-100"
+      <div class="bg-white rounded-xl p-8 max-w-3xl w-full mx-4 transform transition-all duration-500 ease-in-out scale-100 shadow-2xl"
            @click.stop>
         <div class="relative">
           <button @click="cerrarModal" 
-                  class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  class="absolute -top-4 -right-4 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors duration-200">
+            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-          <div class="flex flex-col md:flex-row gap-6">
-            <div class="w-full md:w-1/2">
+          <div class="flex flex-col gap-8">
+            <div class="w-full">
               <img :src="servicioSeleccionado.imagen" 
                    :alt="servicioSeleccionado.titulo"
-                   class="w-full h-64 object-cover rounded-lg">
+                   class="w-full h-96 object-cover rounded-lg shadow-lg">
             </div>
-            <div class="w-full md:w-1/2">
-              <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ servicioSeleccionado.titulo }}</h3>
-              <p class="text-gray-600 mb-4">{{ servicioSeleccionado.descripcion }}</p>
-              <div class="text-3xl font-bold text-gray-900">${{ servicioSeleccionado.precio }}</div>
+            <div class="w-full space-y-6">
+              <div class="border-b border-gray-200 pb-4">
+                <h3 class="text-3xl font-bold text-gray-900 mb-3">{{ servicioSeleccionado.titulo }}</h3>
+                <div class="text-4xl font-bold text-blue-600">${{ servicioSeleccionado.precio }}</div>
+              </div>
+              <p class="text-lg text-gray-600 leading-relaxed">{{ servicioSeleccionado.descripcion }}</p>
+              <div class="flex justify-end">
+                <button @click="cerrarModal" 
+                        class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium">
+                  Cerrar
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -519,21 +527,41 @@ export default {
 <style scoped>
 .modal-enter-active,
 .modal-leave-active {
-  transition: opacity 0.3s ease;
+  transition: all 0.5s ease;
 }
 
 .modal-enter-from,
 .modal-leave-to {
   opacity: 0;
+  transform: scale(0.95);
 }
 
 .modal-content-enter-active,
 .modal-content-leave-active {
-  transition: transform 0.3s ease;
+  transition: all 0.5s ease;
 }
 
 .modal-content-enter-from,
 .modal-content-leave-to {
-  transform: scale(0.9);
+  transform: translateY(20px);
+  opacity: 0;
+}
+
+/* Animación para el botón de cerrar */
+button {
+  transition: transform 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+/* Animación para la imagen */
+img {
+  transition: transform 0.3s ease;
+}
+
+img:hover {
+  transform: scale(1.02);
 }
 </style>
