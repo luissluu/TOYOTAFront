@@ -7,9 +7,6 @@
         <div class="relative py-12 px-8 md:px-12 lg:px-16 z-10">
           <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">Servicios Automotrices Toyota</h1>
           <p class="text-white text-lg mb-6 max-w-2xl">Cuidamos tu vehículo con la más alta calidad y garantía. Todos nuestros servicios incluyen mano de obra certificada y refacciones originales.</p>
-          <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
-            Realizar diagnóstico
-          </button>
         </div>
       </div>
     </section>
