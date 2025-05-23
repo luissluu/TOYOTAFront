@@ -821,17 +821,19 @@ export default {
 
     // Filtrar artículos
     const articulosFiltrados = computed(() => {
-      return articulos.value.filter(articulo => {
-        const coincideBusqueda = articulo.nombre.toLowerCase().includes(busqueda.value.toLowerCase()) ||
-                                articulo.codigo.toLowerCase().includes(busqueda.value.toLowerCase());
-        
-        const coincideEstado = !filtroEstado.value || 
-          (filtroEstado.value === 'disponible' && articulo.stock_actual > articulo.stock_minimo) ||
-          (filtroEstado.value === 'bajo' && articulo.stock_actual <= articulo.stock_minimo && articulo.stock_actual > 0) ||
-          (filtroEstado.value === 'agotado' && articulo.stock_actual === 0);
+      return articulos.value
+        .filter(articulo => articulo.categoria.toLowerCase() !== 'herramientas') // <-- Agrega este filtro
+        .filter(articulo => {
+          const coincideBusqueda = articulo.nombre.toLowerCase().includes(busqueda.value.toLowerCase()) ||
+                                  articulo.codigo.toLowerCase().includes(busqueda.value.toLowerCase());
+          
+          const coincideEstado = !filtroEstado.value || 
+            (filtroEstado.value === 'disponible' && articulo.stock_actual > articulo.stock_minimo) ||
+            (filtroEstado.value === 'bajo' && articulo.stock_actual <= articulo.stock_minimo && articulo.stock_actual > 0) ||
+            (filtroEstado.value === 'agotado' && articulo.stock_actual === 0);
 
-        return coincideBusqueda && coincideEstado;
-      });
+          return coincideBusqueda && coincideEstado;
+        });
     });
     
     const guardarPieza = async () => {
