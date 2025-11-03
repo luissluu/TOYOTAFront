@@ -41,7 +41,7 @@
       <div class="bg-gray-800 rounded-2xl shadow-lg p-6 md:p-8 border border-gray-700">
         <div class="flex items-center justify-between mb-5">
           <h2 class="text-xl md:text-2xl font-bold text-white">Estado del servicio</h2>
-          <span class="text-sm text-gray-300">{{ currentStep + 1 }} / {{ steps.length }}</span>
+          <span class="text-sm text-gray-300">{{ (currentStep ?? 0) + 1 }} / {{ steps?.length ?? 3 }}</span>
         </div>
 
         <!-- Línea de progreso -->
@@ -182,7 +182,7 @@
 
 <script>
 import axios from '../axios'
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useAuthStore } from '@/components/stores/auth'
 
 const steps = [
