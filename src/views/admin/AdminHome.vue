@@ -222,18 +222,37 @@
           const conteoServicios = {};
           const ordenesPorServicio = {}; // Para evitar contar la misma orden múltiples veces
           
+          // Debug: ver estructura de órdenes
+          console.log('Estructura de órdenes:', ordenes.map(o => ({
+            orden_id: o.orden_id || o.id,
+            tiene_detalles: !!o.detalles,
+            detalles_length: o.detalles?.length || 0,
+            primer_detalle: o.detalles?.[0] || null
+          })));
+          
           ordenes.forEach(o => {
-            if (!o.detalles || !o.detalles.length) return;
+            if (!o.detalles || !o.detalles.length) {
+              console.log('Orden sin detalles:', o.orden_id || o.id);
+              return;
+            }
             
             o.detalles.forEach(d => {
               // Normalizar servicio_id a número para comparar
               const servicioIdRaw = d.servicio_id || d.id_servicio;
               const servicioId = servicioIdRaw ? Number(servicioIdRaw) : null;
               
+              console.log('Procesando detalle:', {
+                servicio_id_raw: servicioIdRaw,
+                servicio_id_normalizado: servicioId,
+                nombre_servicio: d.nombre_servicio,
+                detalle_completo: d
+              });
+              
               // Buscar nombre del servicio en el mapa
               let nombreServicio = 'Otro';
               if (servicioId && !isNaN(servicioId)) {
                 nombreServicio = mapaServicios[servicioId] || mapaServicios[String(servicioId)] || d.nombre_servicio || 'Otro';
+                console.log('Nombre encontrado:', nombreServicio, 'para servicio_id:', servicioId);
               } else if (d.nombre_servicio) {
                 nombreServicio = d.nombre_servicio;
               }
@@ -249,6 +268,7 @@
               if (ordenKey && !ordenesPorServicio[nombreServicio].has(ordenKey)) {
                 conteoServicios[nombreServicio]++;
                 ordenesPorServicio[nombreServicio].add(ordenKey);
+                console.log('Contando orden:', ordenKey, 'para servicio:', nombreServicio);
               }
             });
           });
@@ -343,22 +363,37 @@
             if (o.detalles && o.detalles.length) {
               o.detalles.forEach(d => {
                 const servicioIdRaw = d.servicio_id || d.id_servicio;
-                if (!servicioIdRaw) return;
+                if (!servicioIdRaw) {
+                  console.log('Detalle sin servicio_id:', d);
+                  return;
+                }
                 
                 // Normalizar servicio_id
                 const servicioId = Number(servicioIdRaw);
-                if (isNaN(servicioId)) return;
+                if (isNaN(servicioId)) {
+                  console.log('servicio_id no es número:', servicioIdRaw);
+                  return;
+                }
                 
                 // Buscar categoría en el mapa (intentar número y string)
                 const categoria = mapaCategorias[servicioId] || mapaCategorias[String(servicioId)] || 'otro';
                 
+                console.log('Procesando ingreso - servicio_id:', servicioId, 'categoría:', categoria, 'mes:', mesIdx);
+                
                 if (categorias.includes(categoria)) {
                   // Sumar SIEMPRE el precio estimado del servicio
                   const precio = mapaPrecioEstimado[servicioId] || mapaPrecioEstimado[String(servicioId)] || 0;
+                  console.log('Sumando precio:', precio, 'a categoría:', categoria, 'mes:', mesIdx);
                   ingresosPorCategoriaMes[categoria][mesIdx] += precio;
+                } else {
+                  console.log('Categoría no incluida en lista:', categoria);
                 }
               });
+            } else {
+              console.log('Orden sin detalles para ingresos:', o.orden_id || o.id);
             }
+          } else {
+            console.log('Orden de otro año:', o.orden_id || o.id, 'año:', y, 'año actual:', anio);
           }
         });
         
