@@ -172,9 +172,35 @@
           const usuariosRes = await axios.get('/api/usuarios');
           kpis.value.clientes = Array.isArray(usuariosRes.data) ? usuariosRes.data.length : 0;
 
-          // Órdenes
-          const ordenesRes = await axios.get('/api/ordenes-servicio');
-          const ordenes = Array.isArray(ordenesRes.data) ? ordenesRes.data : [];
+        // Órdenes
+        const ordenesRes = await axios.get('/api/ordenes-servicio');
+        const ordenes = Array.isArray(ordenesRes.data) ? ordenesRes.data : [];
+
+        // Si las órdenes no traen detalles, intentar obtenerlos desde un endpoint global
+        let detallesPorOrden = {};
+        try {
+          const faltanDetalles = ordenes.every(o => !o.detalles || o.detalles.length === 0);
+          if (faltanDetalles) {
+            const detRes = await axios.get('/api/detalles-orden');
+            const detalles = Array.isArray(detRes.data) ? detRes.data : [];
+            detallesPorOrden = detalles.reduce((acc, d) => {
+              const oid = d.orden_id || d.id_orden || d.idOrden;
+              if (!oid) return acc;
+              if (!acc[oid]) acc[oid] = [];
+              acc[oid].push(d);
+              return acc;
+            }, {});
+          }
+        } catch (e) {
+          console.warn('No se pudieron cargar detalles globales de órdenes:', e);
+        }
+
+        // Helper para obtener detalles (embebidos o globales)
+        const obtenerDetalles = (orden) => {
+          if (orden?.detalles && orden.detalles.length) return orden.detalles;
+          const oid = orden?.orden_id || orden?.id;
+          return (oid && detallesPorOrden[oid]) ? detallesPorOrden[oid] : [];
+        };
 
           // KPIs
           const ahora = new Date();
@@ -226,17 +252,18 @@
           console.log('Estructura de órdenes:', ordenes.map(o => ({
             orden_id: o.orden_id || o.id,
             tiene_detalles: !!o.detalles,
-            detalles_length: o.detalles?.length || 0,
-            primer_detalle: o.detalles?.[0] || null
+            detalles_length: (obtenerDetalles(o))?.length || 0,
+            primer_detalle: (obtenerDetalles(o))?.[0] || null
           })));
           
           ordenes.forEach(o => {
-            if (!o.detalles || !o.detalles.length) {
+            const detalles = obtenerDetalles(o);
+            if (!detalles || !detalles.length) {
               console.log('Orden sin detalles:', o.orden_id || o.id);
               return;
             }
             
-            o.detalles.forEach(d => {
+            detalles.forEach(d => {
               // Normalizar servicio_id a número para comparar
               const servicioIdRaw = d.servicio_id || d.id_servicio;
               const servicioId = servicioIdRaw ? Number(servicioIdRaw) : null;
@@ -360,8 +387,9 @@
           if (y === anio) {
             const mesIdx = f.getMonth();
             // Obtener categoría desde los detalles de la orden
-            if (o.detalles && o.detalles.length) {
-              o.detalles.forEach(d => {
+            const detalles = obtenerDetalles(o);
+            if (detalles && detalles.length) {
+              detalles.forEach(d => {
                 const servicioIdRaw = d.servicio_id || d.id_servicio;
                 if (!servicioIdRaw) {
                   console.log('Detalle sin servicio_id:', d);
