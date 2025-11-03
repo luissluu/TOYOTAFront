@@ -1,23 +1,37 @@
 <template>
 
-    <!-- Filtro de órdenes -->
+    <!-- Filtro de órdenes (dropdown personalizado) -->
     <div v-if="ordenes.length" class="flex flex-col items-center mb-10">
       <label class="text-white font-semibold mb-2 text-base">Selecciona tu orden</label>
-      <div class="relative w-full max-w-md">
-        <select
-          v-model="ordenSeleccionadaId"
-          class="appearance-none w-full bg-gray-800 text-white px-5 py-3 rounded-xl border border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#EB0A1E] focus:border-[#EB0A1E] transition-all duration-200 cursor-pointer hover:border-gray-500 pr-12"
+      <div ref="ordenesDropdownRef" class="relative w-full max-w-md">
+        <button type="button"
+          class="w-full bg-gray-800 text-white px-5 py-3 rounded-xl border border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#EB0A1E] focus:border-[#EB0A1E] transition-all duration-200 cursor-pointer hover:border-gray-500 flex items-center justify-between"
+          @click="toggleOrdenes()"
         >
-          <option disabled value="">Selecciona una orden...</option>
-          <option v-for="orden in ordenes" :key="orden.orden_id" :value="orden.orden_id">
-            Orden #{{ orden.orden_id }} · {{ orden.detalles[0]?.nombre_servicio || 'Servicio' }}
-          </option>
-        </select>
-        <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-300">
-          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <span class="truncate text-left">
+            {{ ordenSeleccionada ? `Orden #${ordenSeleccionada.orden_id} · ${ordenSeleccionada.detalles?.[0]?.nombre_servicio || 'Servicio'}` : 'Selecciona una orden...' }}
+          </span>
+          <svg class="h-5 w-5 text-gray-300 ml-3" :class="{ 'rotate-180': dropdownOrdenesAbierto }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
-        </span>
+        </button>
+
+        <ul v-if="dropdownOrdenesAbierto"
+          class="absolute z-50 mt-2 w-full rounded-xl bg-gray-900 border border-gray-700 shadow-2xl max-h-64 overflow-auto">
+          <li v-for="orden in ordenes" :key="orden.orden_id"
+              @click="seleccionarOrden(orden.orden_id)"
+              class="px-4 py-3 cursor-pointer hover:bg-gray-800 transition-colors">
+            <div class="flex items-center justify-between">
+              <span class="text-white font-semibold">Orden #{{ orden.orden_id }}</span>
+              <span class="text-xs"
+                    :class="mapEstadoStepper(orden.detalles?.[0]?.estado) === 'finalizada' ? 'text-green-400' : mapEstadoStepper(orden.detalles?.[0]?.estado) === 'en progreso' ? 'text-blue-400' : 'text-yellow-300'">
+                {{ mapEstadoStepper(orden.detalles?.[0]?.estado) }}
+              </span>
+            </div>
+            <div class="text-sm text-gray-300 truncate">{{ orden.detalles?.[0]?.nombre_servicio || 'Servicio' }}</div>
+            <div class="text-xs text-gray-500">{{ formatFecha(orden.fecha_inicio) }}</div>
+          </li>
+        </ul>
       </div>
       <p class="mt-2 text-xs text-gray-400">{{ ordenes.length }} órdenes encontradas</p>
     </div>
@@ -32,7 +46,7 @@
 
         <!-- Línea de progreso -->
         <div class="relative h-2 w-full rounded-full bg-gray-700">
-          <div class="absolute left-0 top-0 h-2 rounded-full bg-gradient-to-r from-[#EB0A1E] to-[#d00919] transition-all duration-500" :style="{ width: progressPercent + '%' }"></div>
+          <div class="absolute left-0 top-0 h-2 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500" :style="{ width: progressPercent + '%' }"></div>
         </div>
 
         <!-- Marcadores -->
@@ -40,12 +54,12 @@
           <div v-for="(step, idx) in steps" :key="step.key" class="flex items-center gap-3">
             <div :class="[
               'flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-bold transition-colors duration-300',
-              idx <= currentStep ? 'bg-[#EB0A1E] text-white border-[#EB0A1E]' : 'bg-gray-900 text-gray-400 border-gray-600'
+              idx <= currentStep ? 'bg-blue-500 text-white border-blue-500' : 'bg-gray-900 text-gray-400 border-gray-600'
             ]">
               {{ idx + 1 }}
             </div>
             <div class="min-w-0">
-              <p :class="[ 'text-sm font-medium', idx <= currentStep ? 'text-white' : 'text-gray-300' ]">{{ step.label }}</p>
+              <p :class="[ 'text-sm font-medium', idx <= currentStep ? 'text-blue-400' : 'text-gray-300' ]">{{ step.label }}</p>
             </div>
           </div>
         </div>
@@ -314,12 +328,43 @@ export default {
       servicioSeleccionado.value = null
     }
 
+    // Dropdown personalizado de órdenes
+    const dropdownOrdenesAbierto = ref(false)
+    const ordenesDropdownRef = ref(null)
+    function toggleOrdenes() {
+      dropdownOrdenesAbierto.value = !dropdownOrdenesAbierto.value
+    }
+    function seleccionarOrden(id) {
+      ordenSeleccionadaId.value = id
+      dropdownOrdenesAbierto.value = false
+    }
+    function onClickFuera(e) {
+      if (!ordenesDropdownRef.value) return
+      if (!ordenesDropdownRef.value.contains(e.target)) {
+        dropdownOrdenesAbierto.value = false
+      }
+    }
+
+    function formatFecha(valor) {
+      if (!valor) return ''
+      try {
+        return new Date(valor).toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: '2-digit' })
+      } catch (e) {
+        return ''
+      }
+    }
+
     onMounted(() => {
       cargarOrdenes()
       cargarServiciosAleatorios()
       if (ordenes.value.length) {
         ordenSeleccionadaId.value = ordenes.value[0].orden_id
       }
+      window.addEventListener('click', onClickFuera)
+    })
+    
+    onUnmounted(() => {
+      window.removeEventListener('click', onClickFuera)
     })
 
     return { 
@@ -341,7 +386,12 @@ export default {
       abrirModal,
       cerrarModal,
       currentStep,
-      progressPercent 
+      progressPercent,
+      dropdownOrdenesAbierto,
+      toggleOrdenes,
+      seleccionarOrden,
+      ordenesDropdownRef,
+      formatFecha 
     }
   }
 }
