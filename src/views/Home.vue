@@ -46,41 +46,55 @@
         <div class="mx-auto max-w-2xl px-4 py-1 sm:px-6 sm:py-1 lg:max-w-7xl lg:px-8">
             <h2 class="text-2xl font-bold tracking-tight text-white">Servicios recomendados</h2>
 
-            <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            <div v-for="servicio in serviciosAleatorios" :key="servicio.servicio_id" 
-                 class="w-full bg-white border border-gray-200 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col p-6">
-                <div class="flex-grow flex flex-col">
-                    <div class="mb-4">
-                        <div class="inline-block bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold mb-3">
-                            Servicio Toyota
-                        </div>
-                        <h5 class="text-xl font-bold text-gray-900 mb-6 line-clamp-2">{{ servicio.nombre }}</h5>
-                    </div>
-                    
-                    <div class="flex-grow flex items-center justify-center my-4">
-                        <router-link 
-                            :to="{ name: 'Servicios', query: { servicio: servicio.servicio_id }}"
-                            class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105"
-                        >
-                            <span>Ver Detalles</span>
-                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                            </svg>
-                        </router-link>
-                    </div>
-                    
-                    <div class="mt-auto pt-4 border-t border-gray-100">
-                        <div class="flex flex-col items-center">
-                            <span class="text-sm text-gray-500">Precio desde</span>
-                            <span class="text-3xl font-bold text-blue-600">${{ servicio.precio_estimado }}</span>
-                        </div>
-                    </div>
+            <div class="mt-2 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div
+                v-for="servicio in serviciosAleatorios"
+                :key="servicio.servicio_id"
+                class="group w-full overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
+              >
+                <!-- Imagen/hero del servicio -->
+                <div class="relative h-36 w-full overflow-hidden">
+                  <img
+                    :src="getImagenServicio(servicio.nombre)"
+                    :alt="servicio.nombre"
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                  <span class="absolute left-3 top-3 inline-flex items-center rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-gray-800 shadow">
+                    Recomendado
+                  </span>
                 </div>
+
+                <!-- Contenido -->
+                <div class="flex h-full flex-col p-5">
+                  <h5 class="mb-2 line-clamp-2 text-lg font-bold text-gray-900">
+                    {{ servicio.nombre }}
+                  </h5>
+                  <p class="mb-4 line-clamp-2 text-sm text-gray-600">
+                    Mantenimiento y cuidado profesional para tu Toyota.
+                  </p>
+
+                  <div class="mt-auto flex items-end justify-between">
+                    <div>
+                      <span class="block text-xs text-gray-500">Precio desde</span>
+                      <span class="text-2xl font-extrabold text-[#EB0A1E]">{{ formatCurrency(servicio.precio_estimado) }}</span>
+                    </div>
+                    <router-link
+                      :to="{ name: 'Servicios', query: { servicio: servicio.servicio_id }}"
+                      class="inline-flex items-center rounded-lg bg-[#EB0A1E] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#d00919] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EB0A1E] focus-visible:ring-offset-2"
+                    >
+                      Ver detalles
+                      <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </router-link>
+                  </div>
+                </div>
+              </div>
             </div>
         </div>
     </div>
-</div>
-            </section>
+</section>
         </div>
         
         <!-- Columna derecha (25% en desktop) para las tarjetas personalizadas -->
@@ -197,6 +211,11 @@ async function cargarServiciosAleatorios() {
   }
 }
 
+function formatCurrency(value) {
+  const num = Number(value) || 0
+  return num.toLocaleString('es-PE', { style: 'currency', currency: 'PEN', maximumFractionDigits: 0 }).replace('S/\u00a0', 'S/ ')
+}
+
 export default {
   name: 'HomePage',
   setup() {
@@ -257,7 +276,8 @@ export default {
       progresoOrden, 
       etapaActual, 
       etapas,
-      getImagenServicio 
+      getImagenServicio,
+      formatCurrency 
     }
   }
 }
