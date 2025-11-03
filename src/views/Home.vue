@@ -96,9 +96,10 @@
     </div>
 
     <!-- Modal servicio recomendado -->
-    <transition name="modal-fade">
-      <div v-if="modalAbierto" class="fixed inset-0 z-[2147483646] flex items-center justify-center bg-black/60 px-4" @click.self="cerrarModal">
-        <div class="relative z-[2147483647] w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl transform transition-all">
+    <teleport to="body">
+      <transition name="modal-fade">
+        <div v-if="modalAbierto" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 px-4" @click.self="cerrarModal">
+          <div class="relative z-[10000] w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl transform transition-all">
           <button class="absolute right-4 top-4 text-gray-400 hover:text-gray-700 transition-colors text-2xl leading-none" @click="cerrarModal" aria-label="Cerrar">&times;</button>
           <h3 class="mb-3 text-2xl font-bold text-gray-900 pr-8">{{ servicioSeleccionado?.nombre || servicioSeleccionado?.titulo }}</h3>
           <p v-if="servicioSeleccionado?.descripcion" class="mb-6 text-sm text-gray-600 leading-relaxed">{{ servicioSeleccionado.descripcion }}</p>
@@ -119,9 +120,10 @@
               </svg>
             </router-link>
           </div>
+          </div>
         </div>
-      </div>
-    </transition>
+      </transition>
+    </teleport>
     <!-- Botón destacado para agendar cita -->
     <div class="flex justify-end mb-8">
       <div class="bg-gradient-to-r from-[#EB0A1E] to-[#d00919] border-2 border-[#EB0A1E]/30 rounded-xl shadow-lg p-5 flex items-center space-x-5 hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5">
