@@ -1,40 +1,55 @@
 <template>
 
     <!-- Filtro de órdenes -->
-    <div v-if="ordenes.length" class="flex flex-col items-center mb-8">
-        <label class="text-white font-semibold mb-3 text-base">Selecciona tu orden:</label>
+    <div v-if="ordenes.length" class="flex flex-col items-center mb-10">
+      <label class="text-white font-semibold mb-2 text-base">Selecciona tu orden</label>
+      <div class="relative w-full max-w-md">
         <select
-            v-model="ordenSeleccionadaId"
-            class="bg-gray-800 text-white px-5 py-2.5 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#EB0A1E] focus:border-[#EB0A1E] transition-all duration-200 min-w-[280px] cursor-pointer hover:border-gray-500"
+          v-model="ordenSeleccionadaId"
+          class="appearance-none w-full bg-gray-800 text-white px-5 py-3 rounded-xl border border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#EB0A1E] focus:border-[#EB0A1E] transition-all duration-200 cursor-pointer hover:border-gray-500 pr-12"
         >
-            <option v-for="orden in ordenes" :key="orden.orden_id" :value="orden.orden_id">
-                Orden #{{ orden.orden_id }} - {{ orden.detalles[0]?.nombre_servicio || 'Servicio' }}
-            </option>
+          <option disabled value="">Selecciona una orden...</option>
+          <option v-for="orden in ordenes" :key="orden.orden_id" :value="orden.orden_id">
+            Orden #{{ orden.orden_id }} · {{ orden.detalles[0]?.nombre_servicio || 'Servicio' }}
+          </option>
         </select>
+        <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-300">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </span>
+      </div>
+      <p class="mt-2 text-xs text-gray-400">{{ ordenes.length }} órdenes encontradas</p>
     </div>
 
-    <!-- Barra de progreso de 3 estados -->
-    <div v-if="ordenSeleccionada" class="w-full max-w-xl mx-auto mb-10">
-        <div class="bg-gray-800 rounded-2xl shadow-lg p-8 flex flex-col items-center border border-blue-700">
-            <h2 class="text-2xl font-bold text-white text-center mb-6 tracking-wide">Estado del Servicio</h2>
-            <div class="flex items-center justify-between w-full mb-2">
-                <div v-for="(step, idx) in steps" :key="step.key" class="flex items-center w-1/3">
-                    <div :class="[
-                        'w-14 h-14 flex items-center justify-center rounded-full border-4 font-extrabold text-xl transition-all duration-300 shadow-md',
-                        getStepClass(mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado), step.key)
-                    ]">
-                        <span>{{ step.icon }}</span>
-                    </div>
-                    <div class="flex flex-col ml-3">
-                        <span :class="getStepTextClass(mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado), step.key) + ' text-base font-semibold drop-shadow'">{{ step.label }}</span>
-                    </div>
-                    <span v-if="idx < steps.length - 1" class="flex-1 h-2 mx-2 rounded transition-all duration-300 shadow-sm" :class="{
-                        'bg-blue-500': mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) === steps[idx].key || mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) === steps[idx+1].key,
-                        'bg-gray-600': mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) !== steps[idx].key && mapEstadoStepper(ordenSeleccionada.detalles[0]?.estado) !== steps[idx+1].key
-                    }"></span>
-                </div>
-            </div>
+    <!-- Barra de progreso de 3 estados (mejorada) -->
+    <div v-if="ordenSeleccionada" class="w-full max-w-3xl mx-auto mb-10">
+      <div class="bg-gray-800 rounded-2xl shadow-lg p-6 md:p-8 border border-gray-700">
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="text-xl md:text-2xl font-bold text-white">Estado del servicio</h2>
+          <span class="text-sm text-gray-300">{{ currentStep + 1 }} / {{ steps.length }}</span>
         </div>
+
+        <!-- Línea de progreso -->
+        <div class="relative h-2 w-full rounded-full bg-gray-700">
+          <div class="absolute left-0 top-0 h-2 rounded-full bg-gradient-to-r from-[#EB0A1E] to-[#d00919] transition-all duration-500" :style="{ width: progressPercent + '%' }"></div>
+        </div>
+
+        <!-- Marcadores -->
+        <div class="mt-6 grid grid-cols-3 gap-4">
+          <div v-for="(step, idx) in steps" :key="step.key" class="flex items-center gap-3">
+            <div :class="[
+              'flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-bold transition-colors duration-300',
+              idx <= currentStep ? 'bg-[#EB0A1E] text-white border-[#EB0A1E]' : 'bg-gray-900 text-gray-400 border-gray-600'
+            ]">
+              {{ idx + 1 }}
+            </div>
+            <div class="min-w-0">
+              <p :class="[ 'text-sm font-medium', idx <= currentStep ? 'text-white' : 'text-gray-300' ]">{{ step.label }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Estructura de dos columnas -->
@@ -207,6 +222,16 @@ function mapEstadoStepper(estado) {
 }
 
 const serviciosAleatorios = ref([])
+
+// Progreso (3 pasos)
+const currentStep = computed(() => {
+  const estado = mapEstadoStepper(ordenSeleccionada?.value?.detalles?.[0]?.estado)
+  return Math.max(0, stepOrder.indexOf(estado))
+})
+const progressPercent = computed(() => {
+  if (steps.length <= 1) return 100
+  return (currentStep.value / (steps.length - 1)) * 100
+})
 
 function getImagenServicio(nombreServicio) {
   const nombre = nombreServicio.toLowerCase();
