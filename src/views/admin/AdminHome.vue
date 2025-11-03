@@ -114,7 +114,12 @@
               <h2 class="text-xl font-bold text-white">Servicios Recientes</h2>
               <p class="text-sm text-gray-400 mt-1">Últimos servicios registrados</p>
             </div>
-            <button class="text-sm text-blue-400 hover:text-blue-300 transition-colors duration-200">Ver Todos</button>
+            <router-link 
+              to="/admin/servicios" 
+              class="text-sm text-blue-400 hover:text-blue-300 transition-colors duration-200"
+            >
+              Ver Todos
+            </router-link>
           </div>
           
           <div class="mt-4 space-y-4">
