@@ -339,7 +339,9 @@ export default {
       modalAbierto,
       servicioSeleccionado,
       abrirModal,
-      cerrarModal 
+      cerrarModal,
+      currentStep,
+      progressPercent 
     }
   }
 }
