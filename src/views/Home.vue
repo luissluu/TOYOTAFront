@@ -1,11 +1,11 @@
 <template>
 
     <!-- Filtro de órdenes -->
-    <div v-if="ordenes.length" class="flex flex-col items-center mb-6">
-        <label class="text-white font-semibold mb-2">Selecciona tu orden:</label>
+    <div v-if="ordenes.length" class="flex flex-col items-center mb-8">
+        <label class="text-white font-semibold mb-3 text-base">Selecciona tu orden:</label>
         <select
             v-model="ordenSeleccionadaId"
-            class="bg-gray-800 text-white px-4 py-2 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="bg-gray-800 text-white px-5 py-2.5 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#EB0A1E] focus:border-[#EB0A1E] transition-all duration-200 min-w-[280px] cursor-pointer hover:border-gray-500"
         >
             <option v-for="orden in ordenes" :key="orden.orden_id" :value="orden.orden_id">
                 Orden #{{ orden.orden_id }} - {{ orden.detalles[0]?.nombre_servicio || 'Servicio' }}
@@ -54,22 +54,22 @@
                 @click="abrirModal(servicio)"
               >
                 <!-- Contenido -->
-                <div class="flex h-full flex-col p-5">
-                  <h5 class="mb-2 line-clamp-2 text-lg font-bold text-gray-900">
+                <div class="flex h-full flex-col p-6">
+                  <h5 class="mb-3 line-clamp-2 text-lg font-bold text-gray-900 leading-tight">
                     {{ servicio.nombre || servicio.titulo }}
                   </h5>
-                  <p v-if="servicio.descripcion" class="mb-4 line-clamp-2 text-sm text-gray-600">
+                  <p v-if="servicio.descripcion" class="mb-5 line-clamp-3 text-sm text-gray-600 leading-relaxed">
                     {{ servicio.descripcion }}
                   </p>
 
-                  <div class="mt-auto flex items-end justify-between">
+                  <div class="mt-auto flex items-end justify-between pt-4 border-t border-gray-100">
                     <div>
-                      <span class="block text-xs text-gray-500">Precio desde</span>
-                      <span class="text-2xl font-extrabold text-[#EB0A1E]">{{ formatCurrency(servicio.precio_estimado || servicio.precio) }}</span>
+                      <span class="block text-xs text-gray-500 mb-1">Precio desde</span>
+                      <span class="text-2xl font-extrabold text-[#EB0A1E] tracking-tight">{{ formatCurrency(servicio.precio_estimado || servicio.precio) }}</span>
                     </div>
                     <button
                       type="button"
-                      class="inline-flex items-center rounded-lg bg-[#EB0A1E] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#d00919] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EB0A1E] focus-visible:ring-offset-2"
+                      class="inline-flex items-center rounded-lg bg-[#EB0A1E] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#d00919] hover:shadow-md hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EB0A1E] focus-visible:ring-offset-2"
                       @click.stop="abrirModal(servicio)"
                     >
                       Ver detalles
@@ -96,44 +96,49 @@
     </div>
 
     <!-- Modal servicio recomendado -->
-    <div v-if="modalAbierto" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
-      <div class="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-        <button class="absolute right-3 top-3 text-gray-500 hover:text-gray-700" @click="cerrarModal">&times;</button>
-        <h3 class="mb-2 text-xl font-bold text-gray-900">{{ servicioSeleccionado?.nombre || servicioSeleccionado?.titulo }}</h3>
-        <p v-if="servicioSeleccionado?.descripcion" class="mb-4 text-sm text-gray-600">{{ servicioSeleccionado.descripcion }}</p>
-        <div class="mb-6">
-          <span class="block text-xs text-gray-500">Precio desde</span>
-          <span class="text-2xl font-extrabold text-[#EB0A1E]">{{ formatCurrency(servicioSeleccionado?.precio_estimado || servicioSeleccionado?.precio) }}</span>
-        </div>
-        <div class="flex justify-end gap-3">
-          <button class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50" @click="cerrarModal">Cerrar</button>
-          <router-link
-            :to="{ name: 'Servicios', query: { servicio: (servicioSeleccionado?.servicio_id || servicioSeleccionado?.id) } }"
-            class="inline-flex items-center rounded-lg bg-[#EB0A1E] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#d00919]"
-            @click.native="cerrarModal"
-          >
-            Ver más
-          </router-link>
+    <transition name="modal-fade">
+      <div v-if="modalAbierto" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm" @click.self="cerrarModal">
+        <div class="relative w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl transform transition-all">
+          <button class="absolute right-4 top-4 text-gray-400 hover:text-gray-700 transition-colors text-2xl leading-none" @click="cerrarModal" aria-label="Cerrar">&times;</button>
+          <h3 class="mb-3 text-2xl font-bold text-gray-900 pr-8">{{ servicioSeleccionado?.nombre || servicioSeleccionado?.titulo }}</h3>
+          <p v-if="servicioSeleccionado?.descripcion" class="mb-6 text-sm text-gray-600 leading-relaxed">{{ servicioSeleccionado.descripcion }}</p>
+          <div class="mb-8 pb-6 border-b border-gray-200">
+            <span class="block text-xs text-gray-500 mb-1">Precio desde</span>
+            <span class="text-3xl font-extrabold text-[#EB0A1E] tracking-tight">{{ formatCurrency(servicioSeleccionado?.precio_estimado || servicioSeleccionado?.precio) }}</span>
+          </div>
+          <div class="flex justify-end gap-3">
+            <button class="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors" @click="cerrarModal">Cerrar</button>
+            <router-link
+              :to="{ name: 'Servicios', query: { servicio: (servicioSeleccionado?.servicio_id || servicioSeleccionado?.id) } }"
+              class="inline-flex items-center rounded-lg bg-[#EB0A1E] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#d00919] hover:shadow-md"
+              @click.native="cerrarModal"
+            >
+              Ver más
+              <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </router-link>
+          </div>
         </div>
       </div>
-    </div>
+    </transition>
     <!-- Botón destacado para agendar cita -->
     <div class="flex justify-end mb-8">
-      <div class="bg-gradient-to-r from-indigo-700 via-blue-700 to-indigo-900 border-2 border-indigo-500 rounded-xl shadow-lg p-4 flex items-center space-x-4 hover:shadow-2xl transition">
-        <svg class="w-10 h-10 text-white drop-shadow-lg" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <rect x="3" y="4" width="18" height="18" rx="4" stroke="currentColor" stroke-width="2.5" fill="#6366f1"/>
-          <path stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M8 2v4M16 2v4M3 10h18M12 14v4M10 16h4"/>
+      <div class="bg-gradient-to-r from-[#EB0A1E] to-[#d00919] border-2 border-[#EB0A1E]/30 rounded-xl shadow-lg p-5 flex items-center space-x-5 hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5">
+        <svg class="w-10 h-10 text-white drop-shadow-lg flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" fill="rgba(255,255,255,0.1)"/>
+          <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M8 2v4M16 2v4M3 10h18M12 14v4M10 16h4"/>
         </svg>
         <div class="flex flex-col">
           <span class="text-lg font-bold text-white">¿Necesitas un servicio?</span>
-          <span class="text-sm text-blue-200">Agenda tu cita fácilmente en línea</span>
+          <span class="text-sm text-white/90">Agenda tu cita fácilmente en línea</span>
         </div>
         <router-link
           to="/agendar-cita"
-          class="ml-6 px-6 py-2 bg-white text-indigo-700 font-bold rounded-lg shadow hover:bg-indigo-600 hover:text-white transition text-lg border-2 border-indigo-400"
+          class="ml-6 px-6 py-2.5 bg-white text-[#EB0A1E] font-bold rounded-lg shadow-md hover:bg-gray-50 hover:shadow-lg transition-all duration-200 border-2 border-white/20 hover:scale-105"
         >
           <span class="inline-flex items-center">
-            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10m-9 4h6m-7 5h8a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/>
             </svg>
             Agendar Cita
@@ -224,7 +229,7 @@ async function cargarServiciosAleatorios() {
 
 function formatCurrency(value) {
   const num = Number(value) || 0
-  return num.toLocaleString('es-PE', { style: 'currency', currency: 'PEN', maximumFractionDigits: 0 }).replace('S/\u00a0', 'S/ ')
+  return num.toLocaleString('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 }).replace('MX$\u00a0', '$')
 }
 
 export default {
@@ -310,3 +315,26 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-fade-enter-active > div,
+.modal-fade-leave-active > div {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+}
+
+.modal-fade-enter-from > div,
+.modal-fade-leave-to > div {
+  transform: scale(0.95) translateY(-10px);
+  opacity: 0;
+}
+</style>
