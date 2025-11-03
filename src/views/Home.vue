@@ -62,14 +62,14 @@
                     {{ servicio.descripcion }}
                   </p>
 
-                  <div class="mt-auto flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 pt-4 border-t border-gray-100">
+                  <div class="mt-auto flex flex-col items-start gap-3 pt-4 border-t border-gray-100">
                     <div class="min-w-0">
                       <span class="block text-xs text-gray-500 mb-1">Precio desde</span>
-                      <span class="text-3xl font-extrabold text-[#EB0A1E] tracking-tight whitespace-nowrap">{{ formatCurrency(servicio.precio_estimado || servicio.precio) }}</span>
+                      <span class="text-2xl font-extrabold text-[#EB0A1E] tracking-tight whitespace-nowrap">{{ formatCurrency(servicio.precio_estimado || servicio.precio) }}</span>
                     </div>
                     <button
                       type="button"
-                      class="inline-flex items-center rounded-lg bg-[#EB0A1E] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#d00919] hover:shadow-md hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EB0A1E] focus-visible:ring-offset-2 self-start sm:self-auto shrink-0"
+                      class="inline-flex items-center rounded-lg bg-[#EB0A1E] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#d00919] hover:shadow-md hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EB0A1E] focus-visible:ring-offset-2 self-start shrink-0"
                       @click.stop="abrirModal(servicio)"
                     >
                       Ver detalles
@@ -97,7 +97,7 @@
 
     <!-- Modal servicio recomendado -->
     <transition name="modal-fade">
-      <div v-if="modalAbierto" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 px-4 backdrop-blur-lg backdrop-saturate-150" @click.self="cerrarModal">
+      <div v-if="modalAbierto" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 px-4" @click.self="cerrarModal">
         <div class="relative z-[10000] w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl transform transition-all">
           <button class="absolute right-4 top-4 text-gray-400 hover:text-gray-700 transition-colors text-2xl leading-none" @click="cerrarModal" aria-label="Cerrar">&times;</button>
           <h3 class="mb-3 text-2xl font-bold text-gray-900 pr-8">{{ servicioSeleccionado?.nombre || servicioSeleccionado?.titulo }}</h3>
