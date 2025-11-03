@@ -50,21 +50,9 @@
               <div
                 v-for="servicio in serviciosAleatorios"
                 :key="servicio.servicio_id || servicio.id"
-                class="group w-full overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
+                class="group w-full overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl cursor-pointer"
+                @click="abrirModal(servicio)"
               >
-                <!-- Imagen/hero del servicio -->
-                <div class="relative h-36 w-full overflow-hidden">
-                  <img
-                    :src="servicio.imagen || getImagenServicio(servicio.nombre || servicio.titulo)"
-                    :alt="servicio.nombre || servicio.titulo"
-                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                  <span class="absolute left-3 top-3 inline-flex items-center rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-gray-800 shadow">
-                    Recomendado
-                  </span>
-                </div>
-
                 <!-- Contenido -->
                 <div class="flex h-full flex-col p-5">
                   <h5 class="mb-2 line-clamp-2 text-lg font-bold text-gray-900">
@@ -79,15 +67,16 @@
                       <span class="block text-xs text-gray-500">Precio desde</span>
                       <span class="text-2xl font-extrabold text-[#EB0A1E]">{{ formatCurrency(servicio.precio_estimado || servicio.precio) }}</span>
                     </div>
-                    <router-link
-                      :to="{ name: 'Servicios', query: { servicio: servicio.servicio_id || servicio.id }}"
+                    <button
+                      type="button"
                       class="inline-flex items-center rounded-lg bg-[#EB0A1E] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#d00919] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EB0A1E] focus-visible:ring-offset-2"
+                      @click.stop="abrirModal(servicio)"
                     >
                       Ver detalles
                       <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                       </svg>
-                    </router-link>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -106,6 +95,28 @@
         </div>
     </div>
 
+    <!-- Modal servicio recomendado -->
+    <div v-if="modalAbierto" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+      <div class="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+        <button class="absolute right-3 top-3 text-gray-500 hover:text-gray-700" @click="cerrarModal">&times;</button>
+        <h3 class="mb-2 text-xl font-bold text-gray-900">{{ servicioSeleccionado?.nombre || servicioSeleccionado?.titulo }}</h3>
+        <p v-if="servicioSeleccionado?.descripcion" class="mb-4 text-sm text-gray-600">{{ servicioSeleccionado.descripcion }}</p>
+        <div class="mb-6">
+          <span class="block text-xs text-gray-500">Precio desde</span>
+          <span class="text-2xl font-extrabold text-[#EB0A1E]">{{ formatCurrency(servicioSeleccionado?.precio_estimado || servicioSeleccionado?.precio) }}</span>
+        </div>
+        <div class="flex justify-end gap-3">
+          <button class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50" @click="cerrarModal">Cerrar</button>
+          <router-link
+            :to="{ name: 'Servicios', query: { servicio: (servicioSeleccionado?.servicio_id || servicioSeleccionado?.id) } }"
+            class="inline-flex items-center rounded-lg bg-[#EB0A1E] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#d00919]"
+            @click.native="cerrarModal"
+          >
+            Ver más
+          </router-link>
+        </div>
+      </div>
+    </div>
     <!-- Botón destacado para agendar cita -->
     <div class="flex justify-end mb-8">
       <div class="bg-gradient-to-r from-indigo-700 via-blue-700 to-indigo-900 border-2 border-indigo-500 rounded-xl shadow-lg p-4 flex items-center space-x-4 hover:shadow-2xl transition">
@@ -256,6 +267,19 @@ export default {
       }
     }
 
+    const modalAbierto = ref(false)
+    const servicioSeleccionado = ref(null)
+
+    function abrirModal(servicio) {
+      servicioSeleccionado.value = servicio
+      modalAbierto.value = true
+    }
+
+    function cerrarModal() {
+      modalAbierto.value = false
+      servicioSeleccionado.value = null
+    }
+
     onMounted(() => {
       cargarOrdenes()
       cargarServiciosAleatorios()
@@ -277,7 +301,11 @@ export default {
       etapaActual, 
       etapas,
       getImagenServicio,
-      formatCurrency 
+      formatCurrency,
+      modalAbierto,
+      servicioSeleccionado,
+      abrirModal,
+      cerrarModal 
     }
   }
 }
