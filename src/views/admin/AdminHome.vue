@@ -244,7 +244,7 @@
         const obtenerDetalles = (orden) => {
           if (orden?.detalles && orden.detalles.length) return orden.detalles;
           const oid = orden?.orden_id || orden?.id;
-          return (oid && detallesPorOrden[oid]) ? detallesPorOrden[oid] : [];
+          return (oid && detallesPorOrdenGlobal[oid]) ? detallesPorOrdenGlobal[oid] : [];
         };
 
         const conteoServicios = {};
@@ -316,7 +316,7 @@
         const obtenerDetalles = (orden) => {
           if (orden?.detalles && orden.detalles.length) return orden.detalles;
           const oid = orden?.orden_id || orden?.id;
-          return (oid && detallesPorOrden[oid]) ? detallesPorOrden[oid] : [];
+          return (oid && detallesPorOrdenGlobal[oid]) ? detallesPorOrdenGlobal[oid] : [];
         };
 
         const mesesLabels = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
@@ -505,7 +505,13 @@
         try {
           // Total clientes
           const usuariosRes = await axios.get('/api/usuarios');
-          kpis.value.clientes = Array.isArray(usuariosRes.data) ? usuariosRes.data.length : 0;
+          if (Array.isArray(usuariosRes.data)) {
+            const usuarios = usuariosRes.data;
+            const getRolId = (u) => u?.rol_id ?? u?.role_id ?? u?.rolId ?? u?.rol?.id ?? u?.role?.id;
+            kpis.value.clientes = usuarios.filter(u => Number(getRolId(u)) === 3).length;
+          } else {
+            kpis.value.clientes = 0;
+          }
 
         // Órdenes
         const ordenesRes = await axios.get('/api/ordenes-servicio');
