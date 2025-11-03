@@ -206,12 +206,16 @@
           const serviciosRes = await axios.get('/api/servicios');
           const servicios = Array.isArray(serviciosRes.data) ? serviciosRes.data : [];
           
-          // Crear mapa de servicio_id -> nombre
+          // Crear mapa de servicio_id -> nombre (normalizar IDs a números para comparación)
           const mapaServicios = {};
           servicios.forEach(s => {
-            const id = s.servicio_id || s.id;
+            const id = Number(s.servicio_id || s.id);
             const nombre = s.nombre || s.titulo || 'Sin nombre';
-            if (id) mapaServicios[id] = nombre;
+            if (id && !isNaN(id)) {
+              mapaServicios[id] = nombre;
+              // También guardar como string por si acaso
+              mapaServicios[String(id)] = nombre;
+            }
           });
 
           // Contar cuántas órdenes usan cada servicio (contar órdenes, no detalles)
@@ -219,28 +223,40 @@
           const ordenesPorServicio = {}; // Para evitar contar la misma orden múltiples veces
           
           ordenes.forEach(o => {
-            if (o.detalles && o.detalles.length) {
-              o.detalles.forEach(d => {
-                const servicioId = d.servicio_id || d.id_servicio;
-                if (servicioId) {
-                  const nombreServicio = mapaServicios[servicioId] || d.nombre_servicio || 'Otro';
-                  
-                  // Inicializar si no existe
-                  if (!conteoServicios[nombreServicio]) {
-                    conteoServicios[nombreServicio] = 0;
-                    ordenesPorServicio[nombreServicio] = new Set();
-                  }
-                  
-                  // Contar la orden solo una vez por servicio
-                  const ordenKey = o.orden_id || o.id;
-                  if (ordenKey && !ordenesPorServicio[nombreServicio].has(ordenKey)) {
-                    conteoServicios[nombreServicio]++;
-                    ordenesPorServicio[nombreServicio].add(ordenKey);
-                  }
-                }
-              });
-            }
+            if (!o.detalles || !o.detalles.length) return;
+            
+            o.detalles.forEach(d => {
+              // Normalizar servicio_id a número para comparar
+              const servicioIdRaw = d.servicio_id || d.id_servicio;
+              const servicioId = servicioIdRaw ? Number(servicioIdRaw) : null;
+              
+              // Buscar nombre del servicio en el mapa
+              let nombreServicio = 'Otro';
+              if (servicioId && !isNaN(servicioId)) {
+                nombreServicio = mapaServicios[servicioId] || mapaServicios[String(servicioId)] || d.nombre_servicio || 'Otro';
+              } else if (d.nombre_servicio) {
+                nombreServicio = d.nombre_servicio;
+              }
+
+              // Inicializar si no existe
+              if (!conteoServicios[nombreServicio]) {
+                conteoServicios[nombreServicio] = 0;
+                ordenesPorServicio[nombreServicio] = new Set();
+              }
+
+              // Contar la orden solo una vez por servicio
+              const ordenKey = o.orden_id || o.id;
+              if (ordenKey && !ordenesPorServicio[nombreServicio].has(ordenKey)) {
+                conteoServicios[nombreServicio]++;
+                ordenesPorServicio[nombreServicio].add(ordenKey);
+              }
+            });
           });
+          
+          // Debug: verificar qué se está contando
+          console.log('Mapa de servicios:', mapaServicios);
+          console.log('Conteo de servicios:', conteoServicios);
+          console.log('Total órdenes procesadas:', ordenes.length);
           
           // Convertir a array y ordenar por cantidad de órdenes (mayor a menor)
           let labelsPop = Object.keys(conteoServicios);
@@ -279,14 +295,23 @@
           }]
         };
 
-        // Mapas: servicio_id -> categoria y -> precio_estimado
+        // Mapas: servicio_id -> categoria y -> precio_estimado (normalizar IDs)
         const mapaCategorias = {};
         const mapaPrecioEstimado = {};
         servicios.forEach(s => {
-          const id = s.servicio_id || s.id;
-          if (!id) return;
-          mapaCategorias[id] = s.categoria || 'otro';
-          mapaPrecioEstimado[id] = Number(s.precio_estimado || 0);
+          const idRaw = s.servicio_id || s.id;
+          if (!idRaw) return;
+          const id = Number(idRaw);
+          if (isNaN(id)) return;
+          
+          const categoria = s.categoria || 'otro';
+          const precio = Number(s.precio_estimado || 0);
+          
+          // Guardar como número y string
+          mapaCategorias[id] = categoria;
+          mapaCategorias[String(id)] = categoria;
+          mapaPrecioEstimado[id] = precio;
+          mapaPrecioEstimado[String(id)] = precio;
         });
 
         // Función para mapear categoría a nombre
@@ -317,21 +342,30 @@
             // Obtener categoría desde los detalles de la orden
             if (o.detalles && o.detalles.length) {
               o.detalles.forEach(d => {
-                const servicioId = d.servicio_id || d.id_servicio;
-                const categoria = servicioId && mapaCategorias[servicioId] 
-                  ? mapaCategorias[servicioId]
-                  : 'otro';
+                const servicioIdRaw = d.servicio_id || d.id_servicio;
+                if (!servicioIdRaw) return;
+                
+                // Normalizar servicio_id
+                const servicioId = Number(servicioIdRaw);
+                if (isNaN(servicioId)) return;
+                
+                // Buscar categoría en el mapa (intentar número y string)
+                const categoria = mapaCategorias[servicioId] || mapaCategorias[String(servicioId)] || 'otro';
+                
                 if (categorias.includes(categoria)) {
                   // Sumar SIEMPRE el precio estimado del servicio
-                  const precio = mapaPrecioEstimado[servicioId] || 0;
+                  const precio = mapaPrecioEstimado[servicioId] || mapaPrecioEstimado[String(servicioId)] || 0;
                   ingresosPorCategoriaMes[categoria][mesIdx] += precio;
                 }
               });
-            } else {
-              // Sin detalles no podemos inferir servicios: no sumamos nada
             }
           }
         });
+        
+        // Debug: verificar ingresos calculados
+        console.log('Ingresos por categoría mes:', ingresosPorCategoriaMes);
+        console.log('Mapa de categorías:', mapaCategorias);
+        console.log('Mapa de precios:', mapaPrecioEstimado);
 
         const ultimos6Labels = mesesLabels.slice(Math.max(0, mes-5), mes+1);
         const colores = {
