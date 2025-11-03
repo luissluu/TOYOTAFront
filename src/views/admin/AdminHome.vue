@@ -214,35 +214,47 @@
             if (id) mapaServicios[id] = nombre;
           });
 
-          // Contar cuántas órdenes usan cada servicio
+          // Contar cuántas órdenes usan cada servicio (contar órdenes, no detalles)
           const conteoServicios = {};
+          const ordenesPorServicio = {}; // Para evitar contar la misma orden múltiples veces
+          
           ordenes.forEach(o => {
             if (o.detalles && o.detalles.length) {
               o.detalles.forEach(d => {
                 const servicioId = d.servicio_id || d.id_servicio;
-                const nombreServicio = servicioId && mapaServicios[servicioId] 
-                  ? mapaServicios[servicioId]
-                  : (d.nombre_servicio || 'Otro');
-                conteoServicios[nombreServicio] = (conteoServicios[nombreServicio] || 0) + 1;
+                if (servicioId) {
+                  const nombreServicio = mapaServicios[servicioId] || d.nombre_servicio || 'Otro';
+                  
+                  // Inicializar si no existe
+                  if (!conteoServicios[nombreServicio]) {
+                    conteoServicios[nombreServicio] = 0;
+                    ordenesPorServicio[nombreServicio] = new Set();
+                  }
+                  
+                  // Contar la orden solo una vez por servicio
+                  const ordenKey = o.orden_id || o.id;
+                  if (ordenKey && !ordenesPorServicio[nombreServicio].has(ordenKey)) {
+                    conteoServicios[nombreServicio]++;
+                    ordenesPorServicio[nombreServicio].add(ordenKey);
+                  }
+                }
               });
             }
           });
           
+          // Convertir a array y ordenar por cantidad de órdenes (mayor a menor)
           let labelsPop = Object.keys(conteoServicios);
           let dataPop = labelsPop.map(k => conteoServicios[k]);
           
-          // Ordenar por mayor frecuencia y limitar a 7
+          // Ordenar por mayor cantidad de órdenes y limitar a 7
           const pares = labelsPop.map((l, i) => ({ l, v: dataPop[i] }))
             .sort((a, b) => b.v - a.v)
             .slice(0, 7);
           labelsPop = pares.map(p => p.l);
           dataPop = pares.map(p => p.v);
           
-          // Si no hay datos, usar los servicios más populares de la BD
-          if (labelsPop.length === 0 && servicios.length > 0) {
-            labelsPop = servicios.slice(0, 7).map(s => s.nombre || s.titulo || 'Servicio');
-            dataPop = new Array(labelsPop.length).fill(0);
-          } else if (labelsPop.length === 0) {
+          // Si no hay datos, mostrar mensaje
+          if (labelsPop.length === 0) {
             labelsPop = ['Sin registros'];
             dataPop = [0];
           }
@@ -267,12 +279,14 @@
           }]
         };
 
-        // Mapa de servicio_id -> categoria
+        // Mapas: servicio_id -> categoria y -> precio_estimado
         const mapaCategorias = {};
+        const mapaPrecioEstimado = {};
         servicios.forEach(s => {
           const id = s.servicio_id || s.id;
-          const categoria = s.categoria || 'otro';
-          if (id) mapaCategorias[id] = categoria;
+          if (!id) return;
+          mapaCategorias[id] = s.categoria || 'otro';
+          mapaPrecioEstimado[id] = Number(s.precio_estimado || 0);
         });
 
         // Función para mapear categoría a nombre
@@ -308,15 +322,13 @@
                   ? mapaCategorias[servicioId]
                   : 'otro';
                 if (categorias.includes(categoria)) {
-                  ingresosPorCategoriaMes[categoria][mesIdx] += Number(d.precio || o.total || 0);
+                  // Sumar SIEMPRE el precio estimado del servicio
+                  const precio = mapaPrecioEstimado[servicioId] || 0;
+                  ingresosPorCategoriaMes[categoria][mesIdx] += precio;
                 }
               });
             } else {
-              // Si no hay detalles, dividir el total entre las categorías o asignar a 'otro'
-              const total = Number(o.total || 0);
-              if (total > 0) {
-                ingresosPorCategoriaMes['mantenimiento'][mesIdx] += total / categorias.length;
-              }
+              // Sin detalles no podemos inferir servicios: no sumamos nada
             }
           }
         });
