@@ -223,15 +223,7 @@ function mapEstadoStepper(estado) {
 
 const serviciosAleatorios = ref([])
 
-// Progreso (3 pasos)
-const currentStep = computed(() => {
-  const estado = mapEstadoStepper(ordenSeleccionada?.value?.detalles?.[0]?.estado)
-  return Math.max(0, stepOrder.indexOf(estado))
-})
-const progressPercent = computed(() => {
-  if (steps.length <= 1) return 100
-  return (currentStep.value / (steps.length - 1)) * 100
-})
+// (se define dentro de setup para acceder a ordenSeleccionada)
 
 function getImagenServicio(nombreServicio) {
   const nombre = nombreServicio.toLowerCase();
@@ -268,6 +260,16 @@ export default {
     const ordenSeleccionada = computed(() =>
       ordenes.value.find(o => o.orden_id === ordenSeleccionadaId.value)
     )
+    // Progreso (3 pasos) - ahora sí depende de ordenSeleccionada
+    const currentStep = computed(() => {
+      const estado = mapEstadoStepper(ordenSeleccionada.value?.detalles?.[0]?.estado)
+      const idx = stepOrder.indexOf(estado)
+      return idx < 0 ? 0 : idx
+    })
+    const progressPercent = computed(() => {
+      if (steps.length <= 1) return 100
+      return (currentStep.value / (steps.length - 1)) * 100
+    })
     const etapaActual = computed(() => {
       if (!ordenSeleccionada.value) return 0
       // Puedes ajustar este mapeo según los estados reales de tu backend
