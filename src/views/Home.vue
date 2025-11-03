@@ -49,14 +49,14 @@
             <div class="mt-2 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               <div
                 v-for="servicio in serviciosAleatorios"
-                :key="servicio.servicio_id"
+                :key="servicio.servicio_id || servicio.id"
                 class="group w-full overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
               >
                 <!-- Imagen/hero del servicio -->
                 <div class="relative h-36 w-full overflow-hidden">
                   <img
-                    :src="getImagenServicio(servicio.nombre)"
-                    :alt="servicio.nombre"
+                    :src="servicio.imagen || getImagenServicio(servicio.nombre || servicio.titulo)"
+                    :alt="servicio.nombre || servicio.titulo"
                     class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
@@ -68,19 +68,19 @@
                 <!-- Contenido -->
                 <div class="flex h-full flex-col p-5">
                   <h5 class="mb-2 line-clamp-2 text-lg font-bold text-gray-900">
-                    {{ servicio.nombre }}
+                    {{ servicio.nombre || servicio.titulo }}
                   </h5>
-                  <p class="mb-4 line-clamp-2 text-sm text-gray-600">
-                    Mantenimiento y cuidado profesional para tu Toyota.
+                  <p v-if="servicio.descripcion" class="mb-4 line-clamp-2 text-sm text-gray-600">
+                    {{ servicio.descripcion }}
                   </p>
 
                   <div class="mt-auto flex items-end justify-between">
                     <div>
                       <span class="block text-xs text-gray-500">Precio desde</span>
-                      <span class="text-2xl font-extrabold text-[#EB0A1E]">{{ formatCurrency(servicio.precio_estimado) }}</span>
+                      <span class="text-2xl font-extrabold text-[#EB0A1E]">{{ formatCurrency(servicio.precio_estimado || servicio.precio) }}</span>
                     </div>
                     <router-link
-                      :to="{ name: 'Servicios', query: { servicio: servicio.servicio_id }}"
+                      :to="{ name: 'Servicios', query: { servicio: servicio.servicio_id || servicio.id }}"
                       class="inline-flex items-center rounded-lg bg-[#EB0A1E] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#d00919] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EB0A1E] focus-visible:ring-offset-2"
                     >
                       Ver detalles
@@ -134,7 +134,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '../axios'
 import { ref, onMounted, computed, watch } from 'vue'
 import { useAuthStore } from '@/components/stores/auth'
 
