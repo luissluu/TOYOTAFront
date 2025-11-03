@@ -204,12 +204,29 @@
 
           // Popularidad por nombre_servicio
           const conteoServicios = {};
-          ordenes.forEach(o => (o.detalles || []).forEach(d => {
-            const n = d.nombre_servicio || 'Otro';
-            conteoServicios[n] = (conteoServicios[n] || 0) + 1;
-          }));
-          const labelsPop = Object.keys(conteoServicios);
-          const dataPop = labelsPop.map(k => conteoServicios[k]);
+          ordenes.forEach(o => {
+            if (o.detalles && o.detalles.length) {
+              o.detalles.forEach(d => {
+                const n = d?.nombre_servicio || 'Otro';
+                conteoServicios[n] = (conteoServicios[n] || 0) + 1;
+              });
+            } else {
+              const n = o.diagnostico || o.notas || 'Otro';
+              conteoServicios[n] = (conteoServicios[n] || 0) + 1;
+            }
+          });
+          let labelsPop = Object.keys(conteoServicios);
+          let dataPop = labelsPop.map(k => conteoServicios[k]);
+          // Ordenar por mayor frecuencia y limitar a 7
+          const pares = labelsPop.map((l, i) => ({ l, v: dataPop[i] }))
+            .sort((a, b) => b.v - a.v)
+            .slice(0, 7);
+          labelsPop = pares.map(p => p.l);
+          dataPop = pares.map(p => p.v);
+          if (labelsPop.length === 0) {
+            labelsPop = ['Sin registros'];
+            dataPop = [0];
+          }
 
         // Datos para el gráfico de servicios más populares
         const popularServicesData = {
