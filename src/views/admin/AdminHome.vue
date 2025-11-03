@@ -76,8 +76,28 @@
               <p class="text-sm text-gray-400 mt-1">Distribución de servicios por tipo</p>
             </div>
             <div class="flex space-x-2">
-              <button class="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200">Este Mes</button>
-              <button class="px-4 py-2 text-sm bg-gray-700 text-gray-300 rounded-md hover:bg-gray-600 transition-colors duration-200">Este Año</button>
+              <button 
+                @click="filtroServiciosPopulares = 'mes'"
+                :class="[
+                  'px-4 py-2 text-sm rounded-md transition-colors duration-200',
+                  filtroServiciosPopulares === 'mes' 
+                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                ]"
+              >
+                Este Mes
+              </button>
+              <button 
+                @click="filtroServiciosPopulares = 'año'"
+                :class="[
+                  'px-4 py-2 text-sm rounded-md transition-colors duration-200',
+                  filtroServiciosPopulares === 'año' 
+                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                ]"
+              >
+                Este Año
+              </button>
             </div>
           </div>
           
@@ -127,8 +147,28 @@
               <p class="text-sm text-gray-400 mt-1">Tendencia de ingresos por tipo de servicio</p>
             </div>
             <div class="flex space-x-2">
-              <button class="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200">6 Meses</button>
-              <button class="px-4 py-2 text-sm bg-gray-700 text-gray-300 rounded-md hover:bg-gray-600 transition-colors duration-200">1 Año</button>
+              <button 
+                @click="filtroIngresos = '6meses'"
+                :class="[
+                  'px-4 py-2 text-sm rounded-md transition-colors duration-200',
+                  filtroIngresos === '6meses' 
+                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                ]"
+              >
+                6 Meses
+              </button>
+              <button 
+                @click="filtroIngresos = '1año'"
+                :class="[
+                  'px-4 py-2 text-sm rounded-md transition-colors duration-200',
+                  filtroIngresos === '1año' 
+                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                ]"
+              >
+                1 Año
+              </button>
             </div>
           </div>
           
@@ -142,7 +182,7 @@
   </template>
   
   <script>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, watch } from 'vue';
   import Chart from 'chart.js/auto';
   import axios from '../../axios';
   
@@ -153,6 +193,9 @@
       const recientes = ref([]);
       const serviciosPopularesChart = ref(null);
       const ingresosCategoriaChart = ref(null);
+      const filtroServiciosPopulares = ref('mes'); // 'mes' o 'año'
+      const filtroIngresos = ref('6meses'); // '6meses' o '1año'
+      let chartInstances = { serviciosPopulares: null, ingresosCategoria: null };
       
       function formatCurrency(n) {
         return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 }).format(n || 0);
@@ -165,6 +208,293 @@
         return 'px-3 py-1 text-xs bg-blue-800 text-blue-100 rounded-full';
       };
 
+      // Variables globales para datos
+      let ordenesGlobales = [];
+      let detallesPorOrdenGlobal = {};
+      let serviciosGlobales = [];
+      let mapaServiciosGlobal = {};
+      let mapaCategoriasGlobal = {};
+      let mapaPrecioEstimadoGlobal = {};
+
+      // Función para calcular servicios populares según filtro
+      const calcularServiciosPopulares = (ordenes, servicios, detallesPorOrden, filtro) => {
+        const ahora = new Date();
+        const mes = ahora.getMonth();
+        const anio = ahora.getFullYear();
+
+        // Filtrar órdenes según el filtro
+        let ordenesFiltradas = ordenes;
+        if (filtro === 'mes') {
+          ordenesFiltradas = ordenes.filter(o => {
+            const f = new Date(o.fecha_inicio || o.fecha || ahora);
+            return f.getMonth() === mes && f.getFullYear() === anio;
+          });
+        } else if (filtro === 'año') {
+          ordenesFiltradas = ordenes.filter(o => {
+            const f = new Date(o.fecha_inicio || o.fecha || ahora);
+            return f.getFullYear() === anio;
+          });
+        }
+
+        const obtenerDetalles = (orden) => {
+          if (orden?.detalles && orden.detalles.length) return orden.detalles;
+          const oid = orden?.orden_id || orden?.id;
+          return (oid && detallesPorOrden[oid]) ? detallesPorOrden[oid] : [];
+        };
+
+        const conteoServicios = {};
+        const ordenesPorServicio = {};
+
+        ordenesFiltradas.forEach(o => {
+          const detalles = obtenerDetalles(o);
+          if (!detalles || !detalles.length) return;
+
+          detalles.forEach(d => {
+            const servicioIdRaw = d.servicio_id || d.id_servicio;
+            const servicioId = servicioIdRaw ? Number(servicioIdRaw) : null;
+
+            let nombreServicio = 'Otro';
+            if (servicioId && !isNaN(servicioId)) {
+              nombreServicio = mapaServiciosGlobal[servicioId] || mapaServiciosGlobal[String(servicioId)] || d.nombre_servicio || 'Otro';
+            } else if (d.nombre_servicio) {
+              nombreServicio = d.nombre_servicio;
+            }
+
+            if (!conteoServicios[nombreServicio]) {
+              conteoServicios[nombreServicio] = 0;
+              ordenesPorServicio[nombreServicio] = new Set();
+            }
+
+            const ordenKey = o.orden_id || o.id;
+            if (ordenKey && !ordenesPorServicio[nombreServicio].has(ordenKey)) {
+              conteoServicios[nombreServicio]++;
+              ordenesPorServicio[nombreServicio].add(ordenKey);
+            }
+          });
+        });
+
+        let labelsPop = Object.keys(conteoServicios);
+        let dataPop = labelsPop.map(k => conteoServicios[k]);
+
+        const pares = labelsPop.map((l, i) => ({ l, v: dataPop[i] }))
+          .sort((a, b) => b.v - a.v)
+          .slice(0, 7);
+        labelsPop = pares.map(p => p.l);
+        dataPop = pares.map(p => p.v);
+
+        if (labelsPop.length === 0) {
+          labelsPop = ['Sin registros'];
+          dataPop = [0];
+        }
+
+        return {
+          labels: labelsPop,
+          datasets: [{
+            label: 'Cantidad de servicios',
+            data: dataPop,
+            backgroundColor: [
+              '#3B82F6', '#EF4444', '#10B981', '#F59E0B',
+              '#8B5CF6', '#EC4899', '#6366F1'
+            ],
+            borderWidth: 0,
+            borderRadius: 4
+          }]
+        };
+      };
+
+      // Función para calcular ingresos por categoría según filtro
+      const calcularIngresosPorCategoria = (ordenes, detallesPorOrden, filtro) => {
+        const ahora = new Date();
+        const mes = ahora.getMonth();
+        const anio = ahora.getFullYear();
+
+        const obtenerDetalles = (orden) => {
+          if (orden?.detalles && orden.detalles.length) return orden.detalles;
+          const oid = orden?.orden_id || orden?.id;
+          return (oid && detallesPorOrden[oid]) ? detallesPorOrden[oid] : [];
+        };
+
+        const mesesLabels = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+        const categorias = ['mantenimiento', 'motor', 'frenos', 'suspension'];
+        const ingresosPorCategoriaMes = {};
+
+        categorias.forEach(cat => {
+          ingresosPorCategoriaMes[cat] = new Array(12).fill(0);
+        });
+
+        // Determinar rango de meses según filtro
+        let mesesMostrar = 6;
+        let mesInicio = Math.max(0, mes - 5);
+        if (filtro === '1año') {
+          mesesMostrar = 12;
+          mesInicio = 0;
+        }
+
+        ordenes.forEach(o => {
+          const f = new Date(o.fecha_inicio || o.fecha || ahora);
+          const y = f.getFullYear();
+          if (y === anio) {
+            const mesIdx = f.getMonth();
+            const detalles = obtenerDetalles(o);
+            if (detalles && detalles.length) {
+              detalles.forEach(d => {
+                const servicioIdRaw = d.servicio_id || d.id_servicio;
+                if (!servicioIdRaw) return;
+
+                const servicioId = Number(servicioIdRaw);
+                if (isNaN(servicioId)) return;
+
+                const categoria = mapaCategoriasGlobal[servicioId] || mapaCategoriasGlobal[String(servicioId)] || 'otro';
+
+                if (categorias.includes(categoria)) {
+                  const precio = mapaPrecioEstimadoGlobal[servicioId] || mapaPrecioEstimadoGlobal[String(servicioId)] || 0;
+                  ingresosPorCategoriaMes[categoria][mesIdx] += precio;
+                }
+              });
+            }
+          }
+        });
+
+        const labelsMostrar = mesesLabels.slice(mesInicio, mesInicio + mesesMostrar);
+        const colores = {
+          'mantenimiento': { border: '#3B82F6', bg: 'rgba(59, 130, 246, 0.1)' },
+          'motor': { border: '#EF4444', bg: 'rgba(239, 68, 68, 0.1)' },
+          'frenos': { border: '#10B981', bg: 'rgba(16, 185, 129, 0.1)' },
+          'suspension': { border: '#F59E0B', bg: 'rgba(245, 158, 11, 0.1)' }
+        };
+
+        return {
+          labels: labelsMostrar,
+          datasets: categorias.map(cat => ({
+            label: cat === 'mantenimiento' ? 'Mantenimiento básico' :
+                   cat === 'motor' ? 'Sistema de motor' :
+                   cat === 'frenos' ? 'Sistema de frenos' :
+                   'Suspensión y dirección',
+            data: ingresosPorCategoriaMes[cat].slice(mesInicio, mesInicio + mesesMostrar),
+            borderColor: colores[cat].border,
+            backgroundColor: colores[cat].bg,
+            tension: 0.4,
+            fill: true
+          }))
+        };
+      };
+
+      // Función para actualizar gráfico de servicios populares
+      const actualizarGraficoServiciosPopulares = () => {
+        if (!serviciosPopularesChart.value) return;
+        
+        const data = calcularServiciosPopulares(
+          ordenesGlobales,
+          serviciosGlobales,
+          detallesPorOrdenGlobal,
+          filtroServiciosPopulares.value
+        );
+
+        if (chartInstances.serviciosPopulares) {
+          chartInstances.serviciosPopulares.destroy();
+        }
+
+        chartInstances.serviciosPopulares = new Chart(serviciosPopularesChart.value, {
+          type: 'bar',
+          data: data,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                padding: 12,
+                bodyFont: { size: 14 },
+                titleFont: { size: 16, weight: 'bold' }
+              }
+            },
+            scales: {
+              y: {
+                ticks: { color: '#9CA3AF' },
+                grid: { color: 'rgba(75, 85, 99, 0.2)' }
+              },
+              x: {
+                ticks: { 
+                  color: '#9CA3AF',
+                  stepSize: 1,
+                  callback: function(value) {
+                    return Number.isInteger(value) ? value : '';
+                  }
+                },
+                grid: { color: 'rgba(75, 85, 99, 0.2)' }
+              }
+            }
+          }
+        });
+      };
+
+      // Función para actualizar gráfico de ingresos por categoría
+      const actualizarGraficoIngresosCategoria = () => {
+        if (!ingresosCategoriaChart.value) return;
+
+        const data = calcularIngresosPorCategoria(
+          ordenesGlobales,
+          detallesPorOrdenGlobal,
+          filtroIngresos.value
+        );
+
+        if (chartInstances.ingresosCategoria) {
+          chartInstances.ingresosCategoria.destroy();
+        }
+
+        chartInstances.ingresosCategoria = new Chart(ingresosCategoriaChart.value, {
+          type: 'line',
+          data: data,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                  color: '#9CA3AF',
+                  padding: 15,
+                  font: { size: 12 }
+                }
+              },
+              tooltip: {
+                backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                padding: 12,
+                bodyFont: { size: 14 },
+                titleFont: { size: 16, weight: 'bold' }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: { color: '#9CA3AF' },
+                grid: { color: 'rgba(75, 85, 99, 0.2)' }
+              },
+              x: {
+                ticks: { color: '#9CA3AF' },
+                grid: { color: 'rgba(75, 85, 99, 0.2)' }
+              }
+            }
+          }
+        });
+      };
+
+      // Watchers para actualizar gráficos cuando cambien los filtros
+      watch(filtroServiciosPopulares, () => {
+        actualizarGraficoServiciosPopulares();
+      });
+
+      watch(filtroIngresos, () => {
+        actualizarGraficoIngresosCategoria();
+      });
+
       // Cargar datos reales
       onMounted(async () => {
         try {
@@ -174,16 +504,15 @@
 
         // Órdenes
         const ordenesRes = await axios.get('/api/ordenes-servicio');
-        const ordenes = Array.isArray(ordenesRes.data) ? ordenesRes.data : [];
+        ordenesGlobales = Array.isArray(ordenesRes.data) ? ordenesRes.data : [];
 
         // Si las órdenes no traen detalles, intentar obtenerlos desde un endpoint global
-        let detallesPorOrden = {};
         try {
-          const faltanDetalles = ordenes.every(o => !o.detalles || o.detalles.length === 0);
+          const faltanDetalles = ordenesGlobales.every(o => !o.detalles || o.detalles.length === 0);
           if (faltanDetalles) {
             const detRes = await axios.get('/api/detalles-orden');
             const detalles = Array.isArray(detRes.data) ? detRes.data : [];
-            detallesPorOrden = detalles.reduce((acc, d) => {
+            detallesPorOrdenGlobal = detalles.reduce((acc, d) => {
               const oid = d.orden_id || d.id_orden || d.idOrden;
               if (!oid) return acc;
               if (!acc[oid]) acc[oid] = [];
@@ -199,15 +528,15 @@
         const obtenerDetalles = (orden) => {
           if (orden?.detalles && orden.detalles.length) return orden.detalles;
           const oid = orden?.orden_id || orden?.id;
-          return (oid && detallesPorOrden[oid]) ? detallesPorOrden[oid] : [];
+          return (oid && detallesPorOrdenGlobal[oid]) ? detallesPorOrdenGlobal[oid] : [];
         };
 
           // KPIs
           const ahora = new Date();
           const mes = ahora.getMonth();
           const anio = ahora.getFullYear();
-          kpis.value.completados = ordenes.filter(o => (o.estado || '').toLowerCase().includes('final')).length;
-          kpis.value.ingresosMes = ordenes
+          kpis.value.completados = ordenesGlobales.filter(o => (o.estado || '').toLowerCase().includes('final')).length;
+          kpis.value.ingresosMes = ordenesGlobales
             .filter(o => {
               const f = new Date(o.fecha_inicio || o.fecha || ahora);
               return f.getMonth() === mes && f.getFullYear() === anio;
@@ -215,356 +544,57 @@
             .reduce((acc, o) => acc + Number(o.total || 0), 0);
 
           // Recientes (3)
-          recientes.value = ordenes
+          recientes.value = ordenesGlobales
             .sort((a, b) => new Date(b.fecha_inicio || b.fecha) - new Date(a.fecha_inicio || a.fecha))
             .slice(0, 3)
-            .map(o => ({
-              id: o.orden_id,
-              servicio: o.detalles?.[0]?.nombre_servicio || o.diagnostico || 'Servicio',
-              cliente: `${o.nombre_usuario || o.nombre || ''} ${o.apellido_usuario || o.apellidoPaterno || ''}`.trim() || 'Cliente',
-              avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(o.nombre_usuario || o.nombre || 'C')}+${encodeURIComponent(o.apellido_usuario || o.apellidoPaterno || '')}&background=random`,
-              estado: (o.estado || '').toLowerCase(),
-              badgeClass: badgeEstado(o.estado),
-              hace: new Date(o.fecha_inicio || o.fecha).toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' })
-            }));
+            .map(o => {
+              const detalles = obtenerDetalles(o);
+              return {
+                id: o.orden_id,
+                servicio: detalles?.[0]?.nombre_servicio || o.diagnostico || 'Servicio',
+                cliente: `${o.nombre_usuario || o.nombre || ''} ${o.apellido_usuario || o.apellidoPaterno || ''}`.trim() || 'Cliente',
+                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(o.nombre_usuario || o.nombre || 'C')}+${encodeURIComponent(o.apellido_usuario || o.apellidoPaterno || '')}&background=random`,
+                estado: (o.estado || '').toLowerCase(),
+                badgeClass: badgeEstado(o.estado),
+                hace: new Date(o.fecha_inicio || o.fecha).toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' })
+              };
+            });
 
           // Obtener servicios reales de la BD
           const serviciosRes = await axios.get('/api/servicios');
-          const servicios = Array.isArray(serviciosRes.data) ? serviciosRes.data : [];
+          serviciosGlobales = Array.isArray(serviciosRes.data) ? serviciosRes.data : [];
           
-          // Crear mapa de servicio_id -> nombre (normalizar IDs a números para comparación)
-          const mapaServicios = {};
-          servicios.forEach(s => {
+          // Crear mapas globales de servicios
+          serviciosGlobales.forEach(s => {
             const id = Number(s.servicio_id || s.id);
             const nombre = s.nombre || s.titulo || 'Sin nombre';
             if (id && !isNaN(id)) {
-              mapaServicios[id] = nombre;
-              // También guardar como string por si acaso
-              mapaServicios[String(id)] = nombre;
+              mapaServiciosGlobal[id] = nombre;
+              mapaServiciosGlobal[String(id)] = nombre;
             }
           });
 
-          // Contar cuántas órdenes usan cada servicio (contar órdenes, no detalles)
-          const conteoServicios = {};
-          const ordenesPorServicio = {}; // Para evitar contar la misma orden múltiples veces
-          
-          // Debug: ver estructura de órdenes
-          console.log('Estructura de órdenes:', ordenes.map(o => ({
-            orden_id: o.orden_id || o.id,
-            tiene_detalles: !!o.detalles,
-            detalles_length: (obtenerDetalles(o))?.length || 0,
-            primer_detalle: (obtenerDetalles(o))?.[0] || null
-          })));
-          
-          ordenes.forEach(o => {
-            const detalles = obtenerDetalles(o);
-            if (!detalles || !detalles.length) {
-              console.log('Orden sin detalles:', o.orden_id || o.id);
-              return;
-            }
+          // Crear mapas de categorías y precios
+          serviciosGlobales.forEach(s => {
+            const idRaw = s.servicio_id || s.id;
+            if (!idRaw) return;
+            const id = Number(idRaw);
+            if (isNaN(id)) return;
             
-            detalles.forEach(d => {
-              // Normalizar servicio_id a número para comparar
-              const servicioIdRaw = d.servicio_id || d.id_servicio;
-              const servicioId = servicioIdRaw ? Number(servicioIdRaw) : null;
-              
-              console.log('Procesando detalle:', {
-                servicio_id_raw: servicioIdRaw,
-                servicio_id_normalizado: servicioId,
-                nombre_servicio: d.nombre_servicio,
-                detalle_completo: d
-              });
-              
-              // Buscar nombre del servicio en el mapa
-              let nombreServicio = 'Otro';
-              if (servicioId && !isNaN(servicioId)) {
-                nombreServicio = mapaServicios[servicioId] || mapaServicios[String(servicioId)] || d.nombre_servicio || 'Otro';
-                console.log('Nombre encontrado:', nombreServicio, 'para servicio_id:', servicioId);
-              } else if (d.nombre_servicio) {
-                nombreServicio = d.nombre_servicio;
-              }
-
-              // Inicializar si no existe
-              if (!conteoServicios[nombreServicio]) {
-                conteoServicios[nombreServicio] = 0;
-                ordenesPorServicio[nombreServicio] = new Set();
-              }
-
-              // Contar la orden solo una vez por servicio
-              const ordenKey = o.orden_id || o.id;
-              if (ordenKey && !ordenesPorServicio[nombreServicio].has(ordenKey)) {
-                conteoServicios[nombreServicio]++;
-                ordenesPorServicio[nombreServicio].add(ordenKey);
-                console.log('Contando orden:', ordenKey, 'para servicio:', nombreServicio);
-              }
-            });
+            const categoria = s.categoria || 'otro';
+            const precio = Number(s.precio_estimado || 0);
+            
+            mapaCategoriasGlobal[id] = categoria;
+            mapaCategoriasGlobal[String(id)] = categoria;
+            mapaPrecioEstimadoGlobal[id] = precio;
+            mapaPrecioEstimadoGlobal[String(id)] = precio;
           });
-          
-          // Debug: verificar qué se está contando
-          console.log('Mapa de servicios:', mapaServicios);
-          console.log('Conteo de servicios:', conteoServicios);
-          console.log('Total órdenes procesadas:', ordenes.length);
-          
-          // Convertir a array y ordenar por cantidad de órdenes (mayor a menor)
-          let labelsPop = Object.keys(conteoServicios);
-          let dataPop = labelsPop.map(k => conteoServicios[k]);
-          
-          // Ordenar por mayor cantidad de órdenes y limitar a 7
-          const pares = labelsPop.map((l, i) => ({ l, v: dataPop[i] }))
-            .sort((a, b) => b.v - a.v)
-            .slice(0, 7);
-          labelsPop = pares.map(p => p.l);
-          dataPop = pares.map(p => p.v);
-          
-          // Si no hay datos, mostrar mensaje
-          if (labelsPop.length === 0) {
-            labelsPop = ['Sin registros'];
-            dataPop = [0];
-          }
 
-        // Datos para el gráfico de servicios más populares
-        const popularServicesData = {
-          labels: labelsPop,
-          datasets: [{
-            label: 'Cantidad de servicios',
-            data: dataPop,
-            backgroundColor: [
-              '#3B82F6', // blue-500
-              '#EF4444', // red-500
-              '#10B981', // green-500
-              '#F59E0B', // amber-500
-              '#8B5CF6', // violet-500
-              '#EC4899', // pink-500
-              '#6366F1'  // indigo-500
-            ],
-            borderWidth: 0,
-            borderRadius: 4
-          }]
-        };
-
-        // Mapas: servicio_id -> categoria y -> precio_estimado (normalizar IDs)
-        const mapaCategorias = {};
-        const mapaPrecioEstimado = {};
-        servicios.forEach(s => {
-          const idRaw = s.servicio_id || s.id;
-          if (!idRaw) return;
-          const id = Number(idRaw);
-          if (isNaN(id)) return;
-          
-          const categoria = s.categoria || 'otro';
-          const precio = Number(s.precio_estimado || 0);
-          
-          // Guardar como número y string
-          mapaCategorias[id] = categoria;
-          mapaCategorias[String(id)] = categoria;
-          mapaPrecioEstimado[id] = precio;
-          mapaPrecioEstimado[String(id)] = precio;
-        });
-
-        // Función para mapear categoría a nombre
-        const nombreCategoria = (cat) => {
-          const map = {
-            'mantenimiento': 'Mantenimiento básico',
-            'motor': 'Sistema de motor',
-            'frenos': 'Sistema de frenos',
-            'suspension': 'Suspensión y dirección'
-          };
-          return map[cat] || cat;
-        };
-
-        // Datos para el gráfico de ingresos por categoría (6 meses)
-        const mesesLabels = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-        const categorias = ['mantenimiento', 'motor', 'frenos', 'suspension'];
-        const ingresosPorCategoriaMes = {};
-        
-        categorias.forEach(cat => {
-          ingresosPorCategoriaMes[cat] = new Array(12).fill(0);
-        });
-
-        ordenes.forEach(o => {
-          const f = new Date(o.fecha_inicio || o.fecha || ahora);
-          const y = f.getFullYear();
-          if (y === anio) {
-            const mesIdx = f.getMonth();
-            // Obtener categoría desde los detalles de la orden
-            const detalles = obtenerDetalles(o);
-            if (detalles && detalles.length) {
-              detalles.forEach(d => {
-                const servicioIdRaw = d.servicio_id || d.id_servicio;
-                if (!servicioIdRaw) {
-                  console.log('Detalle sin servicio_id:', d);
-                  return;
-                }
-                
-                // Normalizar servicio_id
-                const servicioId = Number(servicioIdRaw);
-                if (isNaN(servicioId)) {
-                  console.log('servicio_id no es número:', servicioIdRaw);
-                  return;
-                }
-                
-                // Buscar categoría en el mapa (intentar número y string)
-                const categoria = mapaCategorias[servicioId] || mapaCategorias[String(servicioId)] || 'otro';
-                
-                console.log('Procesando ingreso - servicio_id:', servicioId, 'categoría:', categoria, 'mes:', mesIdx);
-                
-                if (categorias.includes(categoria)) {
-                  // Sumar SIEMPRE el precio estimado del servicio
-                  const precio = mapaPrecioEstimado[servicioId] || mapaPrecioEstimado[String(servicioId)] || 0;
-                  console.log('Sumando precio:', precio, 'a categoría:', categoria, 'mes:', mesIdx);
-                  ingresosPorCategoriaMes[categoria][mesIdx] += precio;
-                } else {
-                  console.log('Categoría no incluida en lista:', categoria);
-                }
-              });
-            } else {
-              console.log('Orden sin detalles para ingresos:', o.orden_id || o.id);
-            }
-          } else {
-            console.log('Orden de otro año:', o.orden_id || o.id, 'año:', y, 'año actual:', anio);
-          }
-        });
-        
-        // Debug: verificar ingresos calculados
-        console.log('Ingresos por categoría mes:', ingresosPorCategoriaMes);
-        console.log('Mapa de categorías:', mapaCategorias);
-        console.log('Mapa de precios:', mapaPrecioEstimado);
-
-        const ultimos6Labels = mesesLabels.slice(Math.max(0, mes-5), mes+1);
-        const colores = {
-          'mantenimiento': { border: '#3B82F6', bg: 'rgba(59, 130, 246, 0.1)' },
-          'motor': { border: '#EF4444', bg: 'rgba(239, 68, 68, 0.1)' },
-          'frenos': { border: '#10B981', bg: 'rgba(16, 185, 129, 0.1)' },
-          'suspension': { border: '#F59E0B', bg: 'rgba(245, 158, 11, 0.1)' }
-        };
-
-        const ingresosCategoriasData = {
-          labels: ultimos6Labels,
-          datasets: categorias.map(cat => ({
-            label: nombreCategoria(cat),
-            data: ingresosPorCategoriaMes[cat].slice(Math.max(0, mes-5), mes+1),
-            borderColor: colores[cat].border,
-            backgroundColor: colores[cat].bg,
-            tension: 0.4,
-            fill: true
-          }))
-        };
-  
-        // Crear el gráfico de servicios más populares
-        if (serviciosPopularesChart.value) {
-          new Chart(serviciosPopularesChart.value, {
-            type: 'bar',
-            data: popularServicesData,
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              indexAxis: 'y',
-              plugins: {
-                legend: {
-                  display: false
-                },
-                tooltip: {
-                  backgroundColor: 'rgba(17, 24, 39, 0.9)',
-                  titleColor: '#fff',
-                  bodyColor: '#fff',
-                  padding: 12,
-                  bodyFont: {
-                    size: 14
-                  },
-                  titleFont: {
-                    size: 16,
-                    weight: 'bold'
-                  }
-                }
-              },
-              scales: {
-                y: {
-                  ticks: {
-                    color: '#9CA3AF'
-                  },
-                  grid: {
-                    color: 'rgba(75, 85, 99, 0.2)'
-                  }
-                },
-                x: {
-                  ticks: {
-                    color: '#9CA3AF'
-                  },
-                  grid: {
-                    color: 'rgba(75, 85, 99, 0.2)'
-                  }
-                }
-              }
-            }
-          });
-        }
-  
-        // Crear el gráfico de ingresos por categoría
-        if (ingresosCategoriaChart.value) {
-          new Chart(ingresosCategoriaChart.value, {
-            type: 'line',
-            data: ingresosCategoriasData,
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: {
-                legend: {
-                  position: 'top',
-                  labels: {
-                    color: '#D1D5DB',
-                    padding: 20,
-                    font: {
-                      size: 12
-                    }
-                  }
-                },
-                tooltip: {
-                  backgroundColor: 'rgba(17, 24, 39, 0.9)',
-                  titleColor: '#fff',
-                  bodyColor: '#fff',
-                  padding: 12,
-                  callbacks: {
-                    label: function(context) {
-                      let label = context.dataset.label || '';
-                      if (label) {
-                        label += ': ';
-                      }
-                      if (context.parsed.y !== null) {
-                        label += new Intl.NumberFormat('es-MX', { 
-                          style: 'currency', 
-                          currency: 'MXN' 
-                        }).format(context.parsed.y);
-                      }
-                      return label;
-                    }
-                  }
-                }
-              },
-              scales: {
-                y: {
-                  beginAtZero: true,
-                  ticks: {
-                    color: '#9CA3AF',
-                    callback: function(value) {
-                      return '$' + value.toLocaleString('es-MX');
-                    }
-                  },
-                  grid: {
-                    color: 'rgba(75, 85, 99, 0.2)'
-                  }
-                },
-                x: {
-                  ticks: {
-                    color: '#9CA3AF'
-                  },
-                  grid: {
-                    color: 'rgba(75, 85, 99, 0.2)'
-                  }
-                }
-              }
-            }
-          });
-        }
+          // Inicializar gráficos después de cargar datos
+          setTimeout(() => {
+            actualizarGraficoServiciosPopulares();
+            actualizarGraficoIngresosCategoria();
+          }, 100);
         } catch (e) {
           console.error('Error cargando dashboard:', e);
         }
@@ -575,12 +605,14 @@
         recientes,
         serviciosPopularesChart,
         ingresosCategoriaChart,
+        filtroServiciosPopulares,
+        filtroIngresos,
         formatCurrency
       };
     }
   };
   </script>
-
+  
   <style>
   .bg-gray-750 {
     background-color: #2d3748;
