@@ -202,28 +202,47 @@
               hace: new Date(o.fecha_inicio || o.fecha).toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' })
             }));
 
-          // Popularidad por nombre_servicio
+          // Obtener servicios reales de la BD
+          const serviciosRes = await axios.get('/api/servicios');
+          const servicios = Array.isArray(serviciosRes.data) ? serviciosRes.data : [];
+          
+          // Crear mapa de servicio_id -> nombre
+          const mapaServicios = {};
+          servicios.forEach(s => {
+            const id = s.servicio_id || s.id;
+            const nombre = s.nombre || s.titulo || 'Sin nombre';
+            if (id) mapaServicios[id] = nombre;
+          });
+
+          // Contar cuántas órdenes usan cada servicio
           const conteoServicios = {};
           ordenes.forEach(o => {
             if (o.detalles && o.detalles.length) {
               o.detalles.forEach(d => {
-                const n = d?.nombre_servicio || 'Otro';
-                conteoServicios[n] = (conteoServicios[n] || 0) + 1;
+                const servicioId = d.servicio_id || d.id_servicio;
+                const nombreServicio = servicioId && mapaServicios[servicioId] 
+                  ? mapaServicios[servicioId]
+                  : (d.nombre_servicio || 'Otro');
+                conteoServicios[nombreServicio] = (conteoServicios[nombreServicio] || 0) + 1;
               });
-            } else {
-              const n = o.diagnostico || o.notas || 'Otro';
-              conteoServicios[n] = (conteoServicios[n] || 0) + 1;
             }
           });
+          
           let labelsPop = Object.keys(conteoServicios);
           let dataPop = labelsPop.map(k => conteoServicios[k]);
+          
           // Ordenar por mayor frecuencia y limitar a 7
           const pares = labelsPop.map((l, i) => ({ l, v: dataPop[i] }))
             .sort((a, b) => b.v - a.v)
             .slice(0, 7);
           labelsPop = pares.map(p => p.l);
           dataPop = pares.map(p => p.v);
-          if (labelsPop.length === 0) {
+          
+          // Si no hay datos, usar los servicios más populares de la BD
+          if (labelsPop.length === 0 && servicios.length > 0) {
+            labelsPop = servicios.slice(0, 7).map(s => s.nombre || s.titulo || 'Servicio');
+            dataPop = new Array(labelsPop.length).fill(0);
+          } else if (labelsPop.length === 0) {
             labelsPop = ['Sin registros'];
             dataPop = [0];
           }
@@ -248,28 +267,78 @@
           }]
         };
 
-        // Datos para el gráfico de ingresos por mes (6 meses)
+        // Mapa de servicio_id -> categoria
+        const mapaCategorias = {};
+        servicios.forEach(s => {
+          const id = s.servicio_id || s.id;
+          const categoria = s.categoria || 'otro';
+          if (id) mapaCategorias[id] = categoria;
+        });
+
+        // Función para mapear categoría a nombre
+        const nombreCategoria = (cat) => {
+          const map = {
+            'mantenimiento': 'Mantenimiento básico',
+            'motor': 'Sistema de motor',
+            'frenos': 'Sistema de frenos',
+            'suspension': 'Suspensión y dirección'
+          };
+          return map[cat] || cat;
+        };
+
+        // Datos para el gráfico de ingresos por categoría (6 meses)
         const mesesLabels = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-        const ingresosPorMes = new Array(12).fill(0);
+        const categorias = ['mantenimiento', 'motor', 'frenos', 'suspension'];
+        const ingresosPorCategoriaMes = {};
+        
+        categorias.forEach(cat => {
+          ingresosPorCategoriaMes[cat] = new Array(12).fill(0);
+        });
+
         ordenes.forEach(o => {
           const f = new Date(o.fecha_inicio || o.fecha || ahora);
           const y = f.getFullYear();
-          if (y === anio) ingresosPorMes[f.getMonth()] += Number(o.total || 0);
+          if (y === anio) {
+            const mesIdx = f.getMonth();
+            // Obtener categoría desde los detalles de la orden
+            if (o.detalles && o.detalles.length) {
+              o.detalles.forEach(d => {
+                const servicioId = d.servicio_id || d.id_servicio;
+                const categoria = servicioId && mapaCategorias[servicioId] 
+                  ? mapaCategorias[servicioId]
+                  : 'otro';
+                if (categorias.includes(categoria)) {
+                  ingresosPorCategoriaMes[categoria][mesIdx] += Number(d.precio || o.total || 0);
+                }
+              });
+            } else {
+              // Si no hay detalles, dividir el total entre las categorías o asignar a 'otro'
+              const total = Number(o.total || 0);
+              if (total > 0) {
+                ingresosPorCategoriaMes['mantenimiento'][mesIdx] += total / categorias.length;
+              }
+            }
+          }
         });
+
         const ultimos6Labels = mesesLabels.slice(Math.max(0, mes-5), mes+1);
-        const ultimos6Data = ingresosPorMes.slice(Math.max(0, mes-5), mes+1);
+        const colores = {
+          'mantenimiento': { border: '#3B82F6', bg: 'rgba(59, 130, 246, 0.1)' },
+          'motor': { border: '#EF4444', bg: 'rgba(239, 68, 68, 0.1)' },
+          'frenos': { border: '#10B981', bg: 'rgba(16, 185, 129, 0.1)' },
+          'suspension': { border: '#F59E0B', bg: 'rgba(245, 158, 11, 0.1)' }
+        };
+
         const ingresosCategoriasData = {
           labels: ultimos6Labels,
-          datasets: [
-            {
-              label: 'Ingresos',
-              data: ultimos6Data,
-              borderColor: '#3B82F6',
-              backgroundColor: 'rgba(59,130,246,0.1)',
-              tension: 0.4,
-              fill: true
-            }
-          ]
+          datasets: categorias.map(cat => ({
+            label: nombreCategoria(cat),
+            data: ingresosPorCategoriaMes[cat].slice(Math.max(0, mes-5), mes+1),
+            borderColor: colores[cat].border,
+            backgroundColor: colores[cat].bg,
+            tension: 0.4,
+            fill: true
+          }))
         };
   
         // Crear el gráfico de servicios más populares
