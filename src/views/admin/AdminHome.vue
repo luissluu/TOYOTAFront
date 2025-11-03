@@ -17,7 +17,7 @@
             </div>
             <div class="ml-5">
               <p class="text-sm font-medium text-gray-300">Clientes Totales</p>
-              <p class="text-3xl font-semibold text-white">385</p>
+              <p class="text-3xl font-semibold text-white">{{ kpis.clientes }}</p>
               <div class="flex items-center mt-1">
                 <svg class="h-4 w-4 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -37,7 +37,7 @@
             </div>
             <div class="ml-5">
               <p class="text-sm font-medium text-gray-300">Ingresos Mensuales</p>
-              <p class="text-3xl font-semibold text-white">$48,250</p>
+              <p class="text-3xl font-semibold text-white">{{ formatCurrency(kpis.ingresosMes) }}</p>
               <div class="flex items-center mt-1">
                 <svg class="h-4 w-4 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -57,7 +57,7 @@
             </div>
             <div class="ml-5">
               <p class="text-sm font-medium text-gray-300">Servicios Completados</p>
-              <p class="text-3xl font-semibold text-white">267</p>
+              <p class="text-3xl font-semibold text-white">{{ kpis.completados }}</p>
               <div class="flex items-center mt-1">
                 <svg class="h-4 w-4 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -98,60 +98,22 @@
           </div>
           
           <div class="mt-4 space-y-4">
-            <div class="bg-gray-700 p-4 rounded-lg hover:bg-gray-650 transition-colors duration-200">
+            <div v-for="rec in recientes" :key="rec.id" class="bg-gray-700 p-4 rounded-lg hover:bg-gray-650 transition-colors duration-200">
               <div class="flex justify-between items-start">
                 <div>
-                  <p class="text-white font-medium">Cambio de aceite y filtro</p>
+                  <p class="text-white font-medium">{{ rec.servicio }}</p>
                   <div class="flex items-center mt-1">
-                    <img class="h-6 w-6 rounded-full" src="https://ui-avatars.com/api/?name=Juan+Perez&background=random" alt="Juan Pérez">
-                    <p class="text-sm text-gray-400 ml-2">Juan Pérez</p>
+                    <img class="h-6 w-6 rounded-full" :src="rec.avatar" :alt="rec.cliente">
+                    <p class="text-sm text-gray-400 ml-2">{{ rec.cliente }}</p>
                   </div>
                 </div>
-                <span class="px-3 py-1 text-xs bg-green-800 text-green-100 rounded-full">Completado</span>
+                <span :class="rec.badgeClass">{{ rec.estado }}</span>
               </div>
               <div class="flex items-center mt-3 text-sm text-gray-400">
                 <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Hace 2 horas
-              </div>
-            </div>
-            
-            <div class="bg-gray-700 p-4 rounded-lg hover:bg-gray-650 transition-colors duration-200">
-              <div class="flex justify-between items-start">
-                <div>
-                  <p class="text-white font-medium">Alineación y balanceo</p>
-                  <div class="flex items-center mt-1">
-                    <img class="h-6 w-6 rounded-full" src="https://ui-avatars.com/api/?name=Maria+Garcia&background=random" alt="María García">
-                    <p class="text-sm text-gray-400 ml-2">María García</p>
-                  </div>
-                </div>
-                <span class="px-3 py-1 text-xs bg-yellow-800 text-yellow-100 rounded-full">En proceso</span>
-              </div>
-              <div class="flex items-center mt-3 text-sm text-gray-400">
-                <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Hace 4 horas
-              </div>
-            </div>
-            
-            <div class="bg-gray-700 p-4 rounded-lg hover:bg-gray-650 transition-colors duration-200">
-              <div class="flex justify-between items-start">
-                <div>
-                  <p class="text-white font-medium">Diagnóstico sistema eléctrico</p>
-                  <div class="flex items-center mt-1">
-                    <img class="h-6 w-6 rounded-full" src="https://ui-avatars.com/api/?name=Roberto+Lopez&background=random" alt="Roberto López">
-                    <p class="text-sm text-gray-400 ml-2">Roberto López</p>
-                  </div>
-                </div>
-                <span class="px-3 py-1 text-xs bg-blue-800 text-blue-100 rounded-full">Programado</span>
-              </div>
-              <div class="flex items-center mt-3 text-sm text-gray-400">
-                <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Para hoy, 16:00
+                {{ rec.hace }}
               </div>
             </div>
           </div>
@@ -182,29 +144,79 @@
   <script>
   import { ref, onMounted } from 'vue';
   import Chart from 'chart.js/auto';
+  import axios from '../../axios';
   
   export default {
     name: 'AdminHome',
     setup() {
+      const kpis = ref({ clientes: 0, ingresosMes: 0, completados: 0 });
+      const recientes = ref([]);
       const serviciosPopularesChart = ref(null);
       const ingresosCategoriaChart = ref(null);
       
-      // Crear el gráfico de servicios más populares al montar el componente
-      onMounted(() => {
+      function formatCurrency(n) {
+        return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 }).format(n || 0);
+      }
+
+      const badgeEstado = (estado) => {
+        const e = (estado || '').toLowerCase();
+        if (e.includes('final')) return 'px-3 py-1 text-xs bg-green-800 text-green-100 rounded-full';
+        if (e.includes('progres')) return 'px-3 py-1 text-xs bg-yellow-800 text-yellow-100 rounded-full';
+        return 'px-3 py-1 text-xs bg-blue-800 text-blue-100 rounded-full';
+      };
+
+      // Cargar datos reales
+      onMounted(async () => {
+        try {
+          // Total clientes
+          const usuariosRes = await axios.get('/api/usuarios');
+          kpis.value.clientes = Array.isArray(usuariosRes.data) ? usuariosRes.data.length : 0;
+
+          // Órdenes
+          const ordenesRes = await axios.get('/api/ordenes-servicio');
+          const ordenes = Array.isArray(ordenesRes.data) ? ordenesRes.data : [];
+
+          // KPIs
+          const ahora = new Date();
+          const mes = ahora.getMonth();
+          const anio = ahora.getFullYear();
+          kpis.value.completados = ordenes.filter(o => (o.estado || '').toLowerCase().includes('final')).length;
+          kpis.value.ingresosMes = ordenes
+            .filter(o => {
+              const f = new Date(o.fecha_inicio || o.fecha || ahora);
+              return f.getMonth() === mes && f.getFullYear() === anio;
+            })
+            .reduce((acc, o) => acc + Number(o.total || 0), 0);
+
+          // Recientes (3)
+          recientes.value = ordenes
+            .sort((a, b) => new Date(b.fecha_inicio || b.fecha) - new Date(a.fecha_inicio || a.fecha))
+            .slice(0, 3)
+            .map(o => ({
+              id: o.orden_id,
+              servicio: o.detalles?.[0]?.nombre_servicio || o.diagnostico || 'Servicio',
+              cliente: `${o.nombre_usuario || o.nombre || ''} ${o.apellido_usuario || o.apellidoPaterno || ''}`.trim() || 'Cliente',
+              avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(o.nombre_usuario || o.nombre || 'C')}+${encodeURIComponent(o.apellido_usuario || o.apellidoPaterno || '')}&background=random`,
+              estado: (o.estado || '').toLowerCase(),
+              badgeClass: badgeEstado(o.estado),
+              hace: new Date(o.fecha_inicio || o.fecha).toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' })
+            }));
+
+          // Popularidad por nombre_servicio
+          const conteoServicios = {};
+          ordenes.forEach(o => (o.detalles || []).forEach(d => {
+            const n = d.nombre_servicio || 'Otro';
+            conteoServicios[n] = (conteoServicios[n] || 0) + 1;
+          }));
+          const labelsPop = Object.keys(conteoServicios);
+          const dataPop = labelsPop.map(k => conteoServicios[k]);
+
         // Datos para el gráfico de servicios más populares
         const popularServicesData = {
-          labels: [
-            'Cambio de aceite', 
-            'Alineación y balanceo', 
-            'Cambio de bujías',
-            'Cambio filtro de aire',
-            'Sistema de frenos',
-            'Diagnóstico eléctrico',
-            'Mantenimiento suspensión'
-          ],
+          labels: labelsPop,
           datasets: [{
             label: 'Cantidad de servicios',
-            data: [142, 98, 75, 63, 52, 48, 35],
+            data: dataPop,
             backgroundColor: [
               '#3B82F6', // blue-500
               '#EF4444', // red-500
@@ -218,42 +230,25 @@
             borderRadius: 4
           }]
         };
-  
-        // Datos para el gráfico de ingresos por categoría
+
+        // Datos para el gráfico de ingresos por mes (6 meses)
+        const mesesLabels = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+        const ingresosPorMes = new Array(12).fill(0);
+        ordenes.forEach(o => {
+          const f = new Date(o.fecha_inicio || o.fecha || ahora);
+          const y = f.getFullYear();
+          if (y === anio) ingresosPorMes[f.getMonth()] += Number(o.total || 0);
+        });
+        const ultimos6Labels = mesesLabels.slice(Math.max(0, mes-5), mes+1);
+        const ultimos6Data = ingresosPorMes.slice(Math.max(0, mes-5), mes+1);
         const ingresosCategoriasData = {
-          labels: [
-            'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'
-          ],
+          labels: ultimos6Labels,
           datasets: [
             {
-              label: 'Mantenimiento básico',
-              data: [12500, 13200, 14100, 13800, 15200, 16300],
+              label: 'Ingresos',
+              data: ultimos6Data,
               borderColor: '#3B82F6',
-              backgroundColor: 'rgba(59, 130, 246, 0.1)',
-              tension: 0.4,
-              fill: true
-            },
-            {
-              label: 'Sistema de motor',
-              data: [8200, 9100, 8700, 10200, 11500, 12100],
-              borderColor: '#EF4444',
-              backgroundColor: 'rgba(239, 68, 68, 0.1)',
-              tension: 0.4,
-              fill: true
-            },
-            {
-              label: 'Sistema de frenos',
-              data: [6500, 7200, 6800, 7500, 8300, 9200],
-              borderColor: '#10B981',
-              backgroundColor: 'rgba(16, 185, 129, 0.1)',
-              tension: 0.4,
-              fill: true
-            },
-            {
-              label: 'Suspensión y dirección',
-              data: [7800, 8100, 9200, 8700, 9600, 10500],
-              borderColor: '#F59E0B',
-              backgroundColor: 'rgba(245, 158, 11, 0.1)',
+              backgroundColor: 'rgba(59,130,246,0.1)',
               tension: 0.4,
               fill: true
             }
@@ -375,11 +370,17 @@
             }
           });
         }
+        } catch (e) {
+          console.error('Error cargando dashboard:', e);
+        }
       });
   
       return {
+        kpis,
+        recientes,
         serviciosPopularesChart,
-        ingresosCategoriaChart
+        ingresosCategoriaChart,
+        formatCurrency
       };
     }
   };
